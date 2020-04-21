@@ -13,22 +13,22 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     public float mp = 100;
     public int potion;
 
-    public GameObject Fireball;
-    public GameObject SkillSpot;
+    //public GameObject Fireball;
+    //public GameObject SkillSpot;
 
     public float speed = 2.0f; // 캐릭터의 좌우 이동속도
     public float jumpPower = 5.0f;
     public float rotateSpeed = 10.0f;
     public static bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
-    public GameObject GameOverPanel;
+    //public GameObject GameOverPanel;
     public Vector3 moveDirection;
 
-    //public float skill_1_cooltime = 1.0f;
-    private bool inSkill_1_Cooltime;
-    private float skill_1_delay = 1.0f;
-    public float sk2CoolTime = 5.0f;
-    public float sk3CoolTime = 10.0f;
-    public float sk4CoolTime = 60.0f;
+    ////public float skill_1_cooltime = 1.0f;
+    //private bool inSkill_1_Cooltime;
+    //private float skill_1_delay = 1.0f;
+    //public float sk2CoolTime = 5.0f;
+    //public float sk3CoolTime = 10.0f;
+    //public float sk4CoolTime = 60.0f;
 
     private float h;
     private float v;
@@ -37,7 +37,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     {
         myAnim = gameObject.GetComponent<Animator>();
         myRig = gameObject.GetComponent<Rigidbody>();
-        SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
+        //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
 
@@ -122,7 +122,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         {
             Move();
             Jump();
-            Skill_1();
+            //Skill_1();
         }
         else
         {
@@ -130,8 +130,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
         }
         isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
-        if (inSkill_1_Cooltime)
-            skill_1_delay += Time.deltaTime;
+        //if (inSkill_1_Cooltime)
+        //    skill_1_delay += Time.deltaTime;
 
         //FindObjectOfType()
         
@@ -158,20 +158,21 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 return;
             }
         }
-        
-    }
-
-    void Skill_1()
-    {
-        if (skill_1_delay >= 1.0f && Input.GetKeyDown(KeyCode.Z))
-        {
-            inSkill_1_Cooltime = false;
-            skill_1_delay = 0.0f;
-            Instantiate(Fireball, SkillSpot.transform.position, Fireball.transform.rotation);
-            inSkill_1_Cooltime = true;
-        }
 
     }
+    //}
+
+    //void Skill_1()
+    //{
+    //    if (skill_1_delay >= 1.0f && Input.GetKeyDown(KeyCode.Z))
+    //    {
+    //        inSkill_1_Cooltime = false;
+    //        skill_1_delay = 0.0f;
+    //        Instantiate(Fireball, SkillSpot.transform.position, Fireball.transform.rotation);
+    //        inSkill_1_Cooltime = true;
+    //    }
+
+    //}
 
     //IEnumerator Skill_1()
     //{
