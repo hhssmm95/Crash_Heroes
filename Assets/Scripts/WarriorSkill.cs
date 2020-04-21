@@ -7,8 +7,8 @@ public class WarriorSkill : MonoBehaviour
     CharacterMove player;
     Animator playerAnim;
     public float slash_Cooltime = 1.5f;
-    float slash_Timer = 0;
-    bool slashOff;
+    public float slash_Timer = 0;
+    public bool slashOff;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -20,7 +20,7 @@ public class WarriorSkill : MonoBehaviour
     {
         Skill_Slash();
 
-        if(slashOff)
+        if (slashOff)
         {
             slash_Timer += Time.deltaTime;
             if (slash_Timer >= slash_Cooltime)
