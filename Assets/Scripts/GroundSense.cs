@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class GroundSense : MonoBehaviour
 {
-    private GameObject player; //플레이어 오브젝트 
+    //private GameObject player; //플레이어 오브젝트 
+    CharacterMove player;
     public bool isGround; //발이 땅에 닿아있다면 true 
     // Start is called before the first frame update
     void Start()
     {
-        player = transform.parent.gameObject; //부모 오브젝트 받아옴
+        player = transform.parent.gameObject.GetComponent<CharacterMove>(); //부모 오브젝트 받아옴
     }
 
     // Update is called once per frame
@@ -20,21 +21,22 @@ public class GroundSense : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject != player)
+        if (!other.CompareTag("Player"))
         {
             isGround = true;
+            //player.myAnim.SetBool("Jump", false);
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject != player)
+        if (!other.CompareTag("Player"))
         {
             isGround = false;
         }
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject != player && isGround == false)
+        if (!other.CompareTag("Player") && isGround == false)
             isGround = true;
     }
 }

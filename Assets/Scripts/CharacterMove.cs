@@ -158,6 +158,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             {
                 //print("점프 가능 !");
                 isGround = false;
+                myAnim.SetTrigger("Jump");
                 myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
 
