@@ -9,11 +9,9 @@ public class UImanager : MonoBehaviour
     Image image;
     Image coolTime_1;
     WarriorSkill warrior;
-    public GameObject player;
+    //public GameObject player;
     
-
     bool cooltime = false;
-
 
     public static UImanager Instance
     {
@@ -61,61 +59,56 @@ public class UImanager : MonoBehaviour
 
     private void Start()
     {
-        warrior = GameObject.Find("lp_guy").GetComponent<WarriorSkill>();
+        warrior = GameObject.Find("M05").GetComponent<WarriorSkill>();
         coolTime_1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
     }
     
 
     private void Update()
     {
-        if (warrior.slashOff)
+        if (warrior.slashOff == true)
         {
+            
+            //Skil_1_CoolTime_On();
             cooltime = true;
         }
-        Skil_1_CoolTime_On();
+        StartCoroutine("Skil_CoolTime");
     }
 
-    void Skil_1_CoolTime_On()
-    {
-        
-        float time = 0f;
-        //coolTime_1.color = Mathf.Lerp(1f, 0f, time);
-
-        if (cooltime)
-        {
-            coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 255f); //쿨타임 이미지 알파값 설정
-        }
-
-        Color fadecolor = coolTime_1.color;
-
-        if (fadecolor.a >= 255f)
-        {
-            time += Time.deltaTime / warrior.slash_Cooltime;
-            fadecolor.a = Mathf.Lerp(warrior.slash_Cooltime, 0f, time);
-            coolTime_1.color = fadecolor;
-        }
-        cooltime = false;
-    }
-
-    // Skil_1_CoolTime_On()
+    //void Skil_1_CoolTime_On()
     //{
 
     //    float time = 0f;
-    //    //coolTime_1.color = Mathf.Lerp(1f, 0f, time);
-
-    //    if (cooltime)
+    //    if (coolTime_1.color.a == 0f)
     //    {
-    //        coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 255f); //쿨타임 이미지 알파값 설정
+    //        coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 255f);
     //    }
 
     //    Color fadecolor = coolTime_1.color;
 
-    //    if (fadecolor.a >= 255f)
+    //    if (cooltime == true)
     //    {
-    //        time += Time.deltaTime / warrior.slash_Cooltime;
-    //        fadecolor.a = Mathf.Lerp(warrior.slash_Cooltime, 0f, time);
+    //        //time += Time.deltaTime / warrior.slash_Cooltime;
+    //        //fadecolor.a = Mathf.Lerp(warrior.slash_Cooltime, 0f, time);
+    //        fadecolor.a -= 1f;
     //        coolTime_1.color = fadecolor;
     //    }
     //    cooltime = false;
     //}
+
+    public IEnumerable Skil_CoolTime()
+    {
+        if (cooltime == true)
+        {
+            coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 1);
+
+            while (coolTime_1.color.a > 0f)
+            {
+                coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, coolTime_1.color.a - (Time.deltaTime / warrior.slash_Cooltime));
+                yield return null;
+            }
+            //yield return null;
+        }
+        cooltime = false;
+    }
 }
