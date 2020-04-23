@@ -12,7 +12,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     public float hp = 100;
     public float mp = 100;
     public int potion;
-
+    public bool isDamaging;
+    float damageTimer;
     //public GameObject Fireball;
     //public GameObject SkillSpot;
 
@@ -22,6 +23,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     public static bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
     //public GameObject GameOverPanel;
     public Vector3 moveDirection;
+    public bool isAttacking;
 
     ////public float skill_1_cooltime = 1.0f;
     //private bool inSkill_1_Cooltime;
@@ -119,7 +121,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     // Update is called once per frame
     void Update()
     {
-        if (!isDead) //사망처리중일 시 이동 불가
+        if (!isDead && this.CompareTag("Player")) //사망처리중일 시 이동 불가
         {
             Move();
             Jump();
@@ -135,8 +137,15 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         //    skill_1_delay += Time.deltaTime;
 
         //FindObjectOfType()
-        
-
+        if(isDamaging)
+        {
+            damageTimer += Time.deltaTime;
+            if (damageTimer >= 1.0f)
+            {
+                isDamaging = false;
+                damageTimer = 0;
+            }
+        }
 
     }
 
@@ -161,6 +170,23 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         }
 
     }
+
+    public void OnDamage(float damage)
+    {
+        if (!isDamaging)
+        {
+            isDamaging = true;
+            myAnim.SetTrigger("Damage");
+            myRig.AddForce(-transform.forward * jumpPower*4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+            hp -= damage;
+        }
+    }
+
+    //IEnumerator OnDamage()
+    //{
+        
+    //}
+
     //}
 
     //void Skill_1()

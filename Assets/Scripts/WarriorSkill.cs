@@ -23,6 +23,8 @@ public class WarriorSkill : MonoBehaviour
         if (slashOff)
         {
             slash_Timer += Time.deltaTime;
+            if (slash_Timer >= 1.0f)
+                player.isAttacking = false;
             if (slash_Timer >= slash_Cooltime)
             {
                 slashOff = false;
@@ -35,10 +37,12 @@ public class WarriorSkill : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z) && !slashOff)
         {
+            player.isAttacking = true;
             slashOff = true;
             //playerAnim.SetInteger("animation", 2);
             playerAnim.SetTrigger("Attack1");
         }
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
+    
 }
