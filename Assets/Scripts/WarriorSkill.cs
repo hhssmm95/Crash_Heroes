@@ -36,7 +36,7 @@ public class WarriorSkill : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z) && !slashOff)
         {
             slashOff = true;
-            playerAnim.SetTrigger("attack_1");
+            playerAnim.SetInteger("animation", 2);
         }
     }
 }

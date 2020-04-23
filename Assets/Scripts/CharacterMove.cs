@@ -101,10 +101,12 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         v = Input.GetAxis("Vertical");
 
         if (h != 0 || v != 0)
-            myAnim.SetBool("run", true);
-        else
+            myAnim.SetInteger("animation", 17);
+        //myAnim.SetBool("run", true);
+        else if(h == 0 || v == 0 || !Input.GetKeyDown(KeyCode.Z))
         {
-            myAnim.SetBool("run", false);
+            myAnim.SetInteger("animation", 13);
+            //myAnim.SetBool("run", false);
             return;
         }
         moveDirection = (Vector3.forward * v) + (Vector3.right * h);
