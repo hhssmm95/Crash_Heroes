@@ -5,10 +5,9 @@ using UnityEngine.UI;
 
 public class BarSlider : MonoBehaviour
 {
-    // Start is called before the first frame update
     Slider slBar;
-    float fSliderBarTime;
 
+    // Start is called before the first frame update
     void Start()
     {
         slBar = GetComponent<Slider>();
