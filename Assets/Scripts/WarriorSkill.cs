@@ -7,7 +7,7 @@ public class WarriorSkill : MonoBehaviour
     CharacterMove player;
     Animator playerAnim;
     public float slash_Cooltime = 1.5f;
-    public float slash_Timer = 0;
+    public float slash_Timer;
     public bool slashOff;
     void Start()
     {
