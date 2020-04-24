@@ -9,6 +9,10 @@ public class UImanager : MonoBehaviour
     Image coolTime_1;
     WarriorSkill warrior;
 
+    public Text text_Time;
+
+    public float LimitTime;
+
     public static UImanager Instance
     {
         get
@@ -57,11 +61,20 @@ public class UImanager : MonoBehaviour
     {
         warrior = GameObject.Find("M05").GetComponent<WarriorSkill>();
         coolTime_1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
+        text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
     }
     
 
     private void Update()
     {
+        LimitTime -= Time.deltaTime;
+        text_Time.text = "" + Mathf.Round(LimitTime);
+
+        if(LimitTime <= 0)
+        {
+            text_Time.text = "0";
+        }
+
         if (warrior.slashOff == true)
         {
             float percent = warrior.slash_Timer / warrior.slash_Cooltime;
