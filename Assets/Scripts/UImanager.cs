@@ -6,12 +6,8 @@ public class UImanager : MonoBehaviour
 {
     private static UImanager instance;
 
-    Image image;
     Image coolTime_1;
     WarriorSkill warrior;
-    //public GameObject player;
-    
-    bool cooltime = false;
 
     public static UImanager Instance
     {
@@ -68,47 +64,12 @@ public class UImanager : MonoBehaviour
     {
         if (warrior.slashOff == true)
         {
-            
-            //Skil_1_CoolTime_On();
-            cooltime = true;
+            float percent = warrior.slash_Timer / warrior.slash_Cooltime;
+            coolTime_1.fillAmount = percent;
         }
-        StartCoroutine("Skil_CoolTime");
-    }
-
-    //void Skil_1_CoolTime_On()
-    //{
-
-    //    float time = 0f;
-    //    if (coolTime_1.color.a == 0f)
-    //    {
-    //        coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 255f);
-    //    }
-
-    //    Color fadecolor = coolTime_1.color;
-
-    //    if (cooltime == true)
-    //    {
-    //        //time += Time.deltaTime / warrior.slash_Cooltime;
-    //        //fadecolor.a = Mathf.Lerp(warrior.slash_Cooltime, 0f, time);
-    //        fadecolor.a -= 1f;
-    //        coolTime_1.color = fadecolor;
-    //    }
-    //    cooltime = false;
-    //}
-
-    public IEnumerable Skil_CoolTime()
-    {
-        if (cooltime == true)
+        else
         {
-            coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, 1);
-
-            while (coolTime_1.color.a > 0f)
-            {
-                coolTime_1.color = new Color(coolTime_1.color.r, coolTime_1.color.g, coolTime_1.color.b, coolTime_1.color.a - (Time.deltaTime / warrior.slash_Cooltime));
-                yield return null;
-            }
-            //yield return null;
+            coolTime_1.fillAmount = 1f;
         }
-        cooltime = false;
     }
 }
