@@ -10,6 +10,7 @@ public class WarriorSkill : MonoBehaviour
     public float slash_Cooltime = 1.5f;
     public float slash_Timer;
     public bool slashOff;
+    public bool isInCombo;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -36,7 +37,7 @@ public class WarriorSkill : MonoBehaviour
 
     void Skill_Slash()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && !slashOff)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !slashOff)
         {
             //Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             //RaycastHit hit;

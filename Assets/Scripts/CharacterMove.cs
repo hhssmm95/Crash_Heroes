@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
+    public GameObject hpBar;
     private Animator myAnim;
     //private Animator myAnim2;
     private Rigidbody myRig;
@@ -51,6 +52,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
+        if (gameObject.CompareTag("Player"))
+            hpBar.SetActive(false);
 
     }
     void Move()
@@ -82,9 +85,11 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     // Update is called once per frame
     void Update()
     {
+
+        
         if (!isDead && this.CompareTag("Player") && !isDashing) //사망처리중일 시 이동 불가
         {
-
+            
             Move();
             Jump();
             Dash();
