@@ -5,6 +5,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 {
     private Animator myAnim;
     private Rigidbody myRig;
+
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
     public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
