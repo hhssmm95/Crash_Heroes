@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
-    public GameObject hpBar;
+    public HealthBar hpBar;
     private Animator myAnim;
     //private Animator myAnim2;
     private Rigidbody myRig;
@@ -14,8 +14,10 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
     public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
     public bool isGround; //캐릭터의 발이 땅에 붙어있을때 true
-    public float hp = 100;
-    public float mp = 100;
+    public float maxHP = 582.0f;
+    public float hp;
+    public float maxMP = 263.0f;
+    public float mp;
     public int potion;
     public bool isDamaging;
     public bool isDashing;
@@ -48,12 +50,15 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         myAnim = gameObject.GetComponent<Animator>();
         myRig = gameObject.GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        hpBar.SetMaxHealth((int)maxHP);
+        
+        
         //myAnim2 = myAnim.layer
         //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
         if (gameObject.CompareTag("Player"))
-            hpBar.SetActive(false);
+            hpBar.gameObject.SetActive(false);
     }
     void Move()
     {
@@ -202,6 +207,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             myAnim.SetTrigger("Damage");
             myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
             hp -= damage;
+            hpBar.SetHealth((int)hp);
         }
     }
 

@@ -39,21 +39,14 @@ public class WarriorSkill : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && !slashOff)
         {
-            //Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            //RaycastHit hit;
-
             player.isAttacking = true;
             slashOff = true;
-            //playerAnim.SetInteger("animation", 2);
-            playerAnim.SetTrigger("Attack1");
-
-            //if(Physics.Raycast(ray, out hit, Mathf.Infinity))
-            //{
-            //    //player.transform.LookAt(hit.transform.position);
-            //    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-            //    transform.rotation = Quaternion.LookRotation(dir);
-                
-            //}
+            if (playerAnim.GetInteger("Combo") == 0)
+                playerAnim.SetInteger("Attack", 1);
+            else if (playerAnim.GetInteger("Combo") == 1)
+                playerAnim.SetInteger("Attack", 2);
+            else if (playerAnim.GetInteger("Combo") == 2)
+                playerAnim.SetInteger("Attack", 3);
 
 
         }
