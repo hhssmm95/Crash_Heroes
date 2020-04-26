@@ -4,7 +4,9 @@ using UnityEngine;
 public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     private Animator myAnim;
+    //private Animator myAnim2;
     private Rigidbody myRig;
+    private Camera mainCamera;
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
     public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
@@ -13,6 +15,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     public float mp = 100;
     public int potion;
     public bool isDamaging;
+    public bool isDashing;
     float damageTimer;
     //public GameObject Fireball;
     //public GameObject SkillSpot;
@@ -24,7 +27,9 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     //public GameObject GameOverPanel;
     public Vector3 moveDirection;
     public bool isAttacking;
-
+    float dashTimer;
+    //AnimatorStateInfo aniinfo;
+    //public float anitime;
     ////public float skill_1_cooltime = 1.0f;
     //private bool inSkill_1_Cooltime;
     //private float skill_1_delay = 1.0f;
@@ -39,6 +44,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     {
         myAnim = gameObject.GetComponent<Animator>();
         myRig = gameObject.GetComponent<Rigidbody>();
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        //myAnim2 = myAnim.layer
         //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
@@ -63,8 +70,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 
         myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.LeftShift))
-            transform.position += moveDirection * (speed*2.5f) * Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftShift)) //달리기
+            transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
         else
             transform.position += moveDirection * speed * Time.deltaTime;
 
@@ -73,11 +80,12 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     // Update is called once per frame
     void Update()
     {
-        if (!isDead && this.CompareTag("Player")) //사망처리중일 시 이동 불가
+        if (!isDead && this.CompareTag("Player") && !isDashing) //사망처리중일 시 이동 불가
         {
 
             Move();
             Jump();
+            Dash();
             //Skill_1();
         }
         else
@@ -86,11 +94,21 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
         }
         isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
-        //if (inSkill_1_Cooltime)
-        //    skill_1_delay += Time.deltaTime;
+       
+        if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4) 
+            || Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
-        //FindObjectOfType()
-        if(isDamaging)
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+                transform.rotation = Quaternion.LookRotation(dir);
+            }
+        }
+
+        if (isDamaging)
         {
             damageTimer += Time.deltaTime;
             if (damageTimer >= 1.5f)
@@ -99,7 +117,38 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 damageTimer = 0;
             }
         }
+        if(isDashing)
+        {
+            transform.position += transform.forward * (speed * 3) * Time.deltaTime;
+            dashTimer += Time.deltaTime;
+
+            if(dashTimer >= 0.5f)
+            {
+                isDashing = false;
+                dashTimer = 0;
+            }
+        }
+        //if(isDashing && dashTimer >= 0.5f)
+        //{
+        //    isDashing = false;
+        //    dashTimer = 0;
+        //}
         
+        
+
+        //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+        
+        //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
+        //if(aniinfo.IsName("Dash"))
+            //anitime = aniinfo.normalizedTime;
+        //else
+        ////    aniinfo = 0;
+        //if (isDashing && anitime < 1.0f)
+        //{
+        //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
+        //}
+        //if(isDashing && !aniinfo.IsName("Dash"))
+        //    isDashing = false;
 
     }
 
@@ -126,23 +175,52 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 
     }
 
+    void Dash()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            isDashing = true;
+            myAnim.SetTrigger("Dash");
+        }
+    }
+
     public void OnDamage(float damage)
     {
         if (!isDamaging)
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            myRig.AddForce(-transform.forward * jumpPower*4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+            myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
             hp -= damage;
         }
     }
 
-    //IEnumerator OnDamage()
+    //IEnumerator Dash()
     //{
-        
+    //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+    //    RaycastHit hit;
+    //    float dashTimer = 0;
+
+    //    isDashing = true;
+    //    myAnim.SetTrigger("Dash");
+    //    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+    //    {
+    //        //player.transform.LookAt(hit.transform.position);
+    //        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+    //        transform.rotation = Quaternion.LookRotation(dir);
+
+    //    }
+    //    while (dashTimer <= 0.5f)
+    //    {
+    //        transform.position += transform.forward * (speed * 3) * Time.deltaTime;
+    //        dashTimer += Time.deltaTime;
+    //    }
+    //    isDashing = false;
+    //    yield return null;
     //}
 
-    //}
+}
 
     //void Skill_1()
     //{
@@ -221,4 +299,3 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     //    //GameOverPanel.SetActive(false);
     //    //isDead = false;
     //}
-}
