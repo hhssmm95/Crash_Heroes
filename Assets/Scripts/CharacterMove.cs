@@ -43,7 +43,6 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
-
     }
     void Move()
     {
@@ -100,8 +99,6 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 damageTimer = 0;
             }
         }
-        
-
     }
 
     void Jump()
