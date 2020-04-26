@@ -10,7 +10,6 @@ public class UImanager : MonoBehaviour
     WarriorSkill warrior;
 
     public Text text_Time;
-
     public float LimitTime;
 
     public static UImanager Instance
