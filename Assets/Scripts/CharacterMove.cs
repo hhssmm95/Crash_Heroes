@@ -50,7 +50,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         myAnim = gameObject.GetComponent<Animator>();
         myRig = gameObject.GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        hpBar.SetMaxHealth((int)maxHP);
+        hpBar.SetMaxHealth(maxHP);
         
         
         //myAnim2 = myAnim.layer
@@ -207,7 +207,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             myAnim.SetTrigger("Damage");
             myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
             hp -= damage;
-            hpBar.SetHealth((int)hp);
+            hpBar.SetHealth(hp);
         }
     }
 
