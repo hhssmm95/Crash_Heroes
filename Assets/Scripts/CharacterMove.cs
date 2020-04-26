@@ -54,7 +54,6 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         dying = false;
         if (gameObject.CompareTag("Player"))
             hpBar.SetActive(false);
-
     }
     void Move()
     {
@@ -124,6 +123,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 damageTimer = 0;
             }
         }
+
+
         if(isDashing)
         {
             transform.position += transform.forward * (speed * 3) * Time.deltaTime;
@@ -156,6 +157,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         //}
         //if(isDashing && !aniinfo.IsName("Dash"))
         //    isDashing = false;
+
 
     }
 

@@ -59,5 +59,4 @@ public class WarriorSkill : MonoBehaviour
         }
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
-    
 }
