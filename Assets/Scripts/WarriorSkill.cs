@@ -42,11 +42,11 @@ public class WarriorSkill : MonoBehaviour
             player.isAttacking = true;
             slashOff = true;
             if (playerAnim.GetInteger("Combo") == 0)
-                playerAnim.SetInteger("Attack", 1);
+                playerAnim.SetTrigger("FirstAttack");
             else if (playerAnim.GetInteger("Combo") == 1)
-                playerAnim.SetInteger("Attack", 2);
+                playerAnim.SetTrigger("SecondAttack");
             else if (playerAnim.GetInteger("Combo") == 2)
-                playerAnim.SetInteger("Attack", 3);
+                playerAnim.SetTrigger("ThirdAttack");
 
 
         }
