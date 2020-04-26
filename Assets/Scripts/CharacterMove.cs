@@ -17,7 +17,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     //public GameObject Fireball;
     //public GameObject SkillSpot;
 
-    public float speed = 2.0f; // 캐릭터의 좌우 이동속도
+    public float speed = 2.0f; // 캐릭터 이동속도
     public float jumpPower = 5.0f;
     public float rotateSpeed = 10.0f;
     public static bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
@@ -46,65 +46,12 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     }
     void Move()
     {
-        //Vector3 moveDirection = Vector3.zero;
 
-        //if (Input.GetAxis("Horizontal") > 0) //우 이동
-        //{
-
-        //    myAnim.SetBool("run", true);
-        //    gameObject.transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
-        //    moveDirection = Vector3.right;
-        //}
-        //else if (Input.GetAxis("Horizontal") < 0) //좌 이동
-        //{
-
-        //    myAnim.SetBool("run", true);
-        //    gameObject.transform.eulerAngles = new Vector3(0.0f, -90.0f, 0.0f);
-        //    moveDirection = Vector3.left;
-        //}
-        //else if (Input.GetAxis("Vertical") > 0) // 앞 이동
-        //{
-
-        //    myAnim.SetBool("run", true);
-        //    gameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-        //    moveDirection = Vector3.forward;
-        //    //inputForward = false;
-        //    //if (delay >= 0.5f && isGround) // 땅에 서있고 점프 쿨타임이 돌아왔을시
-        //    //{
-        //    //    jumpCooltime = false;
-        //    //    delay = 0.0f;
-        //    //    //Fire(new Vector3(transform.position.x, transform.position.y, transform.position.z + 3.0f)); // 다음 타일(현재z좌표+3)까지 포물선(점프)이동 함수 
-        //    //    jumpCooltime = true;
-        //    //}
-        //}
-        //else if (Input.GetAxis("Vertical") < 0) // 뒤 이동
-        //{
-        //    myAnim.SetBool("run", true);
-        //    gameObject.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-        //    moveDirection = Vector3.back;
-
-        //    //inputBackward = false;
-        //    //if (delay >= 0.5f && isGround)
-        //    //{
-        //    //    jumpCooltime = false;
-        //    //    delay = 0.0f;
-        //    //    //Fire(new Vector3(transform.position.x, transform.position.y, transform.position.z - 3.0f));
-        //    //    jumpCooltime = true;
-        //    //}
-        //}
-        //if (Input.GetAxis("Horizontal") > 0) //우 이동
-        //{
-
-        //    myAnim.SetBool("run", true);
-        //    gameObject.transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
-        //    moveDirection = Vector3.right;
-        //}
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
 
         if (h != 0 || v != 0)
             myAnim.SetBool("Run", true);
-        //else if(h == 0 || v == 0 || !Input.GetKeyDown(KeyCode.Z
         else
         {
             myAnim.SetBool("Run", false);
@@ -113,9 +60,14 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         moveDirection = (Vector3.forward * v) + (Vector3.right * h);
 
         Quaternion newRotation = Quaternion.LookRotation(moveDirection);
-        myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed *Time.deltaTime);
-        transform.position += moveDirection *speed * Time.deltaTime;
-        
+
+        myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+            transform.position += moveDirection * (speed*2.5f) * Time.deltaTime;
+        else
+            transform.position += moveDirection * speed * Time.deltaTime;
+
     }
 
     // Update is called once per frame
@@ -123,6 +75,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     {
         if (!isDead && this.CompareTag("Player")) //사망처리중일 시 이동 불가
         {
+
             Move();
             Jump();
             //Skill_1();
@@ -140,12 +93,13 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         if(isDamaging)
         {
             damageTimer += Time.deltaTime;
-            if (damageTimer >= 1.0f)
+            if (damageTimer >= 1.5f)
             {
                 isDamaging = false;
                 damageTimer = 0;
             }
         }
+        
 
     }
 
