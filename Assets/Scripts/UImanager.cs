@@ -74,9 +74,9 @@ public class UImanager : MonoBehaviour
             text_Time.text = "0";
         }
 
-        if (warrior.slashOff == true)
+        if (warrior.skill_1_Off == true)
         {
-            float percent = warrior.slash_Timer / warrior.slash_Cooltime;
+            float percent = warrior.skill_1_Timer / warrior.skill_1_Cooltime;
             coolTime_1.fillAmount = percent;
         }
         else
