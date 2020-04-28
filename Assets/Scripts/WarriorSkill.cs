@@ -13,6 +13,10 @@ public class WarriorSkill : MonoBehaviour
     public bool isInCombo;
     public bool comboContinue;
     public float comboTimer;
+
+    public float skill_1_Cooltime = 3.0f;
+    public float skill_1_Timer;
+    public bool skill_1_Off;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -23,7 +27,7 @@ public class WarriorSkill : MonoBehaviour
     void Update()
     {
         Skill_Slash();
-
+        Skill_1_play();
         if (slashOff)
         {
             slash_Timer += Time.deltaTime;
@@ -39,6 +43,18 @@ public class WarriorSkill : MonoBehaviour
         {
             
             comboTimer += Time.deltaTime;
+        }
+
+        if(skill_1_Off)
+        {
+            skill_1_Timer += Time.deltaTime;
+            if (skill_1_Timer >= 1.2f)
+                player.isAttacking = false;
+            if(skill_1_Timer >= skill_1_Cooltime)
+            {
+                skill_1_Off = false;
+                skill_1_Timer = 0;
+            }
         }
     }
 
@@ -70,8 +86,23 @@ public class WarriorSkill : MonoBehaviour
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
 
-    void Skill_1()
+    void Skill_1_play()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+        {
+            skill_1_Off = true;
+            StartCoroutine("Skill_1");
+        }
+
+    }
+
+    IEnumerator Skill_1()
+    {
+        //playerAnim.stop
+        player.isDashing = true;
+        player.isAttacking = true;
+        playerAnim.SetTrigger("Dash");
+        yield return new WaitForSeconds(0.1f);
+        playerAnim.SetTrigger("ThirdAttack");
     }
 }
