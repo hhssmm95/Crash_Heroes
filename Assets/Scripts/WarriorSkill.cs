@@ -7,10 +7,12 @@ public class WarriorSkill : MonoBehaviour
     CharacterMove player;
     Animator playerAnim;
     //public Camera mainCamera;
-    public float slash_Cooltime = 1.5f;
+    public float slash_Cooltime = 0.5f;
     public float slash_Timer;
     public bool slashOff;
     public bool isInCombo;
+    public bool comboContinue;
+    public float comboTimer;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -33,6 +35,11 @@ public class WarriorSkill : MonoBehaviour
                 slash_Timer = 0;
             }
         }
+        if (comboContinue)
+        {
+            
+            comboTimer += Time.deltaTime;
+        }
     }
 
     void Skill_Slash()
@@ -41,6 +48,15 @@ public class WarriorSkill : MonoBehaviour
         {
             player.isAttacking = true;
             slashOff = true;
+            comboContinue = true;
+
+            if (comboTimer > 3.0f)
+            {
+                playerAnim.SetInteger("Combo", 0);
+                comboContinue = false;
+            }
+            comboTimer = 0;
+
             if (playerAnim.GetInteger("Combo") == 0)
                 playerAnim.SetTrigger("FirstAttack");
             else if (playerAnim.GetInteger("Combo") == 1)
@@ -49,7 +65,13 @@ public class WarriorSkill : MonoBehaviour
                 playerAnim.SetTrigger("ThirdAttack");
 
 
+
         }
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
+    }
+
+    void Skill_1()
+    {
+        
     }
 }

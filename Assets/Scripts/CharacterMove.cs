@@ -67,10 +67,10 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         v = Input.GetAxis("Vertical");
 
         if (h != 0 || v != 0)
-            myAnim.SetBool("Run", true);
+            myAnim.SetBool("Move", true);
         else
         {
-            myAnim.SetBool("Run", false);
+            myAnim.SetBool("Move", false);
             return;
         }
         moveDirection = (Vector3.forward * v) + (Vector3.right * h);
@@ -80,45 +80,24 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
         if (Input.GetKey(KeyCode.LeftShift)) //달리기
+        {
+            myAnim.SetBool("Run", true);
             transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
+
+        }
         else
+        {
+            if(myAnim.GetBool("Run"))
+                myAnim.SetBool("Run", false);
             transform.position += moveDirection * speed * Time.deltaTime;
+        }
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        
-        if (!isDead && this.CompareTag("Player") && !isDashing) //사망처리중일 시 이동 불가
-        {
-            
-            Move();
-            Jump();
-            Dash();
-            //Skill_1();
-        }
-        else
-        {
-            //if (!dying)
-            //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
-        }
         isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
-       
-        if(Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4) 
-            || Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-            {
-                Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                transform.rotation = Quaternion.LookRotation(dir);
-            }
-        }
-
         if (isDamaging)
         {
             damageTimer += Time.deltaTime;
@@ -128,42 +107,74 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 damageTimer = 0;
             }
         }
-
-
-        if(isDashing)
+        if (gameObject.CompareTag("Player"))
         {
-            transform.position += transform.forward * (speed * 3) * Time.deltaTime;
-            dashTimer += Time.deltaTime;
-
-            if(dashTimer >= 0.5f)
+            if (!isDead && !isDashing) //사망처리중일 시 이동 불가
             {
-                isDashing = false;
-                dashTimer = 0;
+
+                Move();
+                Jump();
+                Dash();
+                //Skill_1();
             }
-        }
-        //if(isDashing && dashTimer >= 0.5f)
-        //{
-        //    isDashing = false;
-        //    dashTimer = 0;
-        //}
-        
-        
+            else
+            {
+                //if (!dying)
+                //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
+            }
+            
 
-        //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
-        
-        //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
-        //if(aniinfo.IsName("Dash"))
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
+                || Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+                    transform.rotation = Quaternion.LookRotation(dir);
+                }
+            }
+
+            
+
+
+            if (isDashing)
+            {
+                transform.position += transform.forward * (speed * 3) * Time.deltaTime;
+                dashTimer += Time.deltaTime;
+
+                if (dashTimer >= 0.5f)
+                {
+                    isDashing = false;
+                    dashTimer = 0;
+                }
+            }
+            //if(isDashing && dashTimer >= 0.5f)
+            //{
+            //    isDashing = false;
+            //    dashTimer = 0;
+            //}
+
+
+
+            //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+
+            //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
+            //if(aniinfo.IsName("Dash"))
             //anitime = aniinfo.normalizedTime;
-        //else
-        ////    aniinfo = 0;
-        //if (isDashing && anitime < 1.0f)
-        //{
-        //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
-        //}
-        //if(isDashing && !aniinfo.IsName("Dash"))
-        //    isDashing = false;
+            //else
+            ////    aniinfo = 0;
+            //if (isDashing && anitime < 1.0f)
+            //{
+            //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
+            //}
+            //if(isDashing && !aniinfo.IsName("Dash"))
+            //    isDashing = false;
 
-
+        }
     }
 
     void Jump()
