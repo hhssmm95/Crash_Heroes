@@ -7,6 +7,9 @@ public class UImanager : MonoBehaviour
     private static UImanager instance;
 
     Image coolTime_1;
+    Image coolTime_2;
+    //Image coolTime_3;
+    //Image coolTime_4;
     WarriorSkill warrior;
 
     public Text text_Time;
@@ -60,6 +63,9 @@ public class UImanager : MonoBehaviour
     {
         warrior = GameObject.Find("M05").GetComponent<WarriorSkill>();
         coolTime_1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
+        coolTime_2 = GameObject.FindWithTag("CoolTime_Slot_2").GetComponent<Image>();
+        //coolTime_3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
+        //coolTime_4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
     }
     
@@ -83,5 +89,35 @@ public class UImanager : MonoBehaviour
         {
             coolTime_1.fillAmount = 1f;
         }
+
+        if (warrior.skill_2_Off == true)
+        {
+            float percent = warrior.skill_2_Timer / warrior.skill_2_Cooltime;
+            coolTime_2.fillAmount = percent;
+        }
+        else
+        {
+            coolTime_2.fillAmount = 1f;
+        }
+
+        //if (warrior.skill_3_Off == true)
+        //{
+        //    float percent = warrior.skill_3_Timer / warrior.skill_3_Cooltime;
+        //    coolTime_3.fillAmount = percent;
+        //}
+        //else
+        //{
+        //    coolTime_3.fillAmount = 1f;
+        //}
+
+        //if (warrior.skill_4_Off == true)
+        //{
+        //    float percent = warrior.skill_4_Timer / warrior.skill_4_Cooltime;
+        //    coolTime_4.fillAmount = percent;
+        //}
+        //else
+        //{
+        //    coolTime_4.fillAmount = 1f;
+        //}
     }
 }
