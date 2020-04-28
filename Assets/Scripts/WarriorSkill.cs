@@ -17,6 +17,10 @@ public class WarriorSkill : MonoBehaviour
     public float skill_1_Cooltime = 3.0f;
     public float skill_1_Timer;
     public bool skill_1_Off;
+
+    public float skill_2_Cooltime = 3.0f;
+    public float skill_2_Timer;
+    public bool skill_2_Off;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -28,6 +32,7 @@ public class WarriorSkill : MonoBehaviour
     {
         Skill_Slash();
         Skill_1_play();
+        Skill_2_play();
         if (slashOff)
         {
             slash_Timer += Time.deltaTime;
@@ -54,6 +59,20 @@ public class WarriorSkill : MonoBehaviour
             {
                 skill_1_Off = false;
                 skill_1_Timer = 0;
+            }
+        }
+        if (skill_2_Off)
+        {
+            skill_2_Timer += Time.deltaTime;
+            if (skill_2_Timer >= 1.0f)
+            {
+                player.isAttacking = false;
+                playerAnim.SetBool("Skill2_2", false);
+            }
+            if (skill_2_Timer >= skill_2_Cooltime)
+            {
+                skill_2_Off = false;
+                skill_2_Timer = 0;
             }
         }
     }
@@ -94,6 +113,18 @@ public class WarriorSkill : MonoBehaviour
             StartCoroutine("Skill_1");
         }
 
+    }
+
+    void Skill_2_play()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        {
+            skill_2_Off = true;
+            player.isAttacking = true;
+            //playerAnim.SetBool("Skill2", true);
+            playerAnim.SetTrigger("Skill2_1");
+            playerAnim.SetBool("Skill2_2", true);
+        }
     }
 
     IEnumerator Skill_1()
