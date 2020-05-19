@@ -16,10 +16,12 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
     public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
     public bool isGround; //캐릭터의 발이 땅에 붙어있을때 true
-    public float maxHP = 582.0f;
+    public float maxHP;
     public float hp;
-    public float maxMP = 263.0f;
+    public float maxMP;
     public float mp;
+    public float atk;
+    public float def;
     public int potion;
     public bool isDamaging;
     public bool isDashing;
@@ -53,43 +55,59 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         myRig = gameObject.GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         hpBar.SetMaxHealth(maxHP);
-
+        SkillControl skill = gameObject.GetComponent<SkillControl>();
         switch (job)
         {
             case Global.Classes.Warrior:
-                WarriorSkill warrior = gameObject.GetComponent<WarriorSkill>();
-                warrior.attack_Cooltime = 0.5f;
-                warrior.skill_1_Cooltime = 3.0f;
-                warrior.skill_2_Cooltime = 3.0f;
-                warrior.skill_3_Cooltime = 3.0f;
-                warrior.skill_4_Cooltime = 3.0f;
+                maxHP = 582;
+                maxMP = 263;
+                atk = 64;
+                def = 39;
+                skill.attack_Cooltime = 0.5f;
+                skill.skill_1_Cooltime = 3.0f;
+                skill.skill_2_Cooltime = 3.0f;
+                skill.skill_3_Cooltime = 3.0f;
+                skill.skill_4_Cooltime = 3.0f;
+                
                 break;
 
             case Global.Classes.Archer:
-                ArcherSkill archer = gameObject.GetComponent<ArcherSkill>();
-                archer.attack_Cooltime = 0.5f;
-                archer.skill_1_Cooltime = 3.0f;
-                archer.skill_2_Cooltime = 3.0f;
-                archer.skill_3_Cooltime = 3.0f;
-                archer.skill_4_Cooltime = 3.0f;
+                maxHP = 539;
+                maxMP = 280;
+                atk = 61;
+                def = 32;
+                skill.attack_Cooltime = 0.5f;
+                skill.skill_1_Cooltime = 3.0f;
+                skill.skill_2_Cooltime = 3.0f;
+                skill.skill_3_Cooltime = 3.0f;
+                skill.skill_4_Cooltime = 3.0f;
+
                 break;
 
             case Global.Classes.Dragoon:
-                DragoonSkill dragoon = gameObject.GetComponent<DragoonSkill>();
-                dragoon.attack_Cooltime = 0.5f;
-                dragoon.skill_1_Cooltime = 3.0f;
-                dragoon.skill_2_Cooltime = 3.0f;
-                dragoon.skill_3_Cooltime = 3.0f;
-                dragoon.skill_4_Cooltime = 3.0f;
+                maxHP = 580;
+                maxMP = 274;
+                atk = 66;
+                def = 36;
+                skill.attack_Cooltime = 0.5f;
+                skill.skill_1_Cooltime = 3.0f;
+                skill.skill_2_Cooltime = 3.0f;
+                skill.skill_3_Cooltime = 3.0f;
+                skill.skill_4_Cooltime = 3.0f;
+
                 break;
 
             case Global.Classes.Mage:
-                MageSkill mage = gameObject.GetComponent<MageSkill>();
-                mage.attack_Cooltime = 0.5f;
-                mage.skill_1_Cooltime = 3.0f;
-                mage.skill_2_Cooltime = 3.0f;
-                mage.skill_3_Cooltime = 3.0f;
-                mage.skill_4_Cooltime = 3.0f;
+                maxHP = 524;
+                maxMP = 326;
+                atk = 65;
+                def = 29;
+                skill.attack_Cooltime = 0.5f;
+                skill.skill_1_Cooltime = 3.0f;
+                skill.skill_2_Cooltime = 3.0f;
+                skill.skill_3_Cooltime = 3.0f;
+                skill.skill_4_Cooltime = 3.0f;
+
                 break;
         }
 

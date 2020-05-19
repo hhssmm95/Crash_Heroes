@@ -2,24 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarriorSkill : ClassParent
+public class SkillControl : MonoBehaviour
 {
-    
+    public CharacterMove player;
+    public Animator playerAnim;
+    public Camera mainCamera;
+
+    public float attack_Cooltime;
+    public float attack_Cost;
+
+    public float skill_1_Cooltime;
+    public float skill_1_Cost;
+
+    public float skill_2_Cooltime;
+    public float skill_2_Cost;
+
+    public float skill_3_Cooltime;
+    public float skill_3_Cost;
+
+    public float skill_4_Cooltime;
+    public float skill_4_Cost;
+
+
+    bool attackOff;
+    float attack_Timer;
+    bool comboContinue;
+    float comboTimer;
+    public bool skill_1_Off;
+    public bool skill_2_Off;
+    public bool skill_3_Off;
+    public bool skill_4_Off;
+    public float skill_1_Timer;
+    public float skill_2_Timer;
+    public float skill_3_Timer;
+    public float skill_4_Timer;
 
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
+        
+
     }
+
+    //public void Init(float attack_cool, float attack_cost, float skill_1_cool, float skill_1_cost, float skill_2_cool, float skill_2_cost,
+    //    float skill_3_cool, float skill_3_cost, float skill_4_cool, float skill_4_cost)
+    //{
+    //    InitParent(attack_cool, attack_cost, skill_1_cool, skill_1_cost, skill_2_cool, skill_2_cost,
+    //    skill_3_cool, skill_3_cost, skill_4_cool, skill_4_cost);
+    //}
 
     // Update is called once per frame
     void Update()
     {
-        Skill_Slash();
-        Skill_1_play();
-        Skill_2_play();
-        Skill_3_play();
-        Skill_4_play();
+        Warrior_Attack();
+        Warrior_Skill1();
+        Warrior_Skill2();
+        Warrior_Skill3();
+        Warrior_Skill4();
         if (attackOff)
         {
             attack_Timer += Time.deltaTime;
@@ -86,7 +126,7 @@ public class WarriorSkill : ClassParent
         }
     }
 
-    void Skill_Slash()
+    void Warrior_Attack()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
         {
@@ -114,19 +154,19 @@ public class WarriorSkill : ClassParent
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
 
-    void Skill_1_play()
+    void Warrior_Skill1()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off && player.job == Global.Classes.Warrior)
         {
             skill_1_Off = true;
-            StartCoroutine("Skill_1");
+            StartCoroutine("Warrior_Skill1_Play");
         }
 
     }
 
-    void Skill_2_play()
+    void Warrior_Skill2()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off && player.job == Global.Classes.Warrior)
         {
             skill_2_Off = true;
             player.isAttacking = true;
@@ -136,9 +176,9 @@ public class WarriorSkill : ClassParent
         }
     }
 
-    void Skill_3_play()
+    void Warrior_Skill3()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off && player.job == Global.Classes.Warrior)
         {
             skill_3_Off = true;
             //playerAnim.SetBool("Skill2", true);
@@ -147,9 +187,9 @@ public class WarriorSkill : ClassParent
         }
     }
 
-    void Skill_4_play()
+    void Warrior_Skill4()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off && player.job == Global.Classes.Warrior)
         {
             skill_4_Off = true;
             //playerAnim.SetBool("Skill2", true);
@@ -157,7 +197,7 @@ public class WarriorSkill : ClassParent
         }
     }
 
-    IEnumerator Skill_1()
+    IEnumerator Warrior_Skill1_Play()
     {
         //playerAnim.stop
         player.isDashing = true;
