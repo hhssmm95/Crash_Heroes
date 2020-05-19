@@ -2,30 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarriorSkill : MonoBehaviour
+public class WarriorSkill : ClassParent
 {
-    CharacterMove player;
-    Animator playerAnim;
-    //public Camera mainCamera;
-    public float slash_Cooltime = 0.5f;
-    public float slash_Timer;
-    public bool slashOff;
-    public bool isInCombo;
-    public bool comboContinue;
-    public float comboTimer;
-
-    public float skill_1_Cooltime = 3.0f;
-    public float skill_1_Timer;
-    public bool skill_1_Off;
-
-    public float skill_2_Cooltime = 3.0f;
-    public float skill_2_Timer;
-    public bool skill_2_Off;
-
-
-    public float skill_3_Cooltime = 3.0f;
-    public float skill_3_Timer;
-    public bool skill_3_Off;
+    
 
     void Start()
     {
@@ -40,15 +19,16 @@ public class WarriorSkill : MonoBehaviour
         Skill_1_play();
         Skill_2_play();
         Skill_3_play();
-        if (slashOff)
+        Skill_4_play();
+        if (attackOff)
         {
-            slash_Timer += Time.deltaTime;
-            if (slash_Timer >= 1.0f)
+            attack_Timer += Time.deltaTime;
+            if (attack_Timer >= 1.0f)
                 player.isAttacking = false;
-            if (slash_Timer >= slash_Cooltime)
+            if (attack_Timer >= attack_Cooltime)
             {
-                slashOff = false;
-                slash_Timer = 0;
+                attackOff = false;
+                attack_Timer = 0;
             }
         }
         if (comboContinue)
@@ -87,7 +67,6 @@ public class WarriorSkill : MonoBehaviour
             skill_3_Timer += Time.deltaTime;
             if (skill_3_Timer >= 1.0f)
             {
-                player.isAttacking = false;
                 playerAnim.SetBool("Skill3_2", false);
             }
             if (skill_3_Timer >= skill_3_Cooltime)
@@ -96,14 +75,23 @@ public class WarriorSkill : MonoBehaviour
                 skill_3_Timer = 0;
             }
         }
+        if (skill_4_Off)
+        {
+            skill_4_Timer += Time.deltaTime;
+            if (skill_4_Timer >= skill_4_Cooltime)
+            {
+                skill_4_Off = false;
+                skill_4_Timer = 0;
+            }
+        }
     }
 
     void Skill_Slash()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !slashOff)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
         {
             player.isAttacking = true;
-            slashOff = true;
+            attackOff = true;
             comboContinue = true;
 
             if (comboTimer > 3.0f)
@@ -153,10 +141,19 @@ public class WarriorSkill : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
         {
             skill_3_Off = true;
-            player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             playerAnim.SetTrigger("Skill3_1");
             playerAnim.SetBool("Skill3_2", true);
+        }
+    }
+
+    void Skill_4_play()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        {
+            skill_4_Off = true;
+            //playerAnim.SetBool("Skill2", true);
+            playerAnim.SetTrigger("Skill4");
         }
     }
 
