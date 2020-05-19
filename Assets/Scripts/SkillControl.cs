@@ -24,10 +24,10 @@ public class SkillControl : MonoBehaviour
     public float skill_4_Cost;
 
 
-    bool attackOff;
-    float attack_Timer;
-    bool comboContinue;
-    float comboTimer;
+    public bool attackOff;
+    public float attack_Timer;
+    public bool comboContinue;
+    public float comboTimer;
     public bool skill_1_Off;
     public bool skill_2_Off;
     public bool skill_3_Off;
@@ -55,11 +55,14 @@ public class SkillControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Warrior_Attack();
-        Warrior_Skill1();
-        Warrior_Skill2();
-        Warrior_Skill3();
-        Warrior_Skill4();
+        if (gameObject.CompareTag("Player"))
+        {
+            Warrior_Attack();
+            Warrior_Skill1();
+            Warrior_Skill2();
+            Warrior_Skill3();
+            Warrior_Skill4();
+        }
         if (attackOff)
         {
             attack_Timer += Time.deltaTime;
@@ -128,7 +131,7 @@ public class SkillControl : MonoBehaviour
 
     void Warrior_Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff && player.job == Global.Classes.Warrior)
         {
             player.isAttacking = true;
             attackOff = true;
