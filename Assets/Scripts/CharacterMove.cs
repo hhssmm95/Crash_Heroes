@@ -9,6 +9,8 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
     private Rigidbody myRig;
 
     private Camera mainCamera;
+
+    public Global.Classes job = Global.Classes.Warrior;
     
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
@@ -51,8 +53,47 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         myRig = gameObject.GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         hpBar.SetMaxHealth(maxHP);
-        
-        
+
+        switch (job)
+        {
+            case Global.Classes.Warrior:
+                WarriorSkill warrior = gameObject.GetComponent<WarriorSkill>();
+                warrior.attack_Cooltime = 0.5f;
+                warrior.skill_1_Cooltime = 3.0f;
+                warrior.skill_2_Cooltime = 3.0f;
+                warrior.skill_3_Cooltime = 3.0f;
+                warrior.skill_4_Cooltime = 3.0f;
+                break;
+
+            case Global.Classes.Archer:
+                ArcherSkill archer = gameObject.GetComponent<ArcherSkill>();
+                archer.attack_Cooltime = 0.5f;
+                archer.skill_1_Cooltime = 3.0f;
+                archer.skill_2_Cooltime = 3.0f;
+                archer.skill_3_Cooltime = 3.0f;
+                archer.skill_4_Cooltime = 3.0f;
+                break;
+
+            case Global.Classes.Dragoon:
+                DragoonSkill dragoon = gameObject.GetComponent<DragoonSkill>();
+                dragoon.attack_Cooltime = 0.5f;
+                dragoon.skill_1_Cooltime = 3.0f;
+                dragoon.skill_2_Cooltime = 3.0f;
+                dragoon.skill_3_Cooltime = 3.0f;
+                dragoon.skill_4_Cooltime = 3.0f;
+                break;
+
+            case Global.Classes.Mage:
+                MageSkill mage = gameObject.GetComponent<MageSkill>();
+                mage.attack_Cooltime = 0.5f;
+                mage.skill_1_Cooltime = 3.0f;
+                mage.skill_2_Cooltime = 3.0f;
+                mage.skill_3_Cooltime = 3.0f;
+                mage.skill_4_Cooltime = 3.0f;
+                break;
+        }
+
+
         //myAnim2 = myAnim.layer
         //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
