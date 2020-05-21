@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SkillControl : MonoBehaviour
 {
-    public CharacterMove player;
-    public Animator playerAnim;
-    public Camera mainCamera;
+    CharacterMove player;
+    Animator playerAnim;
+    Camera mainCamera;
 
     public float attack_Cooltime;
     public float attack_Cost;
@@ -41,7 +41,7 @@ public class SkillControl : MonoBehaviour
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
-        
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
     }
 
@@ -57,11 +57,18 @@ public class SkillControl : MonoBehaviour
     {
         if (gameObject.CompareTag("Player"))
         {
-            Warrior_Attack();
-            Warrior_Skill1();
-            Warrior_Skill2();
-            Warrior_Skill3();
-            Warrior_Skill4();
+            if (player.job == Global.Classes.Warrior)
+            {
+                Warrior_Attack();
+                Warrior_Skill1();
+                Warrior_Skill2();
+                Warrior_Skill3();
+                Warrior_Skill4();
+            }
+            if (player.job == Global.Classes.Archer)
+            {
+                Archer_Attack();
+            }
         }
         if (attackOff)
         {
@@ -127,11 +134,23 @@ public class SkillControl : MonoBehaviour
                 skill_4_Timer = 0;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && playerAnim.GetInteger("Combo") == 0)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+                transform.rotation = Quaternion.LookRotation(dir);
+            }
+        }
     }
 
     void Warrior_Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff && player.job == Global.Classes.Warrior)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
         {
             player.isAttacking = true;
             attackOff = true;
@@ -159,48 +178,60 @@ public class SkillControl : MonoBehaviour
 
     void Warrior_Skill1()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off && player.job == Global.Classes.Warrior)
+        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
         {
-            skill_1_Off = true;
-            player.mp -= 30;
-            StartCoroutine("Warrior_Skill1_Play");
+            if (player.mp >= skill_1_Cost)
+            {
+                skill_1_Off = true;
+                player.mp -= skill_1_Cost;
+                StartCoroutine("Warrior_Skill1_Play");
+            }
         }
 
     }
 
     void Warrior_Skill2()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off && player.job == Global.Classes.Warrior)
+        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
         {
-            skill_2_Off = true;
-            player.mp -= 30;
-            player.isAttacking = true;
-            //playerAnim.SetBool("Skill2", true);
-            playerAnim.SetTrigger("Skill2_1");
-            playerAnim.SetBool("Skill2_2", true);
+            if (player.mp >= skill_2_Cost)
+            {
+                skill_2_Off = true;
+                player.mp -= skill_2_Cost;
+                player.isAttacking = true;
+                //playerAnim.SetBool("Skill2", true);
+                playerAnim.SetTrigger("Skill2_1");
+                playerAnim.SetBool("Skill2_2", true);
+            }
         }
     }
 
     void Warrior_Skill3()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off && player.job == Global.Classes.Warrior)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
         {
-            skill_3_Off = true;
-            player.mp -= 30;
-            //playerAnim.SetBool("Skill2", true);
-            playerAnim.SetTrigger("Skill3_1");
-            playerAnim.SetBool("Skill3_2", true);
+            if (player.mp >= skill_3_Cost)
+            {
+                skill_3_Off = true;
+                player.mp -= skill_3_Cost;
+                //playerAnim.SetBool("Skill2", true);
+                playerAnim.SetTrigger("Skill3_1");
+                playerAnim.SetBool("Skill3_2", true);
+            }
         }
     }
 
     void Warrior_Skill4()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off && player.job == Global.Classes.Warrior)
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
         {
-            skill_4_Off = true;
-            player.mp -= 30;
-            //playerAnim.SetBool("Skill2", true);
-            playerAnim.SetTrigger("Skill4");
+            if (player.mp >= skill_4_Cost)
+            {
+                skill_4_Off = true;
+                player.mp -= skill_4_Cost;
+                //playerAnim.SetBool("Skill2", true);
+                playerAnim.SetTrigger("Skill4");
+            }
         }
     }
 
@@ -212,5 +243,32 @@ public class SkillControl : MonoBehaviour
         playerAnim.SetTrigger("Dash");
         yield return new WaitForSeconds(0.1f);
         playerAnim.SetTrigger("ThirdAttack");
+    }
+
+    void Archer_Attack()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+        {
+            player.isAttacking = true;
+            attackOff = true;
+            comboContinue = true;
+
+            if (comboTimer > 3.0f)
+            {
+                playerAnim.SetInteger("Combo", 0);
+                comboContinue = false;
+            }
+            comboTimer = 0;
+
+            if (playerAnim.GetInteger("Combo") == 0)
+                playerAnim.SetTrigger("FirstAttack");
+            else if (playerAnim.GetInteger("Combo") == 1)
+                playerAnim.SetTrigger("SecondAttack");
+            else if (playerAnim.GetInteger("Combo") == 2)
+                playerAnim.SetTrigger("ThirdAttack");
+
+
+
+        }
     }
 }

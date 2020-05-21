@@ -188,7 +188,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 
 
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
-                || Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1))
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -199,8 +199,9 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                     transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
-
             
+
+
 
 
             if (isDashing)
