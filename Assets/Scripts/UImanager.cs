@@ -8,10 +8,12 @@ public class UImanager : MonoBehaviour
 
     CharacterMove player;
 
-    Image coolTime_1;
-    Image coolTime_2;
-    Image coolTime_3;
-    Image coolTime_4;
+    Image slot1;
+    Image slot2;
+    Image slot3;
+    Image slot4;
+    Image slot5;
+
     Image hpOrb;
     Image mpOrb;
     SkillControl skill;
@@ -70,13 +72,34 @@ public class UImanager : MonoBehaviour
 
         skill = player.GetComponent<SkillControl>();
         //warrior = GameObject.Find("M05").GetComponent<WarriorSkill>();
-        coolTime_1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
-        coolTime_2 = GameObject.FindWithTag("CoolTime_Slot_2").GetComponent<Image>();
-        coolTime_3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
-        coolTime_4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
+        slot1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
+        slot2 = GameObject.FindWithTag("CoolTime_Slot_2").GetComponent<Image>();
+        slot3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
+        slot4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
+        slot5 = GameObject.FindWithTag("CoolTime_Slot_5").GetComponent<Image>();
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         hpOrb = GameObject.FindWithTag("hpOrb").GetComponent<Image>();
         mpOrb = GameObject.FindWithTag("mpOrb").GetComponent<Image>();
+
+        switch(player.job)
+        {
+            case Global.Classes.Warrior:
+                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_02", typeof(Sprite)) as Sprite;
+                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_21", typeof(Sprite)) as Sprite;
+                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_19", typeof(Sprite)) as Sprite;
+                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_44", typeof(Sprite)) as Sprite;
+                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_15", typeof(Sprite)) as Sprite;
+                break;
+
+            case Global.Classes.Archer:
+                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_33", typeof(Sprite)) as Sprite;
+                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_02", typeof(Sprite)) as Sprite;
+                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_05", typeof(Sprite)) as Sprite;
+                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_03", typeof(Sprite)) as Sprite;
+                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_19", typeof(Sprite)) as Sprite;
+                break;
+
+        }
     }
     
     void hpControl()
@@ -104,41 +127,51 @@ public class UImanager : MonoBehaviour
         if (skill.skill_1_Off == true)
         {
             float percent = skill.skill_1_Timer / skill.skill_1_Cooltime;
-            coolTime_1.fillAmount = percent;
+            slot1.fillAmount = percent;
         }
         else
         {
-            coolTime_1.fillAmount = 1f;
+            slot1.fillAmount = 1f;
         }
 
         if (skill.skill_2_Off == true)
         {
             float percent = skill.skill_2_Timer / skill.skill_2_Cooltime;
-            coolTime_2.fillAmount = percent;
+            slot2.fillAmount = percent;
         }
         else
         {
-            coolTime_2.fillAmount = 1f;
+            slot2.fillAmount = 1f;
         }
 
         if (skill.skill_3_Off == true)
         {
             float percent = skill.skill_3_Timer / skill.skill_3_Cooltime;
-            coolTime_3.fillAmount = percent;
+            slot3.fillAmount = percent;
         }
         else
         {
-            coolTime_3.fillAmount = 1f;
+            slot3.fillAmount = 1f;
         }
 
         if (skill.skill_4_Off == true)
         {
             float percent = skill.skill_4_Timer / skill.skill_4_Cooltime;
-            coolTime_4.fillAmount = percent;
+            slot4.fillAmount = percent;
         }
         else
         {
-            coolTime_4.fillAmount = 1f;
+            slot4.fillAmount = 1f;
+        }
+
+        if (skill.skill_5_Off == true)
+        {
+            float percent = skill.skill_5_Timer / skill.skill_5_Cooltime;
+            slot5.fillAmount = percent;
+        }
+        else
+        {
+            slot5.fillAmount = 1f;
         }
 
         hpControl();

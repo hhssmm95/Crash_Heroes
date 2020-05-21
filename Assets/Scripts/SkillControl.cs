@@ -23,6 +23,9 @@ public class SkillControl : MonoBehaviour
     public float skill_4_Cooltime;
     public float skill_4_Cost;
 
+    public float skill_5_Cooltime;
+    public float skill_5_Cost;
+
 
     public bool attackOff;
     public float attack_Timer;
@@ -32,10 +35,12 @@ public class SkillControl : MonoBehaviour
     public bool skill_2_Off;
     public bool skill_3_Off;
     public bool skill_4_Off;
+    public bool skill_5_Off;
     public float skill_1_Timer;
     public float skill_2_Timer;
     public float skill_3_Timer;
     public float skill_4_Timer;
+    public float skill_5_Timer;
 
     void Start()
     {
