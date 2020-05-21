@@ -162,6 +162,7 @@ public class SkillControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off && player.job == Global.Classes.Warrior)
         {
             skill_1_Off = true;
+            player.mp -= 30;
             StartCoroutine("Warrior_Skill1_Play");
         }
 
@@ -172,6 +173,7 @@ public class SkillControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off && player.job == Global.Classes.Warrior)
         {
             skill_2_Off = true;
+            player.mp -= 30;
             player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             playerAnim.SetTrigger("Skill2_1");
@@ -184,6 +186,7 @@ public class SkillControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off && player.job == Global.Classes.Warrior)
         {
             skill_3_Off = true;
+            player.mp -= 30;
             //playerAnim.SetBool("Skill2", true);
             playerAnim.SetTrigger("Skill3_1");
             playerAnim.SetBool("Skill3_2", true);
@@ -195,6 +198,7 @@ public class SkillControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off && player.job == Global.Classes.Warrior)
         {
             skill_4_Off = true;
+            player.mp -= 30;
             //playerAnim.SetBool("Skill2", true);
             playerAnim.SetTrigger("Skill4");
         }

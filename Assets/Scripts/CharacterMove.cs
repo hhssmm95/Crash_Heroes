@@ -118,6 +118,9 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         dying = false;
         if (gameObject.CompareTag("Player"))
             hpBar.gameObject.SetActive(false);
+
+        hp = maxHP;
+        mp = maxMP;
     }
     void Move()
     {
