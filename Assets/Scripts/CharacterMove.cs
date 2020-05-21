@@ -63,7 +63,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 maxMP = 263;
                 atk = 64;
                 def = 39;
-                skill.attack_Cooltime = 0.5f;
+                skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
                 skill.skill_2_Cooltime = 3.0f;
                 skill.skill_3_Cooltime = 3.0f;
@@ -118,6 +118,9 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
         dying = false;
         if (gameObject.CompareTag("Player"))
             hpBar.gameObject.SetActive(false);
+
+        hp = maxHP;
+        mp = maxMP;
     }
     void Move()
     {
@@ -185,7 +188,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 
 
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
-                || Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
+                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1))
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -196,8 +199,9 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                     transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
-
             
+
+
 
 
             if (isDashing)

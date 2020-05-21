@@ -12,7 +12,8 @@ public class UImanager : MonoBehaviour
     Image coolTime_2;
     Image coolTime_3;
     Image coolTime_4;
-
+    Image hpOrb;
+    Image mpOrb;
     SkillControl skill;
     //ClassParent characterClass;
 
@@ -74,8 +75,20 @@ public class UImanager : MonoBehaviour
         coolTime_3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
         coolTime_4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
+        hpOrb = GameObject.FindWithTag("hpOrb").GetComponent<Image>();
+        mpOrb = GameObject.FindWithTag("mpOrb").GetComponent<Image>();
     }
     
+    void hpControl()
+    {
+        float percent = player.hp / player.maxHP;
+        hpOrb.fillAmount = percent;
+    }
+    void mpControl()
+    {
+        float percent = player.mp / player.maxMP;
+        mpOrb.fillAmount = percent;
+    }
 
     private void Update()
     {
@@ -127,5 +140,8 @@ public class UImanager : MonoBehaviour
         {
             coolTime_4.fillAmount = 1f;
         }
+
+        hpControl();
+        mpControl();
     }
 }
