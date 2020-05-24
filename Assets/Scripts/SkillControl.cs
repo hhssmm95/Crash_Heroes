@@ -143,7 +143,7 @@ public class SkillControl : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && playerAnim.GetInteger("Combo") == 0)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && playerAnim.GetInteger("Combo") == 0 && gameObject.tag == "Player")
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

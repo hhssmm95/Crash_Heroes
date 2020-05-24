@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class ShotSlash : StateMachineBehaviour
 {
-    public GameObject VFX;
+    public ParticleSystem VFX;
     public Transform shotPos;
+    public Transform player;
+    bool trigger;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        shotPos = GameObject.FindGameObjectWithTag("WarriorSword").transform;
-        Instantiate(VFX, shotPos.transform.position, new Quaternion(1,1,1,1));
+        trigger = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (stateInfo.normalizedTime >= 0.2f && !trigger)
+        {
+            trigger = true;
+            shotPos = GameObject.FindGameObjectWithTag("WarriorSkill3Pos").transform;
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+            Vector3 dir = player.transform.forward;
+            Instantiate(VFX, new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation);
+        }
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

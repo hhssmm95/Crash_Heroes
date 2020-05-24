@@ -11,8 +11,8 @@ public class SlashVFX : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         dir = player.transform.forward;
-        Destroy(gameObject, 3);
-        transform.rotation = Quaternion.LookRotation(dir);
+        //Destroy(gameObject, 3);
+        //transform.rotation = Quaternion.LookRotation(dir);
     }
 
     // Update is called once per frame
@@ -20,12 +20,14 @@ public class SlashVFX : MonoBehaviour
     {
         transform.position += dir * speed * Time.deltaTime;
     }
+    
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<CharacterMove>().OnDamage(5);
+            var enemy = other.GetComponent<CharacterMove>();
+            enemy.OnDamage(10);
         }
     }
 }

@@ -10,7 +10,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
 
     private Camera mainCamera;
 
-    public Global.Classes job = Global.Classes.Archer;
+    public Global.Classes job = Global.Classes.Warrior;//Archer;
     
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
@@ -64,7 +64,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 maxMP = 263;
                 atk = 64;
                 def = 39;
-                skill.attack_Cooltime = 0.7f;
+                skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
                 skill.skill_2_Cooltime = 3.0f;
                 skill.skill_3_Cooltime = 3.0f;

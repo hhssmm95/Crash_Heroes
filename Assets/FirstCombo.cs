@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class FirstCombo : StateMachineBehaviour
 {
+    bool trigger;
      //OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //animator.SetBool("isInCombo", true);
+        trigger = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (stateInfo.normalizedTime >= 0.6f)
+        if (stateInfo.normalizedTime >= 0.2f && !trigger)
+        {
+            trigger = true;
             animator.SetInteger("Combo", 1);
+        }
     }
 
      //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
