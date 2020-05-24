@@ -287,7 +287,7 @@ public class SkillControl : MonoBehaviour
             {
                 skill_1_Off = true;
                 player.mp -= skill_1_Cost;
-                player.isAttacking = true;
+                //player.isAttacking = true;
                 //playerAnim.SetBool("Skill2", true);
                 playerAnim.SetTrigger("Skill1");
                 Vector3 dir = player.transform.forward;
