@@ -42,12 +42,14 @@ public class SkillControl : MonoBehaviour
     public float skill_4_Timer;
     public float skill_5_Timer;
 
+    public ParticleSystem ArcherVX1;
+    public GameObject ArcherSkill1Pos;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
+        //ArcherVX1 = GameObject.FindGameObjectWithTag("ArcherVX1").GetComponent<ParticleSystem>();
     }
 
     //public void Init(float attack_cool, float attack_cost, float skill_1_cool, float skill_1_cost, float skill_2_cool, float skill_2_cost,
@@ -73,6 +75,7 @@ public class SkillControl : MonoBehaviour
             if (player.job == Global.Classes.Archer)
             {
                 Archer_Attack();
+                Archer_Skill1();
             }
         }
         if (attackOff)
@@ -274,6 +277,24 @@ public class SkillControl : MonoBehaviour
 
 
 
+        }
+    }
+    void Archer_Skill1()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+        {
+            if (player.mp >= skill_1_Cost)
+            {
+                skill_1_Off = true;
+                player.mp -= skill_1_Cost;
+                player.isAttacking = true;
+                //playerAnim.SetBool("Skill2", true);
+                playerAnim.SetTrigger("Skill1");
+                Vector3 dir = player.transform.forward;
+                
+                //transform.rotation = Quaternion.LookRotation(dir);
+                Instantiate(ArcherVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir)*ArcherVX1.transform.rotation);
+            }
         }
     }
 }

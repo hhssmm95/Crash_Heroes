@@ -77,7 +77,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
                 maxMP = 280;
                 atk = 61;
                 def = 32;
-                skill.attack_Cooltime = 0.7f;
+                skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
                 skill.skill_2_Cooltime = 3.0f;
                 skill.skill_3_Cooltime = 3.0f;
@@ -273,6 +273,7 @@ public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들
             myAnim.SetTrigger("Dash");
         }
     }
+    
 
     public void OnDamage(float damage)
     {
