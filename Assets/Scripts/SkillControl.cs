@@ -44,6 +44,11 @@ public class SkillControl : MonoBehaviour
 
     public ParticleSystem ArcherVX1;
     public GameObject ArcherSkill1Pos;
+    public ParticleSystem WarriorVX1_1;
+    public ParticleSystem WarriorVX1_2;
+    public GameObject WarriorAttack2Pos;
+    public ParticleSystem WarriorVX1_3;
+
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -171,14 +176,28 @@ public class SkillControl : MonoBehaviour
             }
             comboTimer = 0;
 
+            Vector3 dir = player.transform.forward;
             if (playerAnim.GetInteger("Combo") == 0)
+            {
                 playerAnim.SetTrigger("FirstAttack");
+                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.35f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+
+            }
             else if (playerAnim.GetInteger("Combo") == 1)
+            {
                 playerAnim.SetTrigger("SecondAttack");
+                Instantiate(WarriorVX1_2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
+
+            }
             else if (playerAnim.GetInteger("Combo") == 2)
+            {
                 playerAnim.SetTrigger("ThirdAttack");
+                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+
+            }
 
 
+            //transform.rotation = Quaternion.LookRotation(dir);
 
         }
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
