@@ -180,7 +180,7 @@ public class SkillControl : MonoBehaviour
             if (playerAnim.GetInteger("Combo") == 0)
             {
                 playerAnim.SetTrigger("FirstAttack");
-                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.35f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
 
             }
             else if (playerAnim.GetInteger("Combo") == 1)
@@ -192,10 +192,10 @@ public class SkillControl : MonoBehaviour
             else if (playerAnim.GetInteger("Combo") == 2)
             {
                 playerAnim.SetTrigger("ThirdAttack");
-                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
 
             }
-
+            
 
             //transform.rotation = Quaternion.LookRotation(dir);
 
@@ -258,6 +258,7 @@ public class SkillControl : MonoBehaviour
                 player.mp -= skill_4_Cost;
                 //playerAnim.SetBool("Skill2", true);
                 playerAnim.SetTrigger("Skill4");
+               
             }
         }
     }
@@ -270,6 +271,9 @@ public class SkillControl : MonoBehaviour
         playerAnim.SetTrigger("Dash");
         yield return new WaitForSeconds(0.1f);
         playerAnim.SetTrigger("ThirdAttack");
+        Vector3 dir = player.transform.forward;
+        Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+
     }
 
     void Archer_Attack()
