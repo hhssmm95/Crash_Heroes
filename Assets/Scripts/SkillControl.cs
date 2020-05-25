@@ -42,15 +42,18 @@ public class SkillControl : MonoBehaviour
     public float skill_4_Timer;
     public float skill_5_Timer;
 
-    public ParticleSystem ArcherVX1;
+    public ParticleSystem ArcherVX1; //스킬1
     public GameObject ArcherSkill1Pos;
     public ParticleSystem WarriorVX1_1;
     public ParticleSystem WarriorVX1_2;
     public GameObject WarriorAttack2Pos;
+    public GameObject ArcherAttack2Pos;
     public ParticleSystem WarriorVX1_3;
     public ParticleSystem WarriorVX2_1;
     public ParticleSystem WarriorVX2_2;
     public GameObject ArcherArrow;
+    public ParticleSystem ArcherVX2_1; //평타1
+    public ParticleSystem ArcherVX2_2; //평타2
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -83,6 +86,7 @@ public class SkillControl : MonoBehaviour
             {
                 Archer_Attack();
                 Archer_Skill1();
+                Archer_Skill2();
             }
         }
         if (attackOff)
@@ -308,9 +312,16 @@ public class SkillControl : MonoBehaviour
             Vector3 dir = transform.forward;
 
             if (playerAnim.GetInteger("Combo") == 0)
+            {
                 playerAnim.SetTrigger("FirstAttack");
+                Instantiate(ArcherVX2_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
+
+            }
             else if (playerAnim.GetInteger("Combo") == 1)
+            {
                 playerAnim.SetTrigger("SecondAttack");
+                Instantiate(ArcherVX2_2, ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
+            }
             else if (playerAnim.GetInteger("Combo") == 2)
             {
                 playerAnim.SetTrigger("ThirdAttack");
@@ -336,6 +347,28 @@ public class SkillControl : MonoBehaviour
                 
                 //transform.rotation = Quaternion.LookRotation(dir);
                 Instantiate(ArcherVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir)*ArcherVX1.transform.rotation);
+            }
+        }
+    }
+
+    void Archer_Skill2()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        {
+            if (player.mp >= skill_2_Cost)
+            {
+                skill_2_Off = true;
+                player.mp -= skill_2_Cost;
+                playerAnim.SetTrigger("Skill2");
+                Vector3 dir = transform.forward;
+
+                //transform.rotation = Quaternion.LookRotation(dir);
+                Quaternion rot1 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, -5.0f));
+                Quaternion rot2 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, 5.0f));
+                Instantiate(ArcherArrow, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+                Instantiate(ArcherArrow, new Vector3(transform.position.x+0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
+                Instantiate(ArcherArrow, new Vector3(transform.position.x-0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
+
             }
         }
     }

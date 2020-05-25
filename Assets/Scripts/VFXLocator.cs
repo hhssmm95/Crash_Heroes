@@ -9,7 +9,11 @@ public class VFXLocator : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
+        var status = player.GetComponent<CharacterMove>();
+        if(status.job == Global.Classes.Warrior)
+            atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
+        else if(status.job == Global.Classes.Archer)
+            atk2Pos = GameObject.FindGameObjectWithTag("ArcherAttack2Pos").GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -34,4 +38,6 @@ public class VFXLocator : MonoBehaviour
             transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.656f, player.transform.position.z+0.1f);
 
     }
+
+    
 }
