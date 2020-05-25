@@ -60,8 +60,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < CellBtn.Length; i++)
         {
             CellBtn[i].interactable = (multiple + i < myList.Count) ? true : false;
-            CellBtn[i].transform.GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
-            CellBtn[i].transform.GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
+            CellBtn[i].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
+            CellBtn[i].transform.GetChild(0).GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
         }
     }
 
@@ -83,17 +83,33 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 
     #region 서버연결
-    void Awake() => Screen.SetResolution(960, 540, false);
+    void Awake()
+    {
+        //PhotonNetwork.AutomaticallySyncScene = true;
+        Screen.SetResolution(960, 540, false);
+    }
 
+    //public void OnEnable()
+    //{
+    //    PhotonNetwork.AutomaticallySyncScene = true;
+    //    Connect();
+    //}
     void Update()
     {
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
         LobbyInfoText.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + "로비 / " + PhotonNetwork.CountOfPlayers + "접속";
     }
 
-    public void Connect() => PhotonNetwork.ConnectUsingSettings();
+    public void Connect()
+    {
+        PhotonNetwork.GameVersion = "0.0.0";
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
-    public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
 
     public override void OnJoinedLobby()
     {
@@ -104,7 +120,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         myList.Clear();
     }
 
-    public void Disconnect() => PhotonNetwork.Disconnect();
+    public void Disconnect()
+    {
+        PhotonNetwork.Disconnect();
+    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -115,11 +134,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 
     #region 방
-    public void CreateRoom() => PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 100) : RoomInput.text, new RoomOptions { MaxPlayers = 2 });
+    public void CreateRoom()
+    {
+        PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 100) : RoomInput.text, new RoomOptions { MaxPlayers = 4 });
+    }
+    public void JoinRandomRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
 
-    public void JoinRandomRoom() => PhotonNetwork.JoinRandomRoom();
-
-    public void LeaveRoom() => PhotonNetwork.LeaveRoom();
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
 
     public override void OnJoinedRoom()
     {
@@ -129,9 +156,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < ChatText.Length; i++) ChatText[i].text = "";
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message) { RoomInput.text = ""; CreateRoom(); }
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        RoomInput.text = ""; CreateRoom(); 
+    }
 
-    public override void OnJoinRandomFailed(short returnCode, string message) { RoomInput.text = ""; CreateRoom(); }
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        RoomInput.text = ""; CreateRoom();
+    }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -150,7 +183,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ListText.text = "";
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
             ListText.text += PhotonNetwork.PlayerList[i].NickName + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
-        RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + PhotonNetwork.CurrentRoom.MaxPlayers + "최대";
+        RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
+    }
+
+    void StartGame()
+    {
+        PhotonNetwork.LoadLevel(1);
     }
     #endregion
 
