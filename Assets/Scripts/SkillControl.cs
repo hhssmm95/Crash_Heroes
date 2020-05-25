@@ -50,7 +50,7 @@ public class SkillControl : MonoBehaviour
     public ParticleSystem WarriorVX1_3;
     public ParticleSystem WarriorVX2_1;
     public ParticleSystem WarriorVX2_2;
-
+    public GameObject ArcherArrow;
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
@@ -305,12 +305,17 @@ public class SkillControl : MonoBehaviour
             }
             comboTimer = 0;
 
+            Vector3 dir = transform.forward;
+
             if (playerAnim.GetInteger("Combo") == 0)
                 playerAnim.SetTrigger("FirstAttack");
             else if (playerAnim.GetInteger("Combo") == 1)
                 playerAnim.SetTrigger("SecondAttack");
             else if (playerAnim.GetInteger("Combo") == 2)
+            {
                 playerAnim.SetTrigger("ThirdAttack");
+                Instantiate(ArcherArrow, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+            }
 
 
 
