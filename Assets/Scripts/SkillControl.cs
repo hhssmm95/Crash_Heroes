@@ -48,6 +48,8 @@ public class SkillControl : MonoBehaviour
     public ParticleSystem WarriorVX1_2;
     public GameObject WarriorAttack2Pos;
     public ParticleSystem WarriorVX1_3;
+    public ParticleSystem WarriorVX2_1;
+    public ParticleSystem WarriorVX2_2;
 
     void Start()
     {
@@ -180,7 +182,7 @@ public class SkillControl : MonoBehaviour
             if (playerAnim.GetInteger("Combo") == 0)
             {
                 playerAnim.SetTrigger("FirstAttack");
-                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.35f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
 
             }
             else if (playerAnim.GetInteger("Combo") == 1)
@@ -192,10 +194,10 @@ public class SkillControl : MonoBehaviour
             else if (playerAnim.GetInteger("Combo") == 2)
             {
                 playerAnim.SetTrigger("ThirdAttack");
-                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
 
             }
-
+            
 
             //transform.rotation = Quaternion.LookRotation(dir);
 
@@ -229,6 +231,7 @@ public class SkillControl : MonoBehaviour
                 //playerAnim.SetBool("Skill2", true);
                 playerAnim.SetTrigger("Skill2_1");
                 playerAnim.SetBool("Skill2_2", true);
+                StartCoroutine("Warrior_Skill2_VFX");
             }
         }
     }
@@ -258,6 +261,7 @@ public class SkillControl : MonoBehaviour
                 player.mp -= skill_4_Cost;
                 //playerAnim.SetBool("Skill2", true);
                 playerAnim.SetTrigger("Skill4");
+               
             }
         }
     }
@@ -270,6 +274,20 @@ public class SkillControl : MonoBehaviour
         playerAnim.SetTrigger("Dash");
         yield return new WaitForSeconds(0.1f);
         playerAnim.SetTrigger("ThirdAttack");
+        Vector3 dir = player.transform.forward;
+        Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+
+    }
+
+    IEnumerator Warrior_Skill2_VFX()
+    {
+        Vector3 dir = transform.forward;
+        Instantiate(WarriorVX2_1, new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z+0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
+
+        yield return new WaitForSeconds(0.2f);
+
+        Instantiate(WarriorVX2_2, new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z+0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
+
     }
 
     void Archer_Attack()
