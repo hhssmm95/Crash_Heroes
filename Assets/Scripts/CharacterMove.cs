@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class CharacterMove : MonoBehaviour //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
+using Photon.Pun;
+public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     public HealthBar hpBar;
     private Animator myAnim;
