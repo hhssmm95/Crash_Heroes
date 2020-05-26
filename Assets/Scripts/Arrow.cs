@@ -8,7 +8,8 @@ public class Arrow : MonoBehaviour
 
     void Start()
     {
-        
+        if (gameObject.tag == "BigArrow")
+            speed *= 2;
     }
 
     // Update is called once per frame
@@ -22,7 +23,10 @@ public class Arrow : MonoBehaviour
         if(other.CompareTag("Enemy"))
         {
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.OnDamage(10);
+            if (gameObject.tag == "BigArrow")
+                enemy.OnDamage(30);
+            else
+                enemy.OnDamage(10);
             Destroy(gameObject);
         }
         else if(!other.CompareTag("Player"))

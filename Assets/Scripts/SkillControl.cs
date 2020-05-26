@@ -52,6 +52,7 @@ public class SkillControl : MonoBehaviour
     public ParticleSystem WarriorVX2_1;
     public ParticleSystem WarriorVX2_2;
     public GameObject ArcherArrow;
+    public GameObject BigArrow;
     public ParticleSystem ArcherVX2_1; //평타1
     public ParticleSystem ArcherVX2_2; //평타2
     void Start()
@@ -87,6 +88,8 @@ public class SkillControl : MonoBehaviour
                 Archer_Attack();
                 Archer_Skill1();
                 Archer_Skill2();
+                Archer_Skill3();
+                Archer_Skill4();
             }
         }
         if (attackOff)
@@ -123,7 +126,8 @@ public class SkillControl : MonoBehaviour
             if (skill_2_Timer >= 1.0f)
             {
                 player.isAttacking = false;
-                playerAnim.SetBool("Skill2_2", false);
+                if(player.job == Global.Classes.Warrior)
+                    playerAnim.SetBool("Skill2_2", false);
             }
             if (skill_2_Timer >= skill_2_Cooltime)
             {
@@ -294,6 +298,7 @@ public class SkillControl : MonoBehaviour
 
     }
 
+
     void Archer_Attack()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
@@ -371,5 +376,53 @@ public class SkillControl : MonoBehaviour
 
             }
         }
+    }
+
+    void Archer_Skill3()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+        {
+            if (player.mp >= skill_3_Cost)
+            {
+                skill_3_Off = true;
+                player.mp -= skill_3_Cost;
+                playerAnim.SetTrigger("Skill3");
+                StartCoroutine("Archer_Skill3_Delay");
+            }
+        }
+    }
+
+    void Archer_Skill4()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        {
+            if (player.mp >= skill_4_Cost)
+            {
+                skill_4_Off = true;
+                player.mp -= skill_4_Cost;
+                playerAnim.SetTrigger("Skill4");
+                StartCoroutine("Archer_Skill4_Effect");
+                
+            }
+        }
+    }
+
+
+    IEnumerator Archer_Skill3_Delay()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Vector3 dir = transform.forward;
+
+        //transform.rotation = Quaternion.LookRotation(dir);
+        Instantiate(BigArrow, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
+
+    }
+
+    IEnumerator Archer_Skill4_Effect()
+    {
+        float originSpeed = player.speed;
+        player.speed *= 1.5f;
+        yield return new WaitForSecondsRealtime(10.0f);
+        player.speed = originSpeed;
     }
 }

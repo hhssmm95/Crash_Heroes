@@ -11,7 +11,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
 
     private Camera mainCamera;
 
-    public Global.Classes job = Global.Classes.Archer;
+    public Global.Classes job = Global.Classes.Warrior;
     
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
@@ -26,6 +26,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
     public int potion;
     public bool isDamaging;
     public bool isDashing;
+    float mpTimer;
     float damageTimer;
     //public GameObject Fireball;
     //public GameObject SkillSpot;
@@ -67,10 +68,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 def = 39;
                 skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
+                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
+                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
+                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
-                
+                skill.skill_4_Cost = 30;
+
                 break;
 
             case Global.Classes.Archer:
@@ -80,9 +85,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 def = 32;
                 skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
+                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
+                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
+                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
+                skill.skill_4_Cost = 30;
 
                 break;
 
@@ -218,6 +227,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                     dashTimer = 0;
                 }
             }
+                
+            if (mp / maxMP < 1)
+            {
+                mpTimer += Time.deltaTime;
+
+                if (mpTimer >= 0.2f)
+                {
+                    mpTimer = 0;
+                    mp += 1;
+                }
+            }
+            
+            
             //if(isDashing && dashTimer >= 0.5f)
             //{
             //    isDashing = false;
@@ -242,6 +264,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
 
         }
     }
+
+    //private void FixedUpdate()
+    //{
+    //    if (mp / maxMP < 1)
+    //    {
+    //        mp += 1;
+    //    }
+    //}
 
     void Jump()
     {
