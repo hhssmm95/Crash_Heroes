@@ -10,8 +10,6 @@ public class Sword : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMove>();
-        
-        
     }
 
     // Update is called once per frame

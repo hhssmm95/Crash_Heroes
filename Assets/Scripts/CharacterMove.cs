@@ -11,7 +11,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
 
     private Camera mainCamera;
 
-    public Global.Classes job = Global.Classes.Warrior;
+    public Global.Classes job;
     
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
@@ -100,11 +100,15 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 maxMP = 274;
                 atk = 66;
                 def = 36;
-                skill.attack_Cooltime = 0.5f;
+                skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
+                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
+                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
+                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
+                skill.skill_4_Cost = 30;
 
                 break;
 
@@ -317,6 +321,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
             hp -= damage;
             hpBar.SetHealth(hp);
         }
+    }
+
+    public void OnSlow(float rate, float time)
+    {
+        StartCoroutine(Slow(rate, time));
+    }
+
+    IEnumerator Slow(float rate, float time)
+    {
+        float originSpeed = speed;
+        speed *= rate;
+        yield return new WaitForSeconds(time);
+        speed = originSpeed;
     }
 
     //IEnumerator Dash()
