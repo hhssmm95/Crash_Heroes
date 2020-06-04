@@ -11,7 +11,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
 
     private Camera mainCamera;
 
-    public Global.Classes job;
+    public Global.Classes job = Global.Classes.Warrior;//Archer;
     
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
@@ -26,7 +26,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
     public int potion;
     public bool isDamaging;
     public bool isDashing;
-    float mpTimer;
     float damageTimer;
     //public GameObject Fireball;
     //public GameObject SkillSpot;
@@ -68,14 +67,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 def = 39;
                 skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
-
+                
                 break;
 
             case Global.Classes.Archer:
@@ -85,13 +80,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 def = 32;
                 skill.attack_Cooltime = 1.0f;
                 skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
 
                 break;
 
@@ -100,15 +91,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 maxMP = 274;
                 atk = 66;
                 def = 36;
-                skill.attack_Cooltime = 1.0f;
+                skill.attack_Cooltime = 0.5f;
                 skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
                 skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
                 skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
                 skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
 
                 break;
 
@@ -175,6 +162,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
     // Update is called once per frame
     void Update()
     {
+        if (photonView.IsMine)
+        {
         isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
         if (isDamaging)
         {
@@ -185,97 +174,76 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
                 damageTimer = 0;
             }
         }
-        if (gameObject.CompareTag("Player"))
-        {
-            if (!isDead && !isDashing) //사망처리중일 시 이동 불가
+            if (gameObject.CompareTag("Player"))
             {
-
-                Move();
-                Jump();
-                Dash();
-                //Skill_1();
-            }
-            else
-            {
-                //if (!dying)
-                //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
-            }
-            
-
-
-            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
-                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                if (!isDead && !isDashing) //사망처리중일 시 이동 불가
                 {
-                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    transform.rotation = Quaternion.LookRotation(dir);
+
+                    Move();
+                    Jump();
+                    Dash();
+                    //Skill_1();
                 }
-            }
-            
-
-
-
-
-            if (isDashing)
-            {
-                transform.position += transform.forward * (speed * 3) * Time.deltaTime;
-                dashTimer += Time.deltaTime;
-
-                if (dashTimer >= 0.5f)
+                else
                 {
-                    isDashing = false;
-                    dashTimer = 0;
+                    //if (!dying)
+                    //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
                 }
-            }
-                
-            if (mp / maxMP < 1)
-            {
-                mpTimer += Time.deltaTime;
 
-                if (mpTimer >= 0.2f)
+
+
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
+                    /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1))
                 {
-                    mpTimer = 0;
-                    mp += 1;
+                    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                    {
+                        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+                        transform.rotation = Quaternion.LookRotation(dir);
+                    }
                 }
+
+
+
+
+
+                if (isDashing)
+                {
+                    transform.position += transform.forward * (speed * 3) * Time.deltaTime;
+                    dashTimer += Time.deltaTime;
+
+                    if (dashTimer >= 0.5f)
+                    {
+                        isDashing = false;
+                        dashTimer = 0;
+                    }
+                }
+                //if(isDashing && dashTimer >= 0.5f)
+                //{
+                //    isDashing = false;
+                //    dashTimer = 0;
+                //}
+
+
+
+                //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+
+                //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
+                //if(aniinfo.IsName("Dash"))
+                //anitime = aniinfo.normalizedTime;
+                //else
+                ////    aniinfo = 0;
+                //if (isDashing && anitime < 1.0f)
+                //{
+                //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
+                //}
+                //if(isDashing && !aniinfo.IsName("Dash"))
+                //    isDashing = false;
             }
-            
-            
-            //if(isDashing && dashTimer >= 0.5f)
-            //{
-            //    isDashing = false;
-            //    dashTimer = 0;
-            //}
-
-
-
-            //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
-
-            //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
-            //if(aniinfo.IsName("Dash"))
-            //anitime = aniinfo.normalizedTime;
-            //else
-            ////    aniinfo = 0;
-            //if (isDashing && anitime < 1.0f)
-            //{
-            //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
-            //}
-            //if(isDashing && !aniinfo.IsName("Dash"))
-            //    isDashing = false;
-
         }
     }
-
-    //private void FixedUpdate()
-    //{
-    //    if (mp / maxMP < 1)
-    //    {
-    //        mp += 1;
-    //    }
-    //}
 
     void Jump()
     {
@@ -321,19 +289,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
             hp -= damage;
             hpBar.SetHealth(hp);
         }
-    }
-
-    public void OnSlow(float rate, float time)
-    {
-        StartCoroutine(Slow(rate, time));
-    }
-
-    IEnumerator Slow(float rate, float time)
-    {
-        float originSpeed = speed;
-        speed *= rate;
-        yield return new WaitForSeconds(time);
-        speed = originSpeed;
     }
 
     //IEnumerator Dash()

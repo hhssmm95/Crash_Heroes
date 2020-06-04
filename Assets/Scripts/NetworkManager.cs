@@ -35,7 +35,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     int currentPage = 1, maxPage, multiple;
 
 
-
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
     public void MyListClick(int num)
@@ -46,7 +45,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         MyListRenewal();
     }
 
-    void MyListRenewal()
+    private void MyListRenewal()
     {
         // 최대페이지
         maxPage = (myList.Count % CellBtn.Length == 0) ? myList.Count / CellBtn.Length : myList.Count / CellBtn.Length + 1;
@@ -82,19 +81,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     #endregion
 
 
+
     #region 서버연결
-    void Awake()
+    private void Awake()
     {
-        //PhotonNetwork.AutomaticallySyncScene = true;
-        Screen.SetResolution(960, 540, false);
+        PhotonNetwork.AutomaticallySyncScene = true;
+        //Screen.SetResolution(960, 540, false);
     }
 
-    //public void OnEnable()
-    //{
-    //    PhotonNetwork.AutomaticallySyncScene = true;
-    //    Connect();
-    //}
-    void Update()
+    private void Update()
     {
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
         LobbyInfoText.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + "로비 / " + PhotonNetwork.CountOfPlayers + "접속";
@@ -138,10 +133,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 100) : RoomInput.text, new RoomOptions { MaxPlayers = 4 });
     }
-    public void JoinRandomRoom()
-    {
-        PhotonNetwork.JoinRandomRoom();
-    }
 
     public void LeaveRoom()
     {
@@ -158,7 +149,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        RoomInput.text = ""; CreateRoom(); 
+        RoomInput.text = ""; CreateRoom();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -178,14 +169,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ChatRPC("<color=yellow>" + otherPlayer.NickName + "님이 퇴장하셨습니다</color>");
     }
 
-    void RoomRenewal()
+    private void RoomRenewal()
     {
         ListText.text = "";
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
             ListText.text += PhotonNetwork.PlayerList[i].NickName + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
         RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
     }
-    
     #endregion
 
 
@@ -211,6 +201,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             for (int i = 1; i < ChatText.Length; i++) ChatText[i - 1].text = ChatText[i].text;
             ChatText[ChatText.Length - 1].text = msg;
+        }
+    }
+    #endregion
+
+    #region 게임시작
+
+    public void StartGame()
+    {
+        if(PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            PhotonNetwork.LoadLevel(1);
         }
     }
     #endregion
