@@ -6,10 +6,23 @@ public class VFXLocator : MonoBehaviour
 {
     GameObject player;
     Transform atk2Pos;
+    Transform skill1Pos;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
+        var status = player.GetComponent<CharacterMove>();
+        if (status.job == Global.Classes.Warrior)
+            atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
+        else if (status.job == Global.Classes.Archer)
+        {
+            atk2Pos = GameObject.FindGameObjectWithTag("ArcherAttack2Pos").GetComponent<Transform>();
+            skill1Pos = GameObject.FindGameObjectWithTag("ArcherSkill1Pos").GetComponent<Transform>();
+        }
+        else if(status.job == Global.Classes.Dragoon)
+        {
+            atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
+            skill1Pos = GameObject.FindGameObjectWithTag("ArcherSkill1Pos").GetComponent<Transform>();
+        }
     }
 
     // Update is called once per frame
@@ -32,6 +45,9 @@ public class VFXLocator : MonoBehaviour
 
         else if (gameObject.CompareTag("WarriorSkill2_2"))
             transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.656f, player.transform.position.z+0.1f);
-
+        else if (gameObject.CompareTag("ArcherVX1") || gameObject.CompareTag("DragoonSkill1"))
+            transform.position = new Vector3(skill1Pos.position.x, skill1Pos.position.y, skill1Pos.position.z);
     }
+
+    
 }
