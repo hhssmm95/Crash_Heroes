@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class UImanager : MonoBehaviour
 {
     private static UImanager instance;
+
+    public GameObject MenuUI;
+
+    bool isMenuUI = false;
 
     CharacterMove player;
 
@@ -176,5 +181,20 @@ public class UImanager : MonoBehaviour
 
         hpControl();
         mpControl();
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isMenuUI == false)
+            {
+                MenuUI.SetActive(true);
+                isMenuUI = true;
+            }
+
+            else
+            {
+                MenuUI.SetActive(false);
+                isMenuUI = false;
+            }
+        }
     }
 }

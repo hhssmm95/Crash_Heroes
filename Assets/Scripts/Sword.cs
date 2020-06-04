@@ -17,6 +17,7 @@ public class Sword : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (player.isAttacking == true && !attacking)
             attacking = true;
         else if (player.isAttacking == false && attacking)

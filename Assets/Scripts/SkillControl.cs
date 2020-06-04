@@ -69,6 +69,7 @@ public class SkillControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (gameObject.CompareTag("Player"))
         {
             if (player.job == Global.Classes.Warrior)
