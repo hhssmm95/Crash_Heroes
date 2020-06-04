@@ -51,7 +51,6 @@ public class SkillControl : MonoBehaviour
     public ParticleSystem WarriorVX1_3;
     public ParticleSystem WarriorVX2_1;
     public ParticleSystem WarriorVX2_2;
-    public ParticleSystem DragoonVX1;
 
     public GameObject ArcherArrow;
     public GameObject BigArrow;
@@ -61,6 +60,9 @@ public class SkillControl : MonoBehaviour
     public ParticleSystem DragoonVX0_1;
     public ParticleSystem DragoonVX0_2;
     public ParticleSystem DragoonVX0_3;
+
+    public ParticleSystem DragoonVX1;
+    public ParticleSystem DragoonVX2;
 
 
     void Start()
@@ -103,6 +105,7 @@ public class SkillControl : MonoBehaviour
             {
                 Dragoon_Attack();
                 DragoonSkill1();
+                DragoonSkill2();
                 
             }
         }
@@ -499,6 +502,25 @@ public class SkillControl : MonoBehaviour
 
                 //transform.rotation = Quaternion.LookRotation(dir);
                 Instantiate(DragoonVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+            }
+        }
+    }
+
+    void DragoonSkill2()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        {
+            if (player.mp >= skill_2_Cost)
+            {
+                skill_2_Off = true;
+                player.mp -= skill_2_Cost;
+                //player.isAttacking = true;
+                //playerAnim.SetBool("Skill2", true);
+                playerAnim.SetTrigger("Skill2");
+                Vector3 dir = player.transform.forward;
+
+                //transform.rotation = Quaternion.LookRotation(dir);
+                Instantiate(DragoonVX2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
             }
         }
     }

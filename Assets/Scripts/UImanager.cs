@@ -99,6 +99,13 @@ public class UImanager : MonoBehaviour
                 slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_19", typeof(Sprite)) as Sprite;
                 break;
 
+            case Global.Classes.Dragoon:
+                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_44", typeof(Sprite)) as Sprite;
+                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_23", typeof(Sprite)) as Sprite;
+                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_50", typeof(Sprite)) as Sprite;
+                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_42", typeof(Sprite)) as Sprite;
+                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_28", typeof(Sprite)) as Sprite;
+                break;
         }
     }
     

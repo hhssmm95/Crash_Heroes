@@ -32,7 +32,7 @@ public class VFXLocator : MonoBehaviour
         {
             transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z + 0.1f);
         }
-        else if (gameObject.CompareTag("WarriorAttack2"))
+        else if (gameObject.CompareTag("WarriorAttack2") || gameObject.CompareTag("DragoonSkill2"))
         {
             transform.position = new Vector3(atk2Pos.position.x, atk2Pos.position.y, atk2Pos.position.z);
         }

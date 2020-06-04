@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DragoonVX : MonoBehaviour
 {
-    ParticleSystem DragoonVX1;
+    ParticleSystem VX;
     List<ParticleCollisionEvent> collisionEvents;
     void Start()
     {
-        DragoonVX1 = GetComponent<ParticleSystem>();
+        VX = GetComponent<ParticleSystem>();
         collisionEvents = new List<ParticleCollisionEvent>();
 
     }
@@ -32,8 +32,11 @@ public class DragoonVX : MonoBehaviour
                 enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
+            else if(gameObject.CompareTag("DragoonSkill2"))
+            {
 
-            enemy.OnDamage(10);
+                enemy.OnDamage(10);
+            }
         }
     }
 }
