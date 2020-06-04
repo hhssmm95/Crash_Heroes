@@ -24,7 +24,7 @@ public class DragoonVX : MonoBehaviour
         //Debug.Log("파티클충돌");
         if (other.CompareTag("Enemy"))
         {
-
+            Debug.Log("VX충돌");
             var enemy = other.GetComponent<CharacterMove>();
             if (gameObject.CompareTag("DragoonSkill1"))
             {
@@ -36,7 +36,9 @@ public class DragoonVX : MonoBehaviour
             {
 
                 enemy.OnDamage(10);
+                return;
             }
+            enemy.OnDamage(10);
         }
     }
 }
