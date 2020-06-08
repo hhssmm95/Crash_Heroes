@@ -53,6 +53,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
 
     public bool isMine;
 
+    private UImanager ui;
+
     //private int score;
     
     void Start()
@@ -68,6 +70,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
             cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
             cameraLoc.playerCheck = true;
             cameraLoc.player = gameObject;
+            ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UImanager>();
+            ui.player = this;
+            ui.playerCheck = true;
+            
         }
         switch (job)
         {

@@ -11,7 +11,9 @@ public class UImanager : MonoBehaviour
 
     bool isMenuUI = false;
 
-    CharacterMove player;
+    public CharacterMove player;
+    public bool playerCheck;
+    bool initComplete;
 
     Image slot1;
     Image slot2;
@@ -73,9 +75,8 @@ public class UImanager : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMove>();
+        //player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMove>();
 
-        skill = player.GetComponent<SkillControl>();
         //warrior = GameObject.Find("M05").GetComponent<WarriorSkill>();
         slot1 = GameObject.FindWithTag("CoolTime_Slot_1").GetComponent<Image>();
         slot2 = GameObject.FindWithTag("CoolTime_Slot_2").GetComponent<Image>();
@@ -86,32 +87,7 @@ public class UImanager : MonoBehaviour
         hpOrb = GameObject.FindWithTag("hpOrb").GetComponent<Image>();
         mpOrb = GameObject.FindWithTag("mpOrb").GetComponent<Image>();
 
-        switch(player.job)
-        {
-            case Global.Classes.Warrior:
-                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_02", typeof(Sprite)) as Sprite;
-                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_21", typeof(Sprite)) as Sprite;
-                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_19", typeof(Sprite)) as Sprite;
-                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_44", typeof(Sprite)) as Sprite;
-                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_15", typeof(Sprite)) as Sprite;
-                break;
-
-            case Global.Classes.Archer:
-                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_33", typeof(Sprite)) as Sprite;
-                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_02", typeof(Sprite)) as Sprite;
-                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_05", typeof(Sprite)) as Sprite;
-                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_03", typeof(Sprite)) as Sprite;
-                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_19", typeof(Sprite)) as Sprite;
-                break;
-
-            case Global.Classes.Dragoon:
-                slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_44", typeof(Sprite)) as Sprite;
-                slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_23", typeof(Sprite)) as Sprite;
-                slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_50", typeof(Sprite)) as Sprite;
-                slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_42", typeof(Sprite)) as Sprite;
-                slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_28", typeof(Sprite)) as Sprite;
-                break;
-        }
+        
     }
     
     void hpControl()
@@ -127,6 +103,40 @@ public class UImanager : MonoBehaviour
 
     private void Update()
     {
+        if (playerCheck && !initComplete)
+        {
+            initComplete = true;
+
+            skill = player.gameObject.GetComponent<SkillControl>();
+
+            switch (player.job)
+            {
+                case Global.Classes.Warrior:
+                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_02", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_21", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_19", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_44", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_15", typeof(Sprite)) as Sprite;
+                    break;
+
+                case Global.Classes.Archer:
+                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_33", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_05", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_03", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_19", typeof(Sprite)) as Sprite;
+                    break;
+
+                case Global.Classes.Dragoon:
+                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_44", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_23", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_50", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_42", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_28", typeof(Sprite)) as Sprite;
+                    break;
+            }
+        }
+
 
         LimitTime -= Time.deltaTime;
         text_Time.text = "" + Mathf.Round(LimitTime);
