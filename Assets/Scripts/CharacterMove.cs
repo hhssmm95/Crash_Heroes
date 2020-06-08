@@ -174,7 +174,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         Quaternion newRotation = Quaternion.LookRotation(moveDirection);
 
-        if(!isAttacking)
+        if (!isAttacking)
             myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
         if (Input.GetKey(KeyCode.LeftShift)) //달리기
@@ -185,7 +185,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
         else
         {
-            if(myAnim.GetBool("Run"))
+            if (myAnim.GetBool("Run"))
                 myAnim.SetBool("Run", false);
             transform.position += moveDirection * speed * Time.deltaTime;
         }

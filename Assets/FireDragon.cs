@@ -7,7 +7,7 @@ public class FireDragon : MonoBehaviour
     public float originZ;
     Animator dragonAnimator;
     float speed = 10;
-    bool turn;
+    //bool turn;
     public FlamesToggle flame;
     Quaternion newRotation;
     void Start()
@@ -46,12 +46,12 @@ public class FireDragon : MonoBehaviour
             transform.position += transform.forward * speed * Time.deltaTime;
         }
 
-        if(turn)
-        {
+        //if(turn)
+        //{
 
-            newRotation = Quaternion.LookRotation(new Vector3(0, 0, -1.0f));
-            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, speed/3 * Time.deltaTime);
-        }
+        //    newRotation = Quaternion.LookRotation(new Vector3(0, 0, -1.0f));
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, speed/3 * Time.deltaTime);
+        //}
     }
 
     IEnumerator DragonBreath()
