@@ -65,13 +65,17 @@ public class SkillControl : MonoBehaviourPunCallbacks
     public ParticleSystem DragoonVX1;
     public ParticleSystem DragoonVX2;
 
+    public GameObject Dragon;
+    public GameObject DragonSpawn;
+
     private bool isMine;
 
     void Start()
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
-        if(photonView.IsMine)
+        //if(photonView.IsMine)
+        if (CompareTag("Player"))
         {
             isMine = true;
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -106,6 +110,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
                 Dragoon_Attack();
                 DragoonSkill1();
                 DragoonSkill2();
+                DragoonSkill3();
 
             }
 
@@ -525,4 +530,25 @@ public class SkillControl : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    void DragoonSkill3()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+        {
+            if (player.mp >= skill_3_Cost)
+            {
+                skill_3_Off = true;
+                player.mp -= skill_3_Cost;
+                playerAnim.SetTrigger("Skill3");
+                Vector3 dir = player.transform.forward;
+                Instantiate(Dragon,  new Vector3(DragonSpawn.transform.position.x -1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+
+            }
+        }
+    }
+
+    //IEnumerator Dragoon_Skill3()
+    //{
+    //    
+    //}
 }
