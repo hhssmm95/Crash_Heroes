@@ -111,6 +111,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
                 DragoonSkill1();
                 DragoonSkill2();
                 DragoonSkill3();
+                DragoonSkill4();
 
             }
 
@@ -545,6 +546,32 @@ public class SkillControl : MonoBehaviourPunCallbacks
 
             }
         }
+    }
+
+    void DragoonSkill4()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        {
+            if (player.mp >= skill_4_Cost)
+            {
+                skill_4_Off = true;
+                player.mp -= skill_4_Cost;
+                playerAnim.SetTrigger("Skill4");
+                StartCoroutine("Dragoon_Skill4_Effect");
+
+            }
+        }
+    }
+
+    IEnumerator Dragoon_Skill4_Effect()
+    {
+        float originMaxHP = player.maxHP;
+        player.maxHP += 200;
+        player.hp += 200;
+        yield return new WaitForSecondsRealtime(10.0f);
+        if (player.hp > originMaxHP)
+            player.hp = originMaxHP;
+        player.maxHP = originMaxHP;
     }
 
     //IEnumerator Dragoon_Skill3()
