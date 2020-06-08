@@ -29,7 +29,7 @@ public class DragoonVX : MonoBehaviour
             if (gameObject.CompareTag("DragoonSkill1"))
             {
                 enemy.OnDamage(10);
-                //enemy.OnSlow(0.5f, 3.0f);
+                enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
             else if(gameObject.CompareTag("DragoonSkill2"))
