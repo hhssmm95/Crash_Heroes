@@ -152,6 +152,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         RoomInput.text = ""; CreateRoom();
     }
 
+    public void JoinRandomRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         RoomInput.text = ""; CreateRoom();

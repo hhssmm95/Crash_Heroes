@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
+public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     public HealthBar hpBar;
     private Animator myAnim;
@@ -353,6 +353,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks //캐릭터의 전반적�
         speed *= rate;
         yield return new WaitForSeconds(time);
         speed = originSpeed;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 
     //IEnumerator Dash()

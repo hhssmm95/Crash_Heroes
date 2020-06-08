@@ -18,7 +18,6 @@ public class CameraLocator :MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
         if(playerCheck && !initComplete)
         {
             offset = transform.position - player.transform.position;

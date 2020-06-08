@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class SkillControl : MonoBehaviourPunCallbacks
+public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove player;
     Animator playerAnim;
@@ -87,11 +87,11 @@ public class SkillControl : MonoBehaviourPunCallbacks
         {
             if (player.job == Global.Classes.Warrior)
             {
-                Warrior_Attack();
-                Warrior_Skill1();
-                Warrior_Skill2();
-                Warrior_Skill3();
-                Warrior_Skill4();
+                photonView.RPC("Warrior_Attack", RpcTarget.All);
+                photonView.RPC("Warrior_Skill1", RpcTarget.All);
+                photonView.RPC("Warrior_Skill2", RpcTarget.All);
+                photonView.RPC("Warrior_Skill3", RpcTarget.All);
+                photonView.RPC("Warrior_Skill4", RpcTarget.All);
             }
             if (player.job == Global.Classes.Archer)
             {
@@ -189,6 +189,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     void Warrior_Attack()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
@@ -208,19 +209,19 @@ public class SkillControl : MonoBehaviourPunCallbacks
             if (playerAnim.GetInteger("Combo") == 0)
             {
                 playerAnim.SetTrigger("FirstAttack");
-                Instantiate(WarriorVX1_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
 
             }
             else if (playerAnim.GetInteger("Combo") == 1)
             {
                 playerAnim.SetTrigger("SecondAttack");
-                Instantiate(WarriorVX1_2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
 
             }
             else if (playerAnim.GetInteger("Combo") == 2)
             {
                 playerAnim.SetTrigger("ThirdAttack");
-                Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
 
             }
             
@@ -231,6 +232,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
 
+    [PunRPC]
     void Warrior_Skill1()
     {
         if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
@@ -245,6 +247,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
 
     }
 
+    [PunRPC]
     void Warrior_Skill2()
     {
         if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
@@ -262,6 +265,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     void Warrior_Skill3()
     {
         if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
@@ -277,6 +281,7 @@ public class SkillControl : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     void Warrior_Skill4()
     {
         if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
@@ -524,5 +529,9 @@ public class SkillControl : MonoBehaviourPunCallbacks
                 Instantiate(DragoonVX2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
             }
         }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

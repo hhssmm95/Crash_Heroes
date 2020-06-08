@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class GManager : MonoBehaviour
+public class GManager : MonoBehaviourPunCallbacks
 {
     public string player_prefab;
     public Transform spawn_point;
@@ -15,5 +15,10 @@ public class GManager : MonoBehaviour
     public void Spawn()
     {
         PhotonNetwork.Instantiate(player_prefab, spawn_point.position, spawn_point.rotation);
+    }
+
+    public void GameOut()
+    {
+        PhotonNetwork.LoadLevel(0);
     }
 }

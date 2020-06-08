@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class VFXLocator : MonoBehaviour
+public class VFXLocator : MonoBehaviourPunCallbacks
 {
     GameObject player;
     Transform atk2Pos;
@@ -18,15 +19,23 @@ public class VFXLocator : MonoBehaviour
             atk2Pos = GameObject.FindGameObjectWithTag("ArcherAttack2Pos").GetComponent<Transform>();
             skill1Pos = GameObject.FindGameObjectWithTag("ArcherSkill1Pos").GetComponent<Transform>();
         }
-        else if(status.job == Global.Classes.Dragoon)
+        else if (status.job == Global.Classes.Dragoon)
         {
             atk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
             skill1Pos = GameObject.FindGameObjectWithTag("ArcherSkill1Pos").GetComponent<Transform>();
         }
+
+        Destroy(gameObject, 1.0f);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        SkillEffect();
+    }
+
+    [PunRPC]
+    void SkillEffect()
     {
         if (gameObject.CompareTag("WarriorAttack1"))
         {
@@ -38,16 +47,15 @@ public class VFXLocator : MonoBehaviour
         }
         else if (gameObject.CompareTag("WarriorAttck3"))
         {
-            transform.position = new Vector3(player.transform.position.x+0.2f, player.transform.position.y + 0.15f, player.transform.position.z-0.1f);
+            transform.position = new Vector3(player.transform.position.x + 0.2f, player.transform.position.y + 0.15f, player.transform.position.z - 0.1f);
         }
-        else if(gameObject.CompareTag("WarriorSkill2_1"))
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.406f, player.transform.position.z+0.1f);
+        else if (gameObject.CompareTag("WarriorSkill2_1"))
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.406f, player.transform.position.z + 0.1f);
 
         else if (gameObject.CompareTag("WarriorSkill2_2"))
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.656f, player.transform.position.z+0.1f);
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.656f, player.transform.position.z + 0.1f);
         else if (gameObject.CompareTag("ArcherVX1") || gameObject.CompareTag("DragoonSkill1"))
             transform.position = new Vector3(skill1Pos.position.x, skill1Pos.position.y, skill1Pos.position.z);
     }
-
     
 }
