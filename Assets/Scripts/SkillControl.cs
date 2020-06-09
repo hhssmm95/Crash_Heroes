@@ -209,19 +209,22 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
             if (playerAnim.GetInteger("Combo") == 0)
             {
                 playerAnim.SetTrigger("FirstAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation)
+                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
             }
             else if (playerAnim.GetInteger("Combo") == 1)
             {
                 playerAnim.SetTrigger("SecondAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation)
+                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
             }
             else if (playerAnim.GetInteger("Combo") == 2)
             {
                 playerAnim.SetTrigger("ThirdAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation)
+                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
             }
             
