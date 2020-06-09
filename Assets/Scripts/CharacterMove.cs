@@ -63,8 +63,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         myRig = gameObject.GetComponent<Rigidbody>();
         hpBar.SetMaxHealth(maxHP);
         SkillControl skill = gameObject.GetComponent<SkillControl>();
-        //if (photonView.IsMine)
-        if(CompareTag("Player"))
+        if (photonView.IsMine)
+        //if(CompareTag("Player"))
         {
             isMine = true;
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();

@@ -75,8 +75,8 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
 
-        if(CompareTag("Player"))
-        //if (photonView.IsMine)
+        //if(CompareTag("Player"))
+        if (photonView.IsMine)
         {
             isMine = true;
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
