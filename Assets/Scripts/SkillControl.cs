@@ -71,14 +71,14 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             isMine = true;
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
 
     }
-    
+
 
     // Update is called once per frame
     void Update()
@@ -87,11 +87,16 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (player.job == Global.Classes.Warrior)
             {
-                photonView.RPC("Warrior_Attack", RpcTarget.All);
-                photonView.RPC("Warrior_Skill1", RpcTarget.All);
-                photonView.RPC("Warrior_Skill2", RpcTarget.All);
-                photonView.RPC("Warrior_Skill3", RpcTarget.All);
-                photonView.RPC("Warrior_Skill4", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+                    photonView.RPC("Warrior_Attack", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+                    photonView.RPC("Warrior_Skill1", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+                    photonView.RPC("Warrior_Skill2", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+                    photonView.RPC("Warrior_Skill3", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+                    photonView.RPC("Warrior_Skill4", RpcTarget.All);
             }
             if (player.job == Global.Classes.Archer)
             {
@@ -192,112 +197,104 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Warrior_Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+        player.isAttacking = true;
+        attackOff = true;
+        comboContinue = true;
+
+        if (comboTimer > 3.0f)
         {
-            player.isAttacking = true;
-            attackOff = true;
-            comboContinue = true;
+            playerAnim.SetInteger("Combo", 0);
+            comboContinue = false;
+        }
+        comboTimer = 0;
 
-            if (comboTimer > 3.0f)
-            {
-                playerAnim.SetInteger("Combo", 0);
-                comboContinue = false;
-            }
-            comboTimer = 0;
-
-            Vector3 dir = player.transform.forward;
-            if (playerAnim.GetInteger("Combo") == 0)
-            {
-                playerAnim.SetTrigger("FirstAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation)
-                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
-
-            }
-            else if (playerAnim.GetInteger("Combo") == 1)
-            {
-                playerAnim.SetTrigger("SecondAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation)
-                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
-
-            }
-            else if (playerAnim.GetInteger("Combo") == 2)
-            {
-                playerAnim.SetTrigger("ThirdAttack");
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation)
-                    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
-
-            }
-            
-
-            //transform.rotation = Quaternion.LookRotation(dir);
+        Vector3 dir = player.transform.forward;
+        if (playerAnim.GetInteger("Combo") == 0)
+        {
+            playerAnim.SetTrigger("FirstAttack");
+            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation)
+            .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
         }
+        else if (playerAnim.GetInteger("Combo") == 1)
+        {
+            playerAnim.SetTrigger("SecondAttack");
+            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation)
+            .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+        }
+        else if (playerAnim.GetInteger("Combo") == 2)
+        {
+            playerAnim.SetTrigger("ThirdAttack");
+            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>()
+            .RPC("SkillEffect", RpcTarget.All);
+
+        }
+
+
+        //transform.rotation = Quaternion.LookRotation(dir);
+
+
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
+
     }
 
     [PunRPC]
     void Warrior_Skill1()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+
+        if (player.mp >= skill_1_Cost)
         {
-            if (player.mp >= skill_1_Cost)
-            {
-                skill_1_Off = true;
-                player.mp -= skill_1_Cost;
-                StartCoroutine("Warrior_Skill1_Play");
-            }
+            skill_1_Off = true;
+            player.mp -= skill_1_Cost;
+            StartCoroutine("Warrior_Skill1_Play");
+
         }
+
 
     }
 
     [PunRPC]
     void Warrior_Skill2()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        if (player.mp >= skill_2_Cost)
         {
-            if (player.mp >= skill_2_Cost)
-            {
-                skill_2_Off = true;
-                player.mp -= skill_2_Cost;
-                player.isAttacking = true;
-                //playerAnim.SetBool("Skill2", true);
-                playerAnim.SetTrigger("Skill2_1");
-                playerAnim.SetBool("Skill2_2", true);
-                StartCoroutine("Warrior_Skill2_VFX");
-            }
+            skill_2_Off = true;
+            player.mp -= skill_2_Cost;
+            player.isAttacking = true;
+            //playerAnim.SetBool("Skill2", true);
+            playerAnim.SetTrigger("Skill2_1");
+            playerAnim.SetBool("Skill2_2", true);
+            StartCoroutine("Warrior_Skill2_VFX");
         }
+
     }
 
     [PunRPC]
     void Warrior_Skill3()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+        if (player.mp >= skill_3_Cost)
         {
-            if (player.mp >= skill_3_Cost)
-            {
-                skill_3_Off = true;
-                player.mp -= skill_3_Cost;
-                //playerAnim.SetBool("Skill2", true);
-                playerAnim.SetTrigger("Skill3_1");
-                playerAnim.SetBool("Skill3_2", true);
-            }
+            skill_3_Off = true;
+            player.mp -= skill_3_Cost;
+            //playerAnim.SetBool("Skill2", true);
+            playerAnim.SetTrigger("Skill3_1");
+            playerAnim.SetBool("Skill3_2", true);
         }
+
     }
 
     [PunRPC]
     void Warrior_Skill4()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        if (player.mp >= skill_4_Cost)
         {
-            if (player.mp >= skill_4_Cost)
-            {
-                skill_4_Off = true;
-                player.mp -= skill_4_Cost;
-                //playerAnim.SetBool("Skill2", true);
-                playerAnim.SetTrigger("Skill4");
-               
-            }
+            skill_4_Off = true;
+            player.mp -= skill_4_Cost;
+            //playerAnim.SetBool("Skill2", true);
+            playerAnim.SetTrigger("Skill4");
+
         }
+
     }
 
     IEnumerator Warrior_Skill1_Play()
@@ -316,11 +313,11 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator Warrior_Skill2_VFX()
     {
         Vector3 dir = transform.forward;
-        Instantiate(WarriorVX2_1, new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z+0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
+        Instantiate(WarriorVX2_1, new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
 
         yield return new WaitForSeconds(0.2f);
 
-        Instantiate(WarriorVX2_2, new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z+0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
+        Instantiate(WarriorVX2_2, new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
 
     }
 
@@ -375,9 +372,9 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
                 //playerAnim.SetBool("Skill2", true);
                 playerAnim.SetTrigger("Skill1");
                 Vector3 dir = player.transform.forward;
-                
+
                 //transform.rotation = Quaternion.LookRotation(dir);
-                Instantiate(ArcherVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir)*ArcherVX1.transform.rotation);
+                Instantiate(ArcherVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX1.transform.rotation);
             }
         }
     }
@@ -397,8 +394,8 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
                 Quaternion rot1 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, -5.0f));
                 Quaternion rot2 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, 5.0f));
                 Instantiate(ArcherArrow, new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-                Instantiate(ArcherArrow, new Vector3(transform.position.x+0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
-                Instantiate(ArcherArrow, new Vector3(transform.position.x-0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
+                Instantiate(ArcherArrow, new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
+                Instantiate(ArcherArrow, new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
 
             }
         }
@@ -428,7 +425,7 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
                 player.mp -= skill_4_Cost;
                 playerAnim.SetTrigger("Skill4");
                 StartCoroutine("Archer_Skill4_Effect");
-                
+
             }
         }
     }
@@ -493,7 +490,7 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
 
         }
 
-        
+
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
     void DragoonSkill1()
