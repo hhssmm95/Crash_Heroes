@@ -306,18 +306,21 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.1f);
         playerAnim.SetTrigger("ThirdAttack");
         Vector3 dir = player.transform.forward;
-        Instantiate(WarriorVX1_3, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
+        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation)
+            .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
     }
 
     IEnumerator Warrior_Skill2_VFX()
     {
         Vector3 dir = transform.forward;
-        Instantiate(WarriorVX2_1, new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
+        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_1", new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation)
+            .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
         yield return new WaitForSeconds(0.2f);
 
-        Instantiate(WarriorVX2_2, new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
+        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_2", new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation)
+            .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
     }
 
