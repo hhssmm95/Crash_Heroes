@@ -63,8 +63,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         myRig = gameObject.GetComponent<Rigidbody>();
         hpBar.SetMaxHealth(maxHP);
         SkillControl skill = gameObject.GetComponent<SkillControl>();
-        //if (photonView.IsMine)
-        if(CompareTag("Player"))
+        if (photonView.IsMine)
+        //if(CompareTag("Player"))
         {
             isMine = true;
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -195,20 +195,21 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
-        isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
-        if (isDamaging)
-        {
-            damageTimer += Time.deltaTime;
-            if (damageTimer >= 1.5f)
-            {
-                isDamaging = false;
-                damageTimer = 0;
-            }
-        }
+        
 
         if (isMine)
         {
-            
+
+            isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
+            if (isDamaging)
+            {
+                damageTimer += Time.deltaTime;
+                if (damageTimer >= 1.5f)
+                {
+                    isDamaging = false;
+                    damageTimer = 0;
+                }
+            }
 
             if (!isDead && !isDashing) //사망처리중일 시 이동 불가
             {
