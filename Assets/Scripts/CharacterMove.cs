@@ -12,7 +12,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     private Camera mainCamera;
     private CameraLocator cameraLoc;
     public Global.Classes job;
-    
+
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
     public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
@@ -28,8 +28,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public bool isDashing;
     float mpTimer;
     float damageTimer;
-    //public GameObject Fireball;
-    //public GameObject SkillSpot;
 
     public float speed = 2.0f; // 캐릭터 이동속도
     public float jumpPower = 5.0f;
@@ -39,15 +37,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public Vector3 moveDirection;
     public bool isAttacking;
     float dashTimer;
-    //AnimatorStateInfo aniinfo;
-    //public float anitime;
-    ////public float skill_1_cooltime = 1.0f;
-    //private bool inSkill_1_Cooltime;
-    //private float skill_1_delay = 1.0f;
-    //public float sk2CoolTime = 5.0f;
-    //public float sk3CoolTime = 10.0f;
-    //public float sk4CoolTime = 60.0f;
-
     private float h;
     private float v;
 
@@ -56,17 +45,92 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     private UImanager ui;
 
     //private int score;
-    
+    WarriorSkill wSkill;
+    //ArcherSkill aSkill;
+    //DragoonSkill dSkill;
+    //MageSkill mSkill;
     void Start()
     {
+
         myAnim = gameObject.GetComponent<Animator>();
         myRig = gameObject.GetComponent<Rigidbody>();
-        hpBar.SetMaxHealth(maxHP);
-        SkillControl skill = gameObject.GetComponent<SkillControl>();
+
+        wSkill = gameObject.GetComponent<WarriorSkill>();
+        //aSkill = gameObject.GetComponent<ArcherSkill>();
+        //dSkill = gameObject.GetComponent<DragoonSkill>();
+        //mSkill = gameObject.GetComponent<MageSkill>();
+
+
+        if (wSkill != null)
+            job = Global.Classes.Warrior;
+        //else if (aSkill != null)
+        //    job = Global.Classes.Archer;
+        //else if (dSkill != null)
+        //    job = Global.Classes.Dragoon;
+        //else if (mSkill != null)
+        //    job = Global.Classes.Mage;
+
+            switch (job)
+        {
+            case Global.Classes.Warrior:
+                wSkill.InitStatus();
+                break;
+
+            case Global.Classes.Archer:
+                //maxHP = 539;
+                //maxMP = 280;
+                //atk = 61;
+                //def = 32;
+                //skill.attack_Cooltime = 1.0f;
+                //skill.skill_1_Cooltime = 3.0f;
+                //skill.skill_1_Cost = 30;
+                //skill.skill_2_Cooltime = 3.0f;
+                //skill.skill_2_Cost = 30;
+                //skill.skill_3_Cooltime = 3.0f;
+                //skill.skill_3_Cost = 30;
+                //skill.skill_4_Cooltime = 3.0f;
+                //skill.skill_4_Cost = 30;
+
+                break;
+
+            case Global.Classes.Dragoon:
+                //maxHP = 580;
+                //maxMP = 274;
+                //atk = 66;
+                //def = 36;
+                //skill.attack_Cooltime = 1.0f;
+                //skill.skill_1_Cooltime = 3.0f;
+                //skill.skill_1_Cost = 30;
+                //skill.skill_2_Cooltime = 3.0f;
+                //skill.skill_2_Cost = 30;
+                //skill.skill_3_Cooltime = 3.0f;
+                //skill.skill_3_Cost = 30;
+                //skill.skill_4_Cooltime = 3.0f;
+                //skill.skill_4_Cost = 30;
+
+                break;
+
+            case Global.Classes.Mage:
+                //maxHP = 524;
+                //maxMP = 326;
+                //atk = 65;
+                //def = 29;
+                //skill.attack_Cooltime = 0.5f;
+                //skill.skill_1_Cooltime = 3.0f;
+                //skill.skill_2_Cooltime = 3.0f;
+                //skill.skill_3_Cooltime = 3.0f;
+                //skill.skill_4_Cooltime = 3.0f;
+
+                break;
+        }
+
         if (photonView.IsMine)
         //if(CompareTag("Player"))
         {
             isMine = true;
+
+            hpBar.SetMaxHealth(maxHP);
+            //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
             cameraLoc.playerCheck = true;
@@ -75,78 +139,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             ui.player = this;
             ui.playerCheck = true;
             hpBar.gameObject.SetActive(false);
-            
+
         }
-        switch (job)
-        {
-            case Global.Classes.Warrior:
-                maxHP = 582;
-                maxMP = 263;
-                atk = 64;
-                def = 39;
-                skill.attack_Cooltime = 1.0f;
-                skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
-                skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
-                skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
-                skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
-
-                break;
-
-            case Global.Classes.Archer:
-                maxHP = 539;
-                maxMP = 280;
-                atk = 61;
-                def = 32;
-                skill.attack_Cooltime = 1.0f;
-                skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
-                skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
-                skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
-                skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
-
-                break;
-
-            case Global.Classes.Dragoon:
-                maxHP = 580;
-                maxMP = 274;
-                atk = 66;
-                def = 36;
-                skill.attack_Cooltime = 1.0f;
-                skill.skill_1_Cooltime = 3.0f;
-                skill.skill_1_Cost = 30;
-                skill.skill_2_Cooltime = 3.0f;
-                skill.skill_2_Cost = 30;
-                skill.skill_3_Cooltime = 3.0f;
-                skill.skill_3_Cost = 30;
-                skill.skill_4_Cooltime = 3.0f;
-                skill.skill_4_Cost = 30;
-
-                break;
-
-            case Global.Classes.Mage:
-                maxHP = 524;
-                maxMP = 326;
-                atk = 65;
-                def = 29;
-                skill.attack_Cooltime = 0.5f;
-                skill.skill_1_Cooltime = 3.0f;
-                skill.skill_2_Cooltime = 3.0f;
-                skill.skill_3_Cooltime = 3.0f;
-                skill.skill_4_Cooltime = 3.0f;
-
-                break;
-        }
+        
 
 
-        //myAnim2 = myAnim.layer
-        //SkillSpot = GameObject.FindGameObjectWithTag("SkillSpawnSpot");
         isDead = false;
         dying = false;
         if (isMine/*gameObject.CompareTag("Player")*/)
@@ -195,7 +192,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
-        
+
 
         if (isMine)
         {
@@ -267,40 +264,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-
-            //if(isDashing && dashTimer >= 0.5f)
-            //{
-            //    isDashing = false;
-            //    dashTimer = 0;
-            //}
-
-
-
-            //if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
-
-            //aniinfo = myAnim.GetCurrentAnimatorStateInfo(2);
-            //if(aniinfo.IsName("Dash"))
-            //anitime = aniinfo.normalizedTime;
-            //else
-            ////    aniinfo = 0;
-            //if (isDashing && anitime < 1.0f)
-            //{
-            //    transform.position += transform.forward * (speed * 10) * Time.deltaTime;
-            //}
-            //if(isDashing && !aniinfo.IsName("Dash"))
-            //    isDashing = false;
-
         }
     }
-
-    //private void FixedUpdate()
-    //{
-    //    if (mp / maxMP < 1)
-    //    {
-    //        mp += 1;
-    //    }
-    //}
-
     void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -314,10 +279,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
 
-            //공중에 떠있는 상태이면 점프하지 못하도록 리턴
             else
             {
-                //print("점프 불가능 !");
                 return;
             }
         }
@@ -333,7 +296,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myAnim.SetTrigger("Dash");
         }
     }
-    
+
 
     public void OnDamage(float damage)
     {
@@ -349,7 +312,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     public void OnSlow(float rate, float time)
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
             StartCoroutine(Slow(rate, time));
     }
     IEnumerator Slow(float rate, float time)
@@ -363,107 +326,4 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     }
-
-    //IEnumerator Dash()
-    //{
-    //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-    //    RaycastHit hit;
-    //    float dashTimer = 0;
-
-    //    isDashing = true;
-    //    myAnim.SetTrigger("Dash");
-    //    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-    //    {
-    //        //player.transform.LookAt(hit.transform.position);
-    //        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-    //        transform.rotation = Quaternion.LookRotation(dir);
-
-    //    }
-    //    while (dashTimer <= 0.5f)
-    //    {
-    //        transform.position += transform.forward * (speed * 3) * Time.deltaTime;
-    //        dashTimer += Time.deltaTime;
-    //    }
-    //    isDashing = false;
-    //    yield return null;
-    //}
-
 }
-
-    //void Skill_1()
-    //{
-    //    if (skill_1_delay >= 1.0f && Input.GetKeyDown(KeyCode.Z))
-    //    {
-    //        inSkill_1_Cooltime = false;
-    //        skill_1_delay = 0.0f;
-    //        Instantiate(Fireball, SkillSpot.transform.position, Fireball.transform.rotation);
-    //        inSkill_1_Cooltime = true;
-    //    }
-
-    //}
-
-    //IEnumerator Skill_1()
-    //{
-    //}
-
-
-    //void SetVelocity(Vector3 velocity)
-    //{
-    //    myRig.velocity = velocity;
-    //}
-
-
-    //Vector3 GetVelocity(Vector3 currentPos, Vector3 targetPos, float initialAngle) //포물선 이동 관련 함수
-    //{
-    //    float gravity = Physics.gravity.magnitude;
-    //    float angle = initialAngle * Mathf.Deg2Rad;
-
-    //    Vector3 planarTarget = new Vector3(targetPos.x, 0, targetPos.z);
-    //    Vector3 planarPosition = new Vector3(currentPos.x, 0, currentPos.z);
-
-    //    float distance = Vector3.Distance(planarTarget, planarPosition);
-    //    float yOffset = currentPos.y - targetPos.y;
-
-    //    float initialVelocity = (1 / Mathf.Cos(angle)) * Mathf.Sqrt((0.5f * gravity * Mathf.Pow(distance, 2)) / (distance * Mathf.Tan(angle) + yOffset));
-
-    //    Vector3 velocity = new Vector3(0f, initialVelocity * Mathf.Sin(angle), initialVelocity * Mathf.Cos(angle));
-
-    //    float angleBetweenObjects = Vector3.Angle(Vector3.forward, planarTarget - planarPosition) * (targetPos.x > currentPos.x ? 1 : -1);
-    //    Vector3 finalVelocity = Quaternion.AngleAxis(angleBetweenObjects, Vector3.up) * velocity;
-
-    //    return finalVelocity;
-    //}
-
-    //void Fire(Vector3 target) //포물선 이동(점프) 함수
-    //{
-    //    Vector3 velocity = GetVelocity(transform.position, target, 60f);
-    //    SetVelocity(velocity);
-
-    //}
-
-
-
-    //IEnumerator deadProcess() //사망처리
-    //{
-    //    dying = true;
-    //    myRig.velocity = Vector3.zero;
-    //    myRig.AddForce(Vector3.up * 3.0f, ForceMode.Impulse);
-    //    gameObject.transform.eulerAngles = new Vector3(0.0f, -90.0f, 0.0f);
-    //    yield return new WaitForSeconds(0.1f);
-    //    gameObject.transform.eulerAngles = new Vector3(0.0f, -180.0f, 0.0f);
-    //    yield return new WaitForSeconds(0.1f);
-    //    gameObject.transform.eulerAngles = new Vector3(0.0f, -270.0f, 0.0f);
-    //    yield return new WaitForSeconds(0.1f);
-    //    gameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-    //    yield return new WaitForSeconds(0.1f);
-    //    gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-
-    //    myAnim.StopPlayback();
-    //    yield return new WaitForSeconds(2.0f);
-    //    GameOverPanel.SetActive(true);
-    //    Time.timeScale = 0.0f;
-    //    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //    //isDead = false;
-    //    //GameOverPanel.SetActive(false);
-    //    //isDead = false;
-    //}
