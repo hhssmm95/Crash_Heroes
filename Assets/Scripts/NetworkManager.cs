@@ -23,6 +23,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [Header("RoomPanel")]
     public GameObject RoomPanel;
     public Text ListText;
+    public Text[] NickNameList;
     public Text RoomInfoText;
     public Text[] ChatText;
     public InputField ChatInput;
@@ -59,8 +60,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < CellBtn.Length; i++)
         {
             CellBtn[i].interactable = (multiple + i < myList.Count) ? true : false;
-            CellBtn[i].transform.GetChild(0).GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
-            CellBtn[i].transform.GetChild(0).GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
+            CellBtn[i].transform.GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
+            CellBtn[i].transform.GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
         }
     }
 
@@ -164,6 +165,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         RoomRenewal();
+        //NickNameRPC(newPlayer.NickName);
         ChatRPC("<color=yellow>" + newPlayer.NickName + "님이 참가하셨습니다</color>");
     }
 
@@ -175,13 +177,35 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void RoomRenewal()
     {
-        ListText.text = "";
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-            ListText.text += PhotonNetwork.PlayerList[i].NickName + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
+        {
+            NickNameList[i].text = "";
+        }
+        for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+        {
+            if (NickNameList[i].text == "")
+            {
+                NickNameList[i].text += PhotonNetwork.PlayerList[i].NickName;// + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
+            }
+        }
         RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
     }
     #endregion
 
+    //#region 닉네임
+    //[PunRPC]
+    //void NickNameRPC(string nickName)
+    //{
+    //    for (int i = 0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
+    //    {
+    //        if(NickNameList[i].text == "")
+    //        {
+    //            NickNameList[i].text = nickName;
+    //            break;
+    //        }
+    //    }
+    //}
+    //#endregion
 
     #region 채팅
     public void Send()
