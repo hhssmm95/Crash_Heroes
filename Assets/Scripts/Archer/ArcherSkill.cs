@@ -6,43 +6,18 @@ using Photon.Pun;
 public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove player;
-    Animator playerAnim;
+    Animator archerAnim;
     Camera mainCamera;
 
     public float attack_Cooltime;
     public float attack_Cost;
-
-    public float skill_1_Cooltime;
-    public float skill_1_Cost;
-
-    public float skill_2_Cooltime;
-    public float skill_2_Cost;
-
-    public float skill_3_Cooltime;
-    public float skill_3_Cost;
-
-    public float skill_4_Cooltime;
-    public float skill_4_Cost;
-
-    public float skill_5_Cooltime;
-    public float skill_5_Cost;
-
+    
 
 
     public bool attackOff;
     public float attack_Timer;
     public bool comboContinue;
     public float comboTimer;
-    public bool skill_1_Off;
-    public bool skill_2_Off;
-    public bool skill_3_Off;
-    public bool skill_4_Off;
-    public bool skill_5_Off;
-    public float skill_1_Timer;
-    public float skill_2_Timer;
-    public float skill_3_Timer;
-    public float skill_4_Timer;
-    public float skill_5_Timer;
 
     public ParticleSystem ArcherVX1; //스킬1
     public GameObject ArcherSkill1Pos;
@@ -61,11 +36,30 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             isMine = true;
 
             player = gameObject.GetComponent<CharacterMove>();
-            playerAnim = gameObject.GetComponent<Animator>();
+            archerAnim = gameObject.GetComponent<Animator>();
 
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             player.job = Global.Classes.Archer;
         }
+    }
+
+    public void InitStatus()
+    {
+
+        player.maxHP = 539;
+        player.maxMP = 280;
+        player.atk = 61;
+        player.def = 32;
+
+        attack_Cooltime = 1.0f;
+        player.skill_1_Cooltime = 3.0f;
+        player.skill_1_Cost = 30;
+        player.skill_2_Cooltime = 3.0f;
+        player.skill_2_Cost = 30;
+        player.skill_3_Cooltime = 3.0f;
+        player.skill_3_Cost = 30;
+        player.skill_4_Cooltime = 3.0f;
+        player.skill_4_Cost = 30;
     }
 
     // Update is called once per frame
@@ -75,13 +69,13 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Archer_Attack", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 photonView.RPC("Archer_Skill1", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+            if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
                 photonView.RPC("Archer_Skill2", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+            if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
                 photonView.RPC("Archer_Skill3", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+            if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
                 photonView.RPC("Archer_Skill4", RpcTarget.All);
 
 
@@ -102,56 +96,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (skill_1_Off)
-            {
-                skill_1_Timer += Time.deltaTime;
-                if (skill_1_Timer >= 1.2f)
-                    player.isAttacking = false;
-                if (skill_1_Timer >= skill_1_Cooltime)
-                {
-                    skill_1_Off = false;
-                    skill_1_Timer = 0;
-                }
-            }
-            if (skill_2_Off)
-            {
-                skill_2_Timer += Time.deltaTime;
-                if (skill_2_Timer >= 1.0f)
-                {
-                    player.isAttacking = false;
-                    if (player.job == Global.Classes.Warrior)
-                        playerAnim.SetBool("Skill2_2", false);
-                }
-                if (skill_2_Timer >= skill_2_Cooltime)
-                {
-                    skill_2_Off = false;
-                    skill_2_Timer = 0;
-                }
-            }
-            if (skill_3_Off)
-            {
-                skill_3_Timer += Time.deltaTime;
-                if (skill_3_Timer >= 1.0f && player.job == Global.Classes.Warrior)
-                {
-                    playerAnim.SetBool("Skill3_2", false);
-                }
-                if (skill_3_Timer >= skill_3_Cooltime)
-                {
-                    skill_3_Off = false;
-                    skill_3_Timer = 0;
-                }
-            }
-            if (skill_4_Off)
-            {
-                skill_4_Timer += Time.deltaTime;
-                if (skill_4_Timer >= skill_4_Cooltime)
-                {
-                    skill_4_Off = false;
-                    skill_4_Timer = 0;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse0) && playerAnim.GetInteger("Combo") == 0 && gameObject.tag == "Player")
+            if (Input.GetKeyDown(KeyCode.Mouse0) && archerAnim.GetInteger("Combo") == 0 && gameObject.tag == "Player")
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -165,24 +110,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public void InitStatus()
-    {
-
-        player.maxHP = 539;
-        player.maxMP = 280;
-        player.atk = 61;
-        player.def = 32;
-
-        attack_Cooltime = 1.0f;
-        skill_1_Cooltime = 3.0f;
-        skill_1_Cost = 30;
-        skill_2_Cooltime = 3.0f;
-        skill_2_Cost = 30;
-        skill_3_Cooltime = 3.0f;
-        skill_3_Cost = 30;
-        skill_4_Cooltime = 3.0f;
-        skill_4_Cost = 30;
-    }
+   
 
     [PunRPC]
     void Archer_Attack()
@@ -195,35 +123,32 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             if (comboTimer > 3.0f)
             {
-                playerAnim.SetInteger("Combo", 0);
+                archerAnim.SetInteger("Combo", 0);
                 comboContinue = false;
             }
             comboTimer = 0;
 
             Vector3 dir = transform.forward;
 
-            if (playerAnim.GetInteger("Combo") == 0)
+            if (archerAnim.GetInteger("Combo") == 0)
             {
-                playerAnim.SetTrigger("FirstAttack");
+                archerAnim.SetTrigger("FirstAttack");
 
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
 
             }
-            else if (playerAnim.GetInteger("Combo") == 1)
+            else if (archerAnim.GetInteger("Combo") == 1)
             {
-                playerAnim.SetTrigger("SecondAttack");
+                archerAnim.SetTrigger("SecondAttack");
 
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
                 
             }
-            else if (playerAnim.GetInteger("Combo") == 2)
+            else if (archerAnim.GetInteger("Combo") == 2)
             {
-                playerAnim.SetTrigger("ThirdAttack");
+                archerAnim.SetTrigger("ThirdAttack");
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
                 
             }
@@ -236,20 +161,19 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill1()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !skill_1_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
         {
-            if (player.mp >= skill_1_Cost)
+            if (player.mp >= player.skill_1_Cost)
             {
-                skill_1_Off = true;
-                player.mp -= skill_1_Cost;
+                player.skill_1_Off = true;
+                player.mp -= player.skill_1_Cost;
                 //player.isAttacking = true;
                 //playerAnim.SetBool("Skill2", true);
-                playerAnim.SetTrigger("Skill1");
+                archerAnim.SetTrigger("Skill1");
                 Vector3 dir = player.transform.forward;
 
                 //transform.rotation = Quaternion.LookRotation(dir);
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherVX1", ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX1.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherVX1", ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX1.transform.rotation);
                 
             }
         }
@@ -258,13 +182,13 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill2()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha2) && !skill_2_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
         {
-            if (player.mp >= skill_2_Cost)
+            if (player.mp >= player.skill_2_Cost)
             {
-                skill_2_Off = true;
-                player.mp -= skill_2_Cost;
-                playerAnim.SetTrigger("Skill2");
+                player.skill_2_Off = true;
+                player.mp -= player.skill_2_Cost;
+                archerAnim.SetTrigger("Skill2");
                 Vector3 dir = transform.forward;
 
                 //transform.rotation = Quaternion.LookRotation(dir);
@@ -272,14 +196,11 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Quaternion rot2 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, 5.0f));
 
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
 
             }
         }
@@ -288,13 +209,13 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill3()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3) && !skill_3_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
         {
-            if (player.mp >= skill_3_Cost)
+            if (player.mp >= player.skill_3_Cost)
             {
-                skill_3_Off = true;
-                player.mp -= skill_3_Cost;
-                playerAnim.SetTrigger("Skill3");
+                player.skill_3_Off = true;
+                player.mp -= player.skill_3_Cost;
+                archerAnim.SetTrigger("Skill3");
                 StartCoroutine("Archer_Skill3_Delay");
             }
         }
@@ -303,13 +224,13 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill4()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4) && !skill_4_Off)
+        if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
         {
-            if (player.mp >= skill_4_Cost)
+            if (player.mp >= player.skill_4_Cost)
             {
-                skill_4_Off = true;
-                player.mp -= skill_4_Cost;
-                playerAnim.SetTrigger("Skill4");
+                player.skill_4_Off = true;
+                player.mp -= player.skill_4_Cost;
+                archerAnim.SetTrigger("Skill4");
                 StartCoroutine("Archer_Skill4_Effect");
 
             }
@@ -324,8 +245,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         //transform.rotation = Quaternion.LookRotation(dir);
 
-        PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation)
-           .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+        PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
 
     }
 

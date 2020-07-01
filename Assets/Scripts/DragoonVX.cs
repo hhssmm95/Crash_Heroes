@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class DragoonVX : MonoBehaviour
+public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 {
     ParticleSystem VX;
     List<ParticleCollisionEvent> collisionEvents;
@@ -18,6 +19,7 @@ public class DragoonVX : MonoBehaviour
     {
     }
 
+    [PunRPC]
     private void OnParticleCollision(GameObject other)
     {
         //ParticlePhysicsExtensions.GetCollisionEvents(ArcherVX1, other, collisionEvents);
@@ -40,5 +42,10 @@ public class DragoonVX : MonoBehaviour
             }
             enemy.OnDamage(10);
         }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

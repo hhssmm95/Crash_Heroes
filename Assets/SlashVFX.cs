@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class SlashVFX : MonoBehaviour
+
+public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
 {
     private Transform player;
     public float speed = 4;
@@ -21,7 +23,7 @@ public class SlashVFX : MonoBehaviour
         transform.position += dir * speed * Time.deltaTime;
     }
     
-
+    [PunRPC]
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
@@ -29,5 +31,10 @@ public class SlashVFX : MonoBehaviour
             var enemy = other.GetComponent<CharacterMove>();
             enemy.OnDamage(10);
         }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

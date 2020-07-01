@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class ArcherSkill1 : MonoBehaviour
+using Photon.Pun;
+public class ArcherSkill1 : MonoBehaviourPunCallbacks, IPunObservable
 {
     ParticleSystem ArcherVX1;
     List<ParticleCollisionEvent> collisionEvents;
@@ -18,6 +18,7 @@ public class ArcherSkill1 : MonoBehaviour
     {
     }
 
+    [PunRPC]
     private void OnParticleCollision(GameObject other)
     {
         //ParticlePhysicsExtensions.GetCollisionEvents(ArcherVX1, other, collisionEvents);
@@ -27,5 +28,10 @@ public class ArcherSkill1 : MonoBehaviour
             var enemy = other.GetComponent<CharacterMove>();
             enemy.OnDamage(10);
         }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

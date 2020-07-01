@@ -23,11 +23,10 @@ public class UImanager : MonoBehaviour
 
     Image hpOrb;
     Image mpOrb;
-    WarriorSkill wSkill;
+    //WarriorSkill wSkill;
     //ArcherSkill aSkill;
     //DragoonSkill dSkill;
     //MageSkill mSkill;
-    //ClassParent characterClass;
 
     public Text text_Time;
     public float LimitTime;
@@ -115,7 +114,6 @@ public class UImanager : MonoBehaviour
             switch (player.job)
             {
                 case Global.Classes.Warrior:
-                    wSkill = player.gameObject.GetComponent<WarriorSkill>();
                     slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_02", typeof(Sprite)) as Sprite;
                     slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_21", typeof(Sprite)) as Sprite;
                     slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_19", typeof(Sprite)) as Sprite;
@@ -151,164 +149,54 @@ public class UImanager : MonoBehaviour
         {
             text_Time.text = "0";
         }
-        switch(player.job)
+        if (player.skill_1_Off == true)
         {
-            case Global.Classes.Warrior:
-                if (wSkill.skill_1_Off == true)
-                {
-                    float percent = wSkill.skill_1_Timer / wSkill.skill_1_Cooltime;
-                    slot1.fillAmount = percent;
-                }
-                else
-                {
-                    slot1.fillAmount = 1f;
-                }
+            float percent = player.skill_1_Timer / player.skill_1_Cooltime;
+            slot1.fillAmount = percent;
+        }
+        else
+        {
+            slot1.fillAmount = 1f;
+        }
 
-                if (wSkill.skill_2_Off == true)
-                {
-                    float percent = wSkill.skill_2_Timer / wSkill.skill_2_Cooltime;
-                    slot2.fillAmount = percent;
-                }
-                else
-                {
-                    slot2.fillAmount = 1f;
-                }
+        if (player.skill_2_Off == true)
+        {
+            float percent = player.skill_2_Timer / player.skill_2_Cooltime;
+            slot2.fillAmount = percent;
+        }
+        else
+        {
+            slot2.fillAmount = 1f;
+        }
 
-                if (wSkill.skill_3_Off == true)
-                {
-                    float percent = wSkill.skill_3_Timer / wSkill.skill_3_Cooltime;
-                    slot3.fillAmount = percent;
-                }
-                else
-                {
-                    slot3.fillAmount = 1f;
-                }
+        if (player.skill_3_Off == true)
+        {
+            float percent = player.skill_3_Timer / player.skill_3_Cooltime;
+            slot3.fillAmount = percent;
+        }
+        else
+        {
+            slot3.fillAmount = 1f;
+        }
 
-                if (wSkill.skill_4_Off == true)
-                {
-                    float percent = wSkill.skill_4_Timer / wSkill.skill_4_Cooltime;
-                    slot4.fillAmount = percent;
-                }
-                else
-                {
-                    slot4.fillAmount = 1f;
-                }
+        if (player.skill_4_Off == true)
+        {
+            float percent = player.skill_4_Timer / player.skill_4_Cooltime;
+            slot4.fillAmount = percent;
+        }
+        else
+        {
+            slot4.fillAmount = 1f;
+        }
 
-                if (wSkill.skill_5_Off == true)
-                {
-                    float percent = wSkill.skill_5_Timer / wSkill.skill_5_Cooltime;
-                    slot5.fillAmount = percent;
-                }
-                else
-                {
-                    slot5.fillAmount = 1f;
-                }
-                break;
-
-            case Global.Classes.Archer:
-            //if (aSkill.skill_1_Off == true)
-            //{
-            //    float percent = aSkill.skill_1_Timer / aSkill.skill_1_Cooltime;
-            //    slot1.fillAmount = percent;
-            //}
-            //else
-            //{
-            //    slot1.fillAmount = 1f;
-            //}
-
-            //if (aSkill.skill_2_Off == true)
-            //{
-            //    float percent = aSkill.skill_2_Timer / aSkill.skill_2_Cooltime;
-            //    slot2.fillAmount = percent;
-            //}
-            //else
-            //{
-            //    slot2.fillAmount = 1f;
-            //}
-
-            //if (aSkill.skill_3_Off == true)
-            //{
-            //    float percent = aSkill.skill_3_Timer / aSkill.skill_3_Cooltime;
-            //    slot3.fillAmount = percent;
-            //}
-            //else
-            //{
-            //    slot3.fillAmount = 1f;
-            //}
-
-            //if (aSkill.skill_4_Off == true)
-            //{
-            //    float percent = aSkill.skill_4_Timer / aSkill.skill_4_Cooltime;
-            //    slot4.fillAmount = percent;
-            //}
-            //else
-            //{
-            //    slot4.fillAmount = 1f;
-            //}
-
-            //if (aSkill.skill_5_Off == true)
-            //{
-            //    float percent = aSkill.skill_5_Timer / aSkill.skill_5_Cooltime;
-            //    slot5.fillAmount = percent;
-            //}
-            //else
-            //{
-            //    slot5.fillAmount = 1f;
-            //}
-            break;
-
-            case Global.Classes.Dragoon:
-                //if (dSkill.skill_1_Off == true)
-                //{
-                //    float percent = dSkill.skill_1_Timer / dSkill.skill_1_Cooltime;
-                //    slot1.fillAmount = percent;
-                //}
-                //else
-                //{
-                //    slot1.fillAmount = 1f;
-                //}
-
-                //if (dSkill.skill_2_Off == true)
-                //{
-                //    float percent = dSkill.skill_2_Timer / dSkill.skill_2_Cooltime;
-                //    slot2.fillAmount = percent;
-                //}
-                //else
-                //{
-                //    slot2.fillAmount = 1f;
-                //}
-
-                //if (dSkill.skill_3_Off == true)
-                //{
-                //    float percent = dSkill.skill_3_Timer / dSkill.skill_3_Cooltime;
-                //    slot3.fillAmount = percent;
-                //}
-                //else
-                //{
-                //    slot3.fillAmount = 1f;
-                //}
-
-                //if (dSkill.skill_4_Off == true)
-                //{
-                //    float percent = dSkill.skill_4_Timer / dSkill.skill_4_Cooltime;
-                //    slot4.fillAmount = percent;
-                //}
-                //else
-                //{
-                //    slot4.fillAmount = 1f;
-                //}
-
-                //if (dSkill.skill_5_Off == true)
-                //{
-                //    float percent = dSkill.skill_5_Timer / dSkill.skill_5_Cooltime;
-                //    slot5.fillAmount = percent;
-                //}
-                //else
-                //{
-                //    slot5.fillAmount = 1f;
-                //}
-                break;
-
+        if (player.skill_5_Off == true)
+        {
+            float percent = player.skill_5_Timer / player.skill_5_Cooltime;
+            slot5.fillAmount = percent;
+        }
+        else
+        {
+            slot5.fillAmount = 1f;
         }
 
 

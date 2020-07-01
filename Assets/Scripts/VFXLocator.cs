@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class VFXLocator : MonoBehaviourPunCallbacks
+public class VFXLocator : MonoBehaviourPunCallbacks, IPunObservable
 {
     GameObject player;
     Transform atk2Pos;
@@ -31,6 +31,7 @@ public class VFXLocator : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        photonView.RPC("SkillEffect", RpcTarget.All);
     }
 
     [PunRPC]
@@ -56,5 +57,10 @@ public class VFXLocator : MonoBehaviourPunCallbacks
         else if (gameObject.CompareTag("ArcherVX1") || gameObject.CompareTag("DragoonSkill1"))
             transform.position = new Vector3(skill1Pos.position.x, skill1Pos.position.y, skill1Pos.position.z);
     }
-    
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+    }
+
 }

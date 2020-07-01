@@ -44,10 +44,36 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     private UImanager ui;
 
+    public float skill_1_Cooltime;
+    public float skill_1_Cost;
+
+    public float skill_2_Cooltime;
+    public float skill_2_Cost;
+
+    public float skill_3_Cooltime;
+    public float skill_3_Cost;
+
+    public float skill_4_Cooltime;
+    public float skill_4_Cost;
+
+    public float skill_5_Cooltime;
+    public float skill_5_Cost;
+
+    public bool skill_1_Off;
+    public bool skill_2_Off;
+    public bool skill_3_Off;
+    public bool skill_4_Off;
+    public bool skill_5_Off;
+    public float skill_1_Timer;
+    public float skill_2_Timer;
+    public float skill_3_Timer;
+    public float skill_4_Timer;
+    public float skill_5_Timer;
+
     //private int score;
-    WarriorSkill wSkill;
-    //ArcherSkill aSkill;
-    //DragoonSkill dSkill;
+    public WarriorSkill wSkill;
+    public ArcherSkill aSkill;
+    public DragoonSkill dSkill;
     //MageSkill mSkill;
     void Start()
     {
@@ -56,17 +82,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         myRig = gameObject.GetComponent<Rigidbody>();
 
         wSkill = gameObject.GetComponent<WarriorSkill>();
-        //aSkill = gameObject.GetComponent<ArcherSkill>();
-        //dSkill = gameObject.GetComponent<DragoonSkill>();
+        aSkill = gameObject.GetComponent<ArcherSkill>();
+        dSkill = gameObject.GetComponent<DragoonSkill>();
         //mSkill = gameObject.GetComponent<MageSkill>();
 
 
         if (wSkill != null)
             job = Global.Classes.Warrior;
-        //else if (aSkill != null)
-        //    job = Global.Classes.Archer;
-        //else if (dSkill != null)
-        //    job = Global.Classes.Dragoon;
+        else if (aSkill != null)
+            job = Global.Classes.Archer;
+        else if (dSkill != null)
+            job = Global.Classes.Dragoon;
         //else if (mSkill != null)
         //    job = Global.Classes.Mage;
 
@@ -77,36 +103,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 break;
 
             case Global.Classes.Archer:
-                //maxHP = 539;
-                //maxMP = 280;
-                //atk = 61;
-                //def = 32;
-                //skill.attack_Cooltime = 1.0f;
-                //skill.skill_1_Cooltime = 3.0f;
-                //skill.skill_1_Cost = 30;
-                //skill.skill_2_Cooltime = 3.0f;
-                //skill.skill_2_Cost = 30;
-                //skill.skill_3_Cooltime = 3.0f;
-                //skill.skill_3_Cost = 30;
-                //skill.skill_4_Cooltime = 3.0f;
-                //skill.skill_4_Cost = 30;
+                aSkill.InitStatus();
 
                 break;
 
             case Global.Classes.Dragoon:
-                //maxHP = 580;
-                //maxMP = 274;
-                //atk = 66;
-                //def = 36;
-                //skill.attack_Cooltime = 1.0f;
-                //skill.skill_1_Cooltime = 3.0f;
-                //skill.skill_1_Cost = 30;
-                //skill.skill_2_Cooltime = 3.0f;
-                //skill.skill_2_Cost = 30;
-                //skill.skill_3_Cooltime = 3.0f;
-                //skill.skill_3_Cost = 30;
-                //skill.skill_4_Cooltime = 3.0f;
-                //skill.skill_4_Cost = 30;
+                dSkill.InitStatus();
 
                 break;
 
@@ -125,7 +127,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
 
         if (photonView.IsMine)
-        //if(CompareTag("Player"))
         {
             isMine = true;
 
@@ -140,6 +141,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             ui.playerCheck = true;
             hpBar.gameObject.SetActive(false);
 
+            gameObject.tag = "Player";
         }
         
 
@@ -264,6 +266,56 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
+
+            if (skill_1_Off)
+            {
+                skill_1_Timer += Time.deltaTime;
+                if (skill_1_Timer >= 1.2f)
+                    isAttacking = false;
+                if (skill_1_Timer >= skill_1_Cooltime)
+                {
+                    skill_1_Off = false;
+                    skill_1_Timer = 0;
+                }
+            }
+            if (skill_2_Off)
+            {
+                skill_2_Timer += Time.deltaTime;
+                if (skill_2_Timer >= 1.0f)
+                {
+                    isAttacking = false;
+                    if (job == Global.Classes.Warrior)
+                        wSkill.warriorAnim.SetBool("Skill2_2", false);
+                }
+                if (skill_2_Timer >= skill_2_Cooltime)
+                {
+                    skill_2_Off = false;
+                    skill_2_Timer = 0;
+                }
+            }
+            if (skill_3_Off)
+            {
+                skill_3_Timer += Time.deltaTime;
+                if (skill_3_Timer >= 1.0f && job == Global.Classes.Warrior)
+                {
+                    wSkill.warriorAnim.SetBool("Skill3_2", false);
+                }
+                if (skill_3_Timer >= skill_3_Cooltime)
+                {
+                    skill_3_Off = false;
+                    skill_3_Timer = 0;
+                }
+            }
+            if (skill_4_Off)
+            {
+                skill_4_Timer += Time.deltaTime;
+                if (skill_4_Timer >= skill_4_Cooltime)
+                {
+                    skill_4_Off = false;
+                    skill_4_Timer = 0;
+                }
+            }
+
         }
     }
     void Jump()
@@ -297,7 +349,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
     }
 
-
+    [PunRPC]
     public void OnDamage(float damage)
     {
         if (!isDamaging)
@@ -310,6 +362,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
     }
 
+    [PunRPC]
     public void OnSlow(float rate, float time)
     {
         if (photonView.IsMine)
