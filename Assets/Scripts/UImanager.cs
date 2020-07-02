@@ -21,8 +21,8 @@ public class UImanager : MonoBehaviour
     Image slot4;
     Image slot5;
 
-    Image hpOrb;
-    Image mpOrb;
+    GameObject hpOrb;
+    GameObject mpOrb;
     //WarriorSkill wSkill;
     //ArcherSkill aSkill;
     //DragoonSkill dSkill;
@@ -86,21 +86,29 @@ public class UImanager : MonoBehaviour
         slot4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         slot5 = GameObject.FindWithTag("CoolTime_Slot_5").GetComponent<Image>();
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
-        hpOrb = GameObject.FindWithTag("hpOrb").GetComponent<Image>();
-        mpOrb = GameObject.FindWithTag("mpOrb").GetComponent<Image>();
+        hpOrb = GameObject.FindWithTag("hpOrb");
+        mpOrb = GameObject.FindWithTag("mpOrb");
+        hpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", -1.6f);
+        mpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", -1.6f);
+        //hpOrb.GetComponent<Renderer>().material.SetFloat("PositionUV_Y_1", -1.6f);
+        //mpOrb.GetComponent<Renderer>().material.SetFloat("PositionUV_Y_1", -1.6f);
 
-        
+
     }
     
     void hpControl()
     {
         float percent = player.hp / player.maxHP;
-        hpOrb.fillAmount = percent;
+        float result = percent * -3.2f + 1.6f;
+        hpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", result);
+        //hpOrb.fillAmount = percent * -1.6f;
     }
     void mpControl()
     {
         float percent = player.mp / player.maxMP;
-        mpOrb.fillAmount = percent;
+        float result = percent * -3.2f + 1.6f;
+        mpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", result);
+        //mpOrb.fillAmount = percent;
     }
 
     private void Update()
