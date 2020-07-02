@@ -9,7 +9,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public Animator warriorAnim;
     Camera mainCamera;
 
-    public float attack_Cooltime;
+    public float attack_Cooltime = 1.0f;
     public float attack_Cost;
 
 
@@ -26,9 +26,12 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem WarriorVX2_1;
     public ParticleSystem WarriorVX2_2;
 
+    public ParticleSystem WarriorVX3;
+    public GameObject WarriorSkill3Pos;
+
     public bool isMine;
 
-    void Start()
+    void Awake()
     {
         //if(CompareTag("Player"))
         if (photonView.IsMine)
@@ -44,6 +47,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+    [PunRPC]
     public void InitStatus()
     {
 
@@ -52,7 +56,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.atk = 64.0f;
         player.def = 39.0f;
 
-        attack_Cooltime = 1.0f;
+        //attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 3.0f;
         player.skill_1_Cost = 30.0f;
         player.skill_2_Cooltime = 3.0f;
@@ -281,6 +285,26 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.2f);
 
         PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_2", new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
+
+    }
+
+    IEnumerator Warrior_Skill3_VFX()
+    {
+        //if (stateInfo.normalizedTime >= 0.2f && !trigger)
+        //{
+        //    trigger = true;
+        //    shotPos = GameObject.FindGameObjectWithTag("WarriorSkill3Pos").transform;
+        //    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+            
+        //    //PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation)
+        //    //    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+
+        //    Instantiate(VFX, new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation);
+        //}
+
+        Vector3 dir = player.transform.forward;
+        yield return new WaitForSeconds(0.4f);
+        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
 
     }
 
