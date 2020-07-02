@@ -99,16 +99,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             switch (job)
         {
             case Global.Classes.Warrior:
-                wSkill.InitStatus();
+                wSkill.photonView.RPC("InitStatus", RpcTarget.All);
+                //photonView.RPC("Warrior_Attack", RpcTarget.All);
                 break;
 
             case Global.Classes.Archer:
-                aSkill.InitStatus();
+                aSkill.photonView.RPC("InitStatus", RpcTarget.All);
 
                 break;
 
             case Global.Classes.Dragoon:
-                dSkill.InitStatus();
+                dSkill.photonView.RPC("InitStatus", RpcTarget.All);
 
                 break;
 
