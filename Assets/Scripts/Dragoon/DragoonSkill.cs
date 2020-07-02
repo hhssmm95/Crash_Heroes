@@ -33,7 +33,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     private bool isMine;
 
-    void Start()
+    void Awake()
     {
         if (photonView.IsMine)
         {

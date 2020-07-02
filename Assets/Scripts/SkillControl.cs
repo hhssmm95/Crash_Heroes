@@ -70,7 +70,7 @@ public class SkillControl : MonoBehaviourPunCallbacks, IPunObservable
 
     private bool isMine;
 
-    void Start()
+    void Awake()
     {
         player = gameObject.GetComponent<CharacterMove>();
         playerAnim = gameObject.GetComponent<Animator>();
