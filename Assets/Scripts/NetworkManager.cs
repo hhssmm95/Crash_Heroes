@@ -192,21 +192,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    //#region 닉네임
-    //[PunRPC]
-    //void NickNameRPC(string nickName)
-    //{
-    //    for (int i = 0; i<PhotonNetwork.CurrentRoom.PlayerCount; i++)
-    //    {
-    //        if(NickNameList[i].text == "")
-    //        {
-    //            NickNameList[i].text = nickName;
-    //            break;
-    //        }
-    //    }
-    //}
-    //#endregion
-
     #region 채팅
     public void Send()
     {
