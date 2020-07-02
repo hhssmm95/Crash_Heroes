@@ -5,20 +5,19 @@ using Photon.Pun;
 
 public class GManager : MonoBehaviourPunCallbacks
 {
-    public string player_prefab;
-    public Transform spawn_point;
+    public string[] player_prefab;
+    public Transform[] spawn_point;
     private void Start()
     {
         Spawn();
     }
-
+    
     public void Spawn()
     {
-        PhotonNetwork.Instantiate(player_prefab, spawn_point.position, spawn_point.rotation);
-    }
-
-    public void GameOut()
-    {
-        PhotonNetwork.LoadLevel(0);
+        for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+        {
+            int ran = Random.Range(0, PhotonNetwork.CurrentRoom.PlayerCount);
+            PhotonNetwork.Instantiate(player_prefab[ran], spawn_point[ran].position, spawn_point[ran].rotation);
+        }
     }
 }
