@@ -23,7 +23,7 @@ public class ArcherSkill1 : MonoBehaviourPunCallbacks, IPunObservable
     {
         //ParticlePhysicsExtensions.GetCollisionEvents(ArcherVX1, other, collisionEvents);
         //Debug.Log("파티클충돌");
-        if(other.CompareTag("Enemy"))
+        if(!other.CompareTag("Archer") && other.layer.ToString() == "Player")
         {
             var enemy = other.GetComponent<CharacterMove>();
             enemy.OnDamage(10);
