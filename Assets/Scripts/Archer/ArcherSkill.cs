@@ -6,10 +6,10 @@ using Photon.Pun;
 public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove player;
-    Animator archerAnim;
+    public Animator archerAnim;
     Camera mainCamera;
 
-    public float attack_Cooltime;
+    public float attack_Cooltime = 1.0f;
     public float attack_Cost;
     
 
@@ -42,7 +42,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.job = Global.Classes.Archer;
         }
     }
-
+    [PunRPC]
     public void InitStatus()
     {
 
@@ -51,7 +51,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.atk = 61;
         player.def = 32;
 
-        attack_Cooltime = 1.0f;
+        //attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 3.0f;
         player.skill_1_Cost = 30;
         player.skill_2_Cooltime = 3.0f;
@@ -96,7 +96,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && archerAnim.GetInteger("Combo") == 0 && gameObject.tag == "Player")
+            if (Input.GetKeyDown(KeyCode.Mouse0) && archerAnim.GetInteger("Combo") == 0)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
