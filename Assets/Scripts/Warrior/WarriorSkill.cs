@@ -31,7 +31,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool isMine;
 
-    void Awake()
+    void Start()
     {
         //if(CompareTag("Player"))
         if (photonView.IsMine)

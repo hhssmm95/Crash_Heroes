@@ -142,7 +142,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             ui.playerCheck = true;
             hpBar.gameObject.SetActive(false);
 
-            gameObject.tag = "Player";
+            //gameObject.tag = "Player";
         }
         
 

@@ -27,9 +27,9 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem ArcherVX2_1; //평타1
     public ParticleSystem ArcherVX2_2; //평타2
 
-    private bool isMine;
+    public bool isMine;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         if (photonView.IsMine)
         {
@@ -42,6 +42,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.job = Global.Classes.Archer;
         }
     }
+
     [PunRPC]
     public void InitStatus()
     {

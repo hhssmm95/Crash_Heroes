@@ -9,7 +9,7 @@ public class Sword : MonoBehaviour
     CharacterMove player;
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMove>();
+        player = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") && attacking)
+        if (!other.CompareTag("Warrior") && attacking && other.gameObject.layer.ToString() == "Player")
         {
             var enemy = other.GetComponent<CharacterMove>();
             enemy.OnDamage(10);

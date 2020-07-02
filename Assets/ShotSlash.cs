@@ -19,17 +19,17 @@ public class ShotSlash : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (stateInfo.normalizedTime >= 0.2f && !trigger)
-        {
-            trigger = true;
-            shotPos = GameObject.FindGameObjectWithTag("WarriorSkill3Pos").transform;
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-            Vector3 dir = player.transform.forward;
-            //PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation)
-            //    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
+        //if (stateInfo.normalizedTime >= 0.2f && !trigger)
+        //{
+        //    trigger = true;
+        //    shotPos = GameObject.FindGameObjectWithTag("WarriorSkill3Pos").transform;
+        //    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        //    Vector3 dir = player.transform.forward;
+        //    //PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation)
+        //    //    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
 
-            Instantiate(VFX, new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation);
-        }
+        //    Instantiate(VFX, new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation);
+        //}
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

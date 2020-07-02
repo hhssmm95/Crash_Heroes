@@ -99,7 +99,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0 && gameObject.tag == "Player")
+            if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
