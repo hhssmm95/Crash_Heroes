@@ -101,55 +101,6 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            //if (skill_1_Off)
-            //{
-            //    skill_1_Timer += Time.deltaTime;
-            //    if (skill_1_Timer >= 1.2f)
-            //        player.isAttacking = false;
-            //    if (skill_1_Timer >= skill_1_Cooltime)
-            //    {
-            //        skill_1_Off = false;
-            //        skill_1_Timer = 0;
-            //    }
-            //}
-            //if (skill_2_Off)
-            //{
-            //    skill_2_Timer += Time.deltaTime;
-            //    if (skill_2_Timer >= 1.0f)
-            //    {
-            //        player.isAttacking = false;
-            //        if (player.job == Global.Classes.Warrior)
-            //            Warrior.SetBool("Skill2_2", false);
-            //    }
-            //    if (skill_2_Timer >= skill_2_Cooltime)
-            //    {
-            //        skill_2_Off = false;
-            //        skill_2_Timer = 0;
-            //    }
-            //}
-            //if (skill_3_Off)
-            //{
-            //    skill_3_Timer += Time.deltaTime;
-            //    if (skill_3_Timer >= 1.0f && player.job == Global.Classes.Warrior)
-            //    {
-            //        Warrior.SetBool("Skill3_2", false);
-            //    }
-            //    if (skill_3_Timer >= skill_3_Cooltime)
-            //    {
-            //        skill_3_Off = false;
-            //        skill_3_Timer = 0;
-            //    }
-            //}
-            //if (skill_4_Off)
-            //{
-            //    skill_4_Timer += Time.deltaTime;
-            //    if (skill_4_Timer >= skill_4_Cooltime)
-            //    {
-            //        skill_4_Off = false;
-            //        skill_4_Timer = 0;
-            //    }
-            //}
-
             if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 0)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -196,13 +147,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
 
         }
-
-
-        //transform.rotation = Quaternion.LookRotation(dir);
-
-
-        //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
-
+        
     }
 
     [PunRPC]
@@ -246,6 +191,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             //playerAnim.SetBool("Skill2", true);
             warriorAnim.SetTrigger("Skill3_1");
             warriorAnim.SetBool("Skill3_2", true);
+            StartCoroutine("Warrior_Skill3_VFX");
         }
 
     }
@@ -290,17 +236,6 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator Warrior_Skill3_VFX()
     {
-        //if (stateInfo.normalizedTime >= 0.2f && !trigger)
-        //{
-        //    trigger = true;
-        //    shotPos = GameObject.FindGameObjectWithTag("WarriorSkill3Pos").transform;
-        //    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-            
-        //    //PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation)
-        //    //    .GetComponent<PhotonView>().RPC("SkillEffect", RpcTarget.All);
-
-        //    Instantiate(VFX, new Vector3(shotPos.transform.position.x, shotPos.transform.position.y, shotPos.transform.position.z), Quaternion.LookRotation(dir) * VFX.transform.rotation);
-        //}
 
         Vector3 dir = player.transform.forward;
         yield return new WaitForSeconds(0.4f);
