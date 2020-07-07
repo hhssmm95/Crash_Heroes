@@ -66,7 +66,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (isMine)
+        if (isMine && !player.isDead)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Archer_Attack", RpcTarget.All);

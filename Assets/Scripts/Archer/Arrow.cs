@@ -20,7 +20,7 @@ public class Arrow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy"))
+        if(!other.CompareTag("Warrior") && other.gameObject.layer.ToString() == "Player")
         {
             var enemy = other.GetComponent<CharacterMove>();
             if (gameObject.tag == "BigArrow")
