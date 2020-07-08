@@ -8,7 +8,7 @@ using Photon.Realtime;
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public GameObject networkManager;
-    private string[] prefebsName = { "Knight", "Prefebs/M03", "Prefebs/F02"};
+    private NickNameList nickNameList;
 
     [Header("MainPanel")]
     public GameObject MainPanel;
@@ -38,6 +38,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
 
+    private void Start()
+    {
+        //DontDestroyOnLoad(networkManager);
+        nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+    }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
     public void MyListClick(int num)
@@ -224,24 +229,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        if(PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         {
-            Shuffle(prefebsName);
+            nickNameList.isStart = true;
             PhotonNetwork.LoadLevel(1);
-            DontDestroyOnLoad(networkManager);
-        }
+        } 
     }
-
-    private static void Shuffle<T>(T[] array)
-    {
-        for (int i = 0; i < array.Length; i++)
-        {
-            System.Random ran = new System.Random();
-            int randomValue = ran.Next(0, array.Length);
-            T temp = array[i];
-            array[i] = array[randomValue];
-            array[randomValue] = temp;
-        }
-    }
+    
     #endregion
 }
