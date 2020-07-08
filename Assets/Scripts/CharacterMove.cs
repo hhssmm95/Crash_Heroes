@@ -26,6 +26,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public int potion;
     public bool isDamaging;
     public bool isDashing;
+    public bool isStun;
+    public bool isBurn;
+    float burnTimer;
     float mpTimer;
     float damageTimer;
 
@@ -204,7 +207,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
-
+        if(isDead)
+        {
+            OnDead();
+        }
 
         if (isMine)
         {
@@ -220,7 +226,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-            if (!isDead && !isDashing) //사망처리중일 시 이동 불가
+            if (!isDead && !isDashing && !isStun) //사망처리중일 시 이동 불가
             {
 
                 Move();
@@ -329,6 +335,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (hp <= 0)
                 isDead = true;
 
+            if(isBurn && burnTimer >= 1.0f && !isDead)
+            {
+                burnTimer = 0;
+                //OnBurn 함수만들어서 제어, if(isBurn) {Timer++;} 추가
+            }
+            
         }
     }
     void Jump()
@@ -365,7 +377,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnDamage(float damage)
     {
-        if (!isDamaging)
+        if (isMine && !isDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
@@ -378,10 +390,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnSlow(float rate, float time)
     {
-        if (photonView.IsMine)
+        if (isMine && !isDead)
             StartCoroutine(Slow(rate, time));
     }
 
+    public void OnStun(float time)
+    {
+        if (isMine && !isDead)
+            StartCoroutine(Stun(time));
+    }
+
+    //[PunRPC]
     public void OnDead()
     {
         if (!dying)
@@ -400,6 +419,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         yield return new WaitForSeconds(time);
         speed = originSpeed;
     }
+
+    IEnumerator Stun(float time)
+    {
+        isStun = true;
+        yield return new WaitForSeconds(time);
+        isStun = false;
+    }
+    
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

@@ -149,7 +149,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             {
                 archerAnim.SetTrigger("ThirdAttack");
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
                 
             }
@@ -197,11 +197,11 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Quaternion rot2 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, 5.0f));
 
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
 
-                PhotonNetwork.Instantiate("Prefebs/arrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
 
             }
         }

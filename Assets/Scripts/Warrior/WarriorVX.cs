@@ -20,6 +20,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         if (tag == "WarriorAttack2")
             wAtk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
 
+        Destroy(gameObject, 1.0f);
     }
 
     // Update is called once per frame

@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Breath : MonoBehaviour
+public class Breath : MonoBehaviourPunCallbacks, IPunObservable
 {
     ParticleSystem VX;
     List<ParticleCollisionEvent> collisionEvents;
+    CharacterMove Dragoon;
     void Start()
     {
         VX = GetComponent<ParticleSystem>();
@@ -22,11 +24,17 @@ public class Breath : MonoBehaviour
     {
         //ParticlePhysicsExtensions.GetCollisionEvents(ArcherVX1, other, collisionEvents);
         //Debug.Log("파티클충돌");
-        if (other.CompareTag("Enemy"))
+        if (!other.CompareTag("Dragoon") && other.gameObject.layer.ToString() == "Player")
         {
-            Debug.Log("VX충돌");
+            Debug.Log("브레스타격");
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.OnDamage(10);
+            //enemy.OnDamage(10);
+            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 1.2f);
         }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

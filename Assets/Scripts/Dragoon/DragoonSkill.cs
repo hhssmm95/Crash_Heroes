@@ -18,8 +18,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     public float comboTimer;
 
 
-    public GameObject ArcherSkill1Pos;
-    public GameObject WarriorAttack2Pos;
+    public GameObject Skill1Pos;
+    public GameObject Attack2Pos;
 
     public ParticleSystem DragoonVX0_1;
     public ParticleSystem DragoonVX0_2;
@@ -139,7 +139,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             else if (dragoonAnim.GetInteger("Combo") == 1)
             {
                 dragoonAnim.SetTrigger("SecondAttack");
-                Instantiate(DragoonVX0_2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
+                Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
 
             }
             else if (dragoonAnim.GetInteger("Combo") == 2)
@@ -173,7 +173,9 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Vector3 dir = player.transform.forward;
 
                 //transform.rotation = Quaternion.LookRotation(dir);
-                Instantiate(DragoonVX1, ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+                //Instantiate(DragoonVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+
             }
         }
     }
@@ -193,7 +195,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Vector3 dir = player.transform.forward;
 
                 //transform.rotation = Quaternion.LookRotation(dir);
-                Instantiate(DragoonVX2, WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+                //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
             }
         }
     }
@@ -209,8 +212,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 player.mp -= player.skill_3_Cost;
                 dragoonAnim.SetTrigger("Skill3");
                 Vector3 dir = player.transform.forward;
-                Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-
+                //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             }
         }
     }
