@@ -6,31 +6,49 @@ using System;
 
 public class GManager : MonoBehaviourPunCallbacks
 {
-    public string[] player_prefab;
+    [SerializeField]
+    private string[] prefebsName = { "Knight", "Prefebs/Archer", "Prefebs/Dragoon" };
     public Transform[] spawn_point;
     
-    NetworkManager networkManager;
+    private NickNameList nickNameList;
 
     public string nickName = null;
     public int playerNum = 0;
     private void Start()
     {
-        networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
-        Spawn();
-    }
-    
-    public void Spawn()
-    {
+        nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
-            if (networkManager.NickNameList[i].text == nickName)
+            if (nickNameList.NameList[i] == nickName)
             {
                 playerNum = i;
                 break;
             }
         }
-        PhotonNetwork.Instantiate(player_prefab[playerNum], spawn_point[playerNum].position, spawn_point[playerNum].rotation);
+
+        Debug.Log(nickName);
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.Log(nickNameList.NameList[i]);
+        }
+        //Shuffle(prefebsName);
+        //Spawn();
+    }
+    
+    public void Spawn()
+    {
+        PhotonNetwork.Instantiate(prefebsName[playerNum], spawn_point[playerNum].position, spawn_point[playerNum].rotation);
     }
 
-    
+    private static void Shuffle<T>(T[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            System.Random ran = new System.Random();
+            int randomValue = ran.Next(0, array.Length);
+            T temp = array[i];
+            array[i] = array[randomValue];
+            array[randomValue] = temp;
+        }
+    }
 }
