@@ -26,6 +26,7 @@ public class Sword : MonoBehaviour
     {
         if (!other.CompareTag("Warrior") && attacking && other.gameObject.layer.ToString() == "Player")
         {
+            
             var enemy = other.GetComponent<CharacterMove>();
             enemy.OnDamage(10);
         }

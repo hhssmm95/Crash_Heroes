@@ -7,6 +7,9 @@ using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    public GameObject networkManager;
+    private string[] prefebsName = { "Knight", "Prefebs/M03", "Prefebs/F02"};
+
     [Header("MainPanel")]
     public GameObject MainPanel;
     public InputField NickNameInput;
@@ -34,7 +37,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
-
 
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
@@ -224,7 +226,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         {
+            Shuffle(prefebsName);
             PhotonNetwork.LoadLevel(1);
+            DontDestroyOnLoad(networkManager);
+        }
+    }
+
+    private static void Shuffle<T>(T[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            System.Random ran = new System.Random();
+            int randomValue = ran.Next(0, array.Length);
+            T temp = array[i];
+            array[i] = array[randomValue];
+            array[randomValue] = temp;
         }
     }
     #endregion

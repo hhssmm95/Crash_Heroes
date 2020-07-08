@@ -15,7 +15,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
     private bool jumpCooltime; //점프 후 아직 쿨타임 중일경우 true
-    public static bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
+    public bool dying; //캐릭터 사망 애니메이션 중복 재생 방지용 변수
     public bool isGround; //캐릭터의 발이 땅에 붙어있을때 true
     public float maxHP;
     public float hp;
@@ -32,7 +32,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float speed = 2.0f; // 캐릭터 이동속도
     public float jumpPower = 5.0f;
     public float rotateSpeed = 10.0f;
-    public static bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
+    public bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
     //public GameObject GameOverPanel;
     public Vector3 moveDirection;
     public bool isAttacking;
@@ -87,14 +87,23 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         //mSkill = gameObject.GetComponent<MageSkill>();
 
 
-        if (wSkill != null)
-            job = Global.Classes.Warrior;
-        else if (aSkill != null)
-            job = Global.Classes.Archer;
-        else if (dSkill != null)
-            job = Global.Classes.Dragoon;
+        //if (wSkill != null)
+        //    job = Global.Classes.Warrior;
+        //else if (aSkill != null)
+        //    job = Global.Classes.Archer;
+        //else if (dSkill != null)
+        //    job = Global.Classes.Dragoon;
         //else if (mSkill != null)
         //    job = Global.Classes.Mage;
+
+        if (gameObject.tag == "Warrior")
+            job = Global.Classes.Warrior;
+        else if (gameObject.tag == "Archer")
+            job = Global.Classes.Archer;
+        else if (gameObject.tag == "Dragoon")
+            job = Global.Classes.Dragoon;
+        else if (gameObject.tag == "Mage")
+            job = Global.Classes.Mage;
 
             switch (job)
         {
@@ -256,7 +265,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-            if (mp / maxMP < 1)
+            if (mp / maxMP < 1 && isDead)
             {
                 mpTimer += Time.deltaTime;
 
@@ -317,6 +326,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
+            if (hp <= 0)
+                isDead = true;
+
         }
     }
     void Jump()
@@ -369,6 +381,18 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (photonView.IsMine)
             StartCoroutine(Slow(rate, time));
     }
+
+    public void OnDead()
+    {
+        if (!dying)
+        {
+            dying = true;
+            myAnim.SetBool("isDead", true);
+        }
+        
+
+    }
+
     IEnumerator Slow(float rate, float time)
     {
         float originSpeed = speed;

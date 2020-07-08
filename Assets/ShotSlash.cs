@@ -5,14 +5,9 @@ using Photon.Pun;
 
 public class ShotSlash : StateMachineBehaviour
 {
-    public ParticleSystem VFX;
-    public Transform shotPos;
-    public Transform player;
-    bool trigger;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        trigger = false;
     }
 
     //[PunRPC]

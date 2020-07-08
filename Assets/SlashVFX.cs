@@ -6,13 +6,14 @@ using Photon.Pun;
 
 public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private Transform player;
+    private CharacterMove warrior;
     public float speed = 4;
     private Vector3 dir;
+    bool hit;
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        dir = player.transform.forward;
+        warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
+        dir = warrior.transform.forward;
         //Destroy(gameObject, 3);
         //transform.rotation = Quaternion.LookRotation(dir);
     }
@@ -23,13 +24,14 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
         transform.position += dir * speed * Time.deltaTime;
     }
     
-    [PunRPC]
+    //[PunRPC]
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (!other.CompareTag("Warrior") && other.gameObject.layer.ToString() == "Player" && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.OnDamage(10);
+            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, warrior.atk*1.5f);
+            hit = true;
         }
     }
 

@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Arrow : MonoBehaviour
+public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 {
+    //CharacterMove Archer;
+    float atk;
     float speed = 10;
-
+    bool hit;
     void Start()
     {
+        atk = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>().atk;
+
         if (gameObject.tag == "BigArrow")
             speed *= 2;
     }
@@ -20,18 +25,32 @@ public class Arrow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy"))
+        if (!other.CompareTag("Warrior") && other.gameObject.layer.ToString() == "Player" && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
+
             if (gameObject.tag == "BigArrow")
-                enemy.OnDamage(30);
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.5f);
+            }
+            else if (gameObject.tag == "MultiArrow")
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.2f);
+            }
             else
-                enemy.OnDamage(10);
-            Destroy(gameObject);
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f);
+            }
+            hit = true;
         }
-        else if(!other.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-        }
+
+        Destroy(gameObject);
+
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+
     }
 }
