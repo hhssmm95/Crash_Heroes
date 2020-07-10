@@ -29,7 +29,7 @@ public class Breath : MonoBehaviourPunCallbacks, IPunObservable
             Debug.Log("브레스타격");
             var enemy = other.GetComponent<CharacterMove>();
             //enemy.OnDamage(10);
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 1.2f);
+            enemy.GetComponent<PhotonView>().RPC("OnBurn", RpcTarget.All, 10.0f, Dragoon.atk * 0.25f);
         }
     }
 
