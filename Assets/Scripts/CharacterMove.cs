@@ -27,8 +27,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public bool isDamaging;
     public bool isDashing;
     public bool isStun;
+
     public bool isBurn;
+    float burnDuration;
+    float burnDurationTimer;
+    float burnDamage;
     float burnTimer;
+
     float mpTimer;
     float damageTimer;
 
@@ -335,9 +340,24 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (hp <= 0)
                 isDead = true;
 
+            if (isBurn)
+            {
+                if(burnDurationTimer >= burnDuration)
+                {
+                    isBurn = false;
+                    burnTimer = 0;
+                    burnDurationTimer = 0;
+                    burnDuration = 0;
+                    burnDamage = 0;
+                }
+                burnTimer += Time.deltaTime;
+                burnDuration += Time.deltaTime;
+            }
+
             if(isBurn && burnTimer >= 1.0f && !isDead)
             {
                 burnTimer = 0;
+                photonView.RPC("OnDamage", RpcTarget.All, burnDamage);
                 //OnBurn 함수만들어서 제어, if(isBurn) {Timer++;} 추가
             }
             
@@ -387,6 +407,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
     }
 
+    //[PunRPC]
+    //public void OnHeavyDamage(float damage)
+    //{
+    //    if (isMine && !isDamaging && !isDead)
+    //    {
+    //        isDamaging = true;
+    //        myAnim.SetTrigger("Damage");
+    //        myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+    //        hp -= damage;
+    //        hpBar.SetHealth(hp);
+    //    }
+    //}
+
     [PunRPC]
     public void OnSlow(float rate, float time)
     {
@@ -394,12 +427,30 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             StartCoroutine(Slow(rate, time));
     }
 
+    [PunRPC]
     public void OnStun(float time)
     {
         if (isMine && !isDead)
             StartCoroutine(Stun(time));
     }
 
+    [PunRPC]
+    public void OnBurn(float duration, float damage)
+    {
+        if (isMine && !isDead)
+        {
+            if(isBurn)
+            {
+                burnDurationTimer = 0;
+                burnDuration = duration;
+                burnDamage = damage;
+                return;
+            }
+            isBurn = true;
+            burnDuration = duration;
+            burnDamage = damage;
+        }
+    }
     //[PunRPC]
     public void OnDead()
     {
@@ -408,7 +459,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             dying = true;
             myAnim.SetBool("isDead", true);
         }
-        
 
     }
 
