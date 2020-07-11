@@ -336,6 +336,15 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     skill_4_Timer = 0;
                 }
             }
+            if (skill_5_Off)
+            {
+                skill_5_Timer += Time.deltaTime;
+                if (skill_5_Timer >= skill_5_Cooltime)
+                {
+                    skill_5_Off = false;
+                    skill_5_Timer = 0;
+                }
+            }
 
             if (hp <= 0)
                 isDead = true;
@@ -349,6 +358,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     burnDurationTimer = 0;
                     burnDuration = 0;
                     burnDamage = 0;
+                    return;
                 }
                 burnTimer += Time.deltaTime;
                 burnDuration += Time.deltaTime;
@@ -407,18 +417,18 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
     }
 
-    //[PunRPC]
-    //public void OnHeavyDamage(float damage)
-    //{
-    //    if (isMine && !isDamaging && !isDead)
-    //    {
-    //        isDamaging = true;
-    //        myAnim.SetTrigger("Damage");
-    //        myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
-    //        hp -= damage;
-    //        hpBar.SetHealth(hp);
-    //    }
-    //}
+    [PunRPC]
+    public void OnHeavyDamage(float damage)
+    {
+        if (isMine && !isDamaging && !isDead)
+        {
+            isDamaging = true;
+            myAnim.SetTrigger("HeavyDamage");
+            myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+            hp -= damage;
+            hpBar.SetHealth(hp);
+        }
+    }
 
     [PunRPC]
     public void OnSlow(float rate, float time)
@@ -451,6 +461,18 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             burnDamage = damage;
         }
     }
+
+    [PunRPC]
+    public void OnHeal(float amount)
+    {
+        if (isMine && !isDead)
+        {
+            hp += amount;
+            if (hp > maxHP)
+                hp = maxHP;
+        }
+    }
+
     //[PunRPC]
     public void OnDead()
     {
@@ -473,7 +495,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     IEnumerator Stun(float time)
     {
         isStun = true;
+        myAnim.SetBool("isStun", true);
         yield return new WaitForSeconds(time);
+        myAnim.SetBool("isStun", false);
         isStun = false;
     }
     

@@ -19,6 +19,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public bool comboContinue;
     public float comboTimer;
     
+    float healTimer;
+    float healDurationTimer;
+    bool healing;
+
     public ParticleSystem WarriorVX1_1;
     public ParticleSystem WarriorVX1_2;
     public GameObject WarriorAttack2Pos;
@@ -57,20 +61,22 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.def = 39.0f;
 
         //attack_Cooltime = 1.0f;
-        player.skill_1_Cooltime = 3.0f;
+        player.skill_1_Cooltime = 12.0f;
         player.skill_1_Cost = 30.0f;
-        player.skill_2_Cooltime = 3.0f;
-        player.skill_2_Cost = 30.0f;
-        player.skill_3_Cooltime = 3.0f;
-        player.skill_3_Cost = 30.0f;
-        player.skill_4_Cooltime = 3.0f;
-        player.skill_4_Cost = 30.0f;
+        player.skill_2_Cooltime = 8.0f;
+        player.skill_2_Cost = 25.0f;
+        player.skill_3_Cooltime = 20.0f;
+        player.skill_3_Cost = 50.0f;
+        player.skill_4_Cooltime = 30.0f;
+        player.skill_4_Cost = 40.0f;
+        player.skill_5_Cooltime = 60.0f;
+        player.skill_5_Cost = 100.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isMine && !player.isDead)
+        if (isMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Warrior_Attack", RpcTarget.All);
@@ -82,6 +88,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                 photonView.RPC("Warrior_Skill3", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
                 photonView.RPC("Warrior_Skill4", RpcTarget.All);
+            if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
+                photonView.RPC("Warrior_Skill5", RpcTarget.All);
 
 
             if (attackOff)
@@ -112,6 +120,27 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                     transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
+
+            if(healing && !player.isDead)
+            {
+                if(healDurationTimer >= 5.0f)
+                {
+                    healing = false;
+                    healDurationTimer = 0;
+                    healTimer = 0;
+                    return;
+                }
+                healTimer += Time.deltaTime;
+                healDurationTimer += Time.deltaTime;
+
+            }
+
+            if(healing && !player.isDead && healTimer >= 1.0f)
+            {
+                healTimer = 0;
+                player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.08f);
+            }
+            
         }
     }
 
@@ -154,7 +183,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public void Warrior_Skill1()
     {
 
-        if (player.mp >= player.skill_1_Cost)
+        if (player.mp >= player.skill_1_Cost && !player.isDead)
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
@@ -168,7 +197,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill2()
     {
-        if (player.mp >= player.skill_2_Cost)
+        if (player.mp >= player.skill_2_Cost && !player.isDead)
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
@@ -184,7 +213,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill3()
     {
-        if (player.mp >= player.skill_3_Cost)
+        if (player.mp >= player.skill_3_Cost && !player.isDead)
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
@@ -199,15 +228,25 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill4()
     {
-        if (player.mp >= player.skill_4_Cost)
+        if (player.mp >= player.skill_4_Cost && !player.isDead)
         {
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;
             //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill4");
-
+            StartCoroutine("Warrior_Skill4_Effect");
         }
 
+    }
+
+    [PunRPC]
+    public void Warrior_Skill5()
+    {
+        if(player.mp >= player.skill_5_Cost)
+        {
+            player.skill_5_Off = true;
+            player.mp -= player.skill_5_Cost;
+            healing = true;
+        }
     }
 
     IEnumerator Warrior_Skill1_Play()
@@ -241,6 +280,21 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.4f);
         PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
 
+    }
+
+    IEnumerator Warrior_Skill4_Effect()
+    {
+        float originAtk = player.atk;
+        float originDef = player.def;
+
+        warriorAnim.SetTrigger("Skill4");
+
+        player.atk *= 1.3f;
+        player.def *= 1.3f;
+        yield return new WaitForSeconds(20.0f);
+
+        player.atk = originAtk;
+        player.def = originDef;
     }
 
 
