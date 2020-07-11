@@ -11,10 +11,10 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
     public PhotonView PV;
 
     public GameObject characterPanel;
-    public GameObject Image_knightPick;
-    public GameObject Image_archerPick;
-    public GameObject Image_dragoonPick;
-    public GameObject Image_magePick;
+    public GameObject knightImage;
+    public GameObject archerImage;
+    public GameObject dragoonImage;
+    public GameObject mageImage;
 
     public string pickName = null;
     public bool knightPick = false;
@@ -69,28 +69,32 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
         {
             pickName = "Knight";
             knightPick = true;
-            Image_knightPick.SetActive(true);
+            knightImage.transform.GetChild(0).gameObject.SetActive(false);
+            knightImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 2 && archerPick == false)
         {
             pickName = "Prefebs/Archer";
             archerPick = true;
-            Image_archerPick.SetActive(true);
+            archerImage.transform.GetChild(0).gameObject.SetActive(false);
+            archerImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 3 && dragoonPick == false)
         {
             pickName = "Prefebs/Dragoon";
             dragoonPick = true;
-            Image_dragoonPick.SetActive(true);
+            dragoonImage.transform.GetChild(0).gameObject.SetActive(false);
+            dragoonImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 4 && magePick == false)
         {
             pickName = "Prefebs/Mage";
             magePick = true;
-            Image_magePick.SetActive(true);
+            mageImage.transform.GetChild(0).gameObject.SetActive(false);
+            mageImage.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
