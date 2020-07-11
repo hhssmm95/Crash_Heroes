@@ -15,11 +15,16 @@ public class CameraLocator :MonoBehaviourPunCallbacks
         //player =  GameObject.FindGameObjectWithTag("Player");
     }
 
+
+
+
     // Update is called once per frame
     void Update()
     {
         if(playerCheck && !initComplete)
         {
+            
+            //transform.position = new Vector3(player.transform.x, player.transform.y + 4.666f, player.transform)
             offset = transform.position - player.transform.position;
             initComplete = true;
         }

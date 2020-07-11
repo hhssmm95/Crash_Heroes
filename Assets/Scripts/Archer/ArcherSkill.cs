@@ -170,7 +170,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            //player.isAttacking = true;
+            player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             archerAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;

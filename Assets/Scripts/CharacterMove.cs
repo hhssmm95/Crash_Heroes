@@ -5,12 +5,13 @@ using Photon.Pun;
 public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     public HealthBar hpBar;
+    public GameObject cameraGuide;
     private Animator myAnim;
     //private Animator myAnim2;
     private Rigidbody myRig;
 
     private Camera mainCamera;
-    private CameraLocator cameraLoc;
+    //private CameraLocator cameraLoc;
     public Global.Classes job;
 
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
@@ -23,8 +24,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float mp;
     public float atk;
     public float def;
-    public int potion;
-    public bool isDamaging;
+    private bool isDamaging;
     public bool isDashing;
     public bool isStun;
 
@@ -38,17 +38,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     float damageTimer;
 
     public float speed = 2.0f; // 캐릭터 이동속도
-    public float jumpPower = 5.0f;
-    public float rotateSpeed = 10.0f;
+    private float jumpPower = 5.0f;
+    private float rotateSpeed = 10.0f;
     public bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
     //public GameObject GameOverPanel;
-    public Vector3 moveDirection;
+    private Vector3 moveDirection;
     public bool isAttacking;
     float dashTimer;
     private float h;
     private float v;
 
-    public bool isMine;
+    private bool isMine;
 
     private UImanager ui;
 
@@ -79,9 +79,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float skill_5_Timer;
 
     //private int score;
-    public WarriorSkill wSkill;
-    public ArcherSkill aSkill;
-    public DragoonSkill dSkill;
+    private WarriorSkill wSkill;
+    private ArcherSkill aSkill;
+    private DragoonSkill dSkill;
     //MageSkill mSkill;
     void Start()
     {
@@ -151,9 +151,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             hpBar.SetMaxHealth(maxHP);
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
-            cameraLoc.playerCheck = true;
-            cameraLoc.player = gameObject;
+            //cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
+            //cameraLoc.playerCheck = true;
+            //cameraLoc.player = gameObject;
             ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UImanager>();
             ui.player = this;
             ui.playerCheck = true;
@@ -219,6 +219,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (isMine)
         {
+
+            mainCamera.transform.position = cameraGuide.transform.position;
+            mainCamera.transform.rotation = cameraGuide.transform.rotation;
 
             isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
             if (isDamaging)
@@ -504,5 +507,28 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        //if (stream.IsWriting) stream.SendNext(hpBar);
+        //else hpBar = (HealthBar)stream.ReceiveNext();
+
+        if (stream.IsWriting)
+        {
+            //stream.SendNext(isGround);
+            stream.SendNext(maxHP);
+            stream.SendNext(maxMP);
+            stream.SendNext(hp);
+            stream.SendNext(mp);
+            stream.SendNext(atk);
+            stream.SendNext(def);
+            //stream.SendNext(isDashing);
+            stream.SendNext(isStun);
+            stream.SendNext(isDead);
+            stream.SendNext(speed);
+            stream.SendNext(isAttacking);
+        }
+        else
+        {
+            maxHP = (float)stream.ReceiveNext();
+        }
+        
     }
 }

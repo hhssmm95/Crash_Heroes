@@ -26,14 +26,14 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        photonView.RPC("Locate", RpcTarget.All);
+        //photonView.RPC("Locate", RpcTarget.All);
+        Locate();
     }
 
     private void OnParticleCollision(GameObject other)
     {
         ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
-
-        //Debug.Log("파티클충돌");
+        Debug.Log("파티클충돌");
         if (!other.CompareTag("Warrior") && other.layer.ToString() == "Player" && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
@@ -61,8 +61,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-
-    [PunRPC]
+    
     void Locate()
     {
         if (gameObject.CompareTag("WarriorAttack1"))

@@ -169,7 +169,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            //player.isAttacking = true;
+            player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             dragoonAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
@@ -189,7 +189,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            //player.isAttacking = true;
+            player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             dragoonAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
