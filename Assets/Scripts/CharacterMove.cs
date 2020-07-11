@@ -5,7 +5,8 @@ using Photon.Pun;
 public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     public HealthBar hpBar;
-    public GameObject cameraGuide;
+    //public GameObject cameraGuide;
+    Vector3 cameraOffset;
     private Animator myAnim;
     //private Animator myAnim2;
     private Rigidbody myRig;
@@ -38,6 +39,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     float damageTimer;
 
     public float speed = 2.0f; // 캐릭터 이동속도
+    private Quaternion movement;
     private float jumpPower = 5.0f;
     private float rotateSpeed = 10.0f;
     public bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
@@ -151,12 +153,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             hpBar.SetMaxHealth(maxHP);
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 4.666f, transform.position.z - 2.72f);
+            //mainCamera.transform.position = cameraGuide.transform.position;
+            //.transform.rotation = cameraGuide.transform.rotation;
+            cameraOffset = mainCamera.transform.position - transform.position;
             //cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
             //cameraLoc.playerCheck = true;
             //cameraLoc.player = gameObject;
             ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UImanager>();
+            if (ui != null)
+                Debug.Log("UI연결댬");
             ui.player = this;
             ui.playerCheck = true;
+            Debug.Log("UI플레이어체크함");
             hpBar.gameObject.SetActive(false);
 
             //gameObject.tag = "Player";
@@ -187,10 +196,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myAnim.SetBool("Move", false);
             return;
         }
+        
         moveDirection = (Vector3.forward * v) + (Vector3.right * h);
 
         Quaternion newRotation = Quaternion.LookRotation(moveDirection);
-
+        
         if (!isAttacking)
             myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
@@ -219,9 +229,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (isMine)
         {
-
-            mainCamera.transform.position = cameraGuide.transform.position;
-            mainCamera.transform.rotation = cameraGuide.transform.rotation;
+            mainCamera.transform.position = transform.position + cameraOffset;
+            //mainCamera.transform.position = cameraGuide.transform.position;
+            //mainCamera.transform.rotation = cameraGuide.transform.rotation;
 
             isGround = GetComponentInChildren<GroundSense>().isGround; //GroundSense클래스의 isGround를 가져와서 자신의 isGround갱신
             if (isDamaging)
