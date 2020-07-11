@@ -4,40 +4,44 @@ using UnityEngine;
 using Photon.Pun;
 using System;
 
-public class GManager : MonoBehaviourPunCallbacks
+public class GManager : MonoBehaviourPunCallbacks//IPunObservable
 {
-    [SerializeField]
-    private string[] prefebsName = { "Knight", "Prefebs/Archer", "Prefebs/Dragoon" };
     public Transform[] spawn_point;
-    
     private NickNameList nickNameList;
+    public PhotonView PV;
 
-    public string nickName = null;
+    public GameObject characterPanel;
+    public GameObject Image_knightPick;
+    public GameObject Image_archerPick;
+    public GameObject Image_dragoonPick;
+    public GameObject Image_magePick;
+
+    public string pickName = null;
+    public bool knightPick = false;
+    public bool archerPick = false;
+    public bool dragoonPick = false;
+    public bool magePick = false;
+
     public int playerNum = 0;
     private void Start()
     {
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+        
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
-            if (nickNameList.NameList[i] == nickName)
+            if (nickNameList.NameList[i] == nickNameList.myNickName)
             {
                 playerNum = i;
                 break;
             }
         }
-
-        Debug.Log(nickName);
-        for (int i = 0; i < 4; i++)
-        {
-            Debug.Log(nickNameList.NameList[i]);
-        }
-        //Shuffle(prefebsName);
-        //Spawn();
+        Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log(nickNameList.myNickName);
     }
-    
+
     public void Spawn()
     {
-        PhotonNetwork.Instantiate(prefebsName[playerNum], spawn_point[playerNum].position, spawn_point[playerNum].rotation);
+        PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);
     }
 
     private static void Shuffle<T>(T[] array)
@@ -51,4 +55,56 @@ public class GManager : MonoBehaviourPunCallbacks
             array[randomValue] = temp;
         }
     }
+
+    public void Pick(int num)
+    {
+        PV.RPC("PickCheck", RpcTarget.All, num);
+        characterPanel.SetActive(false);
+        Spawn();
+    }
+    [PunRPC]
+    public void PickCheck(int pickNum)
+    {
+        if (pickNum == 1 && knightPick == false)
+        {
+            pickName = "Knight";
+            knightPick = true;
+            Image_knightPick.SetActive(true);
+        }
+
+        if (pickNum == 2 && archerPick == false)
+        {
+            pickName = "Prefebs/Archer";
+            archerPick = true;
+            Image_archerPick.SetActive(true);
+        }
+
+        if (pickNum == 3 && dragoonPick == false)
+        {
+            pickName = "Prefebs/Dragoon";
+            dragoonPick = true;
+            Image_dragoonPick.SetActive(true);
+        }
+
+        if (pickNum == 4 && magePick == false)
+        {
+            pickName = "Prefebs/Mage";
+            magePick = true;
+            Image_magePick.SetActive(true);
+        }
+    }
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    if (stream.IsWriting) stream.SendNext(knightPick);
+    //    else knightPick = (bool)stream.ReceiveNext();
+
+    //    if (stream.IsWriting) stream.SendNext(archerPick);
+    //    else archerPick = (bool)stream.ReceiveNext();
+
+    //    if (stream.IsWriting) stream.SendNext(dragoonPick);
+    //    else dragoonPick = (bool)stream.ReceiveNext();
+
+    //    if (stream.IsWriting) stream.SendNext(magePick);
+    //    else magePick = (bool)stream.ReceiveNext();
+    //}
 }

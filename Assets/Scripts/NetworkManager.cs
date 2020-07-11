@@ -7,6 +7,8 @@ using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    private NickNameList nickNameList;
+
     [Header("MainPanel")]
     public GameObject MainPanel;
     public InputField NickNameInput;
@@ -35,6 +37,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
 
+    private void Start()
+    {
+        nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+    }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
     public void MyListClick(int num)
@@ -111,7 +117,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        WelcomeText.text = PhotonNetwork.LocalPlayer.NickName + "님 환영합니다";
+        //WelcomeText.text = PhotonNetwork.LocalPlayer.NickName + "님 환영합니다";
         myList.Clear();
     }
 
@@ -224,7 +230,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         {
             PhotonNetwork.LoadLevel(1);
-        } 
+        }
     }
     
     #endregion
