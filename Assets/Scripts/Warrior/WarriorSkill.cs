@@ -38,15 +38,16 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     void Awake()
     {
         //if(CompareTag("Player"))
+
+        player = gameObject.GetComponent<CharacterMove>();
+        warriorAnim = gameObject.GetComponent<Animator>();
+        player.job = Global.Classes.Warrior;
+
         if (photonView.IsMine)
         {
             isMine = true;
 
-            player = gameObject.GetComponent<CharacterMove>();
-            warriorAnim = gameObject.GetComponent<Animator>();
-
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            player.job = Global.Classes.Warrior;
         }
 
     }
@@ -76,7 +77,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (isMine && !player.isDead && !player.isStun)
+        if (/*isMine && */!player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Warrior_Attack", RpcTarget.All);

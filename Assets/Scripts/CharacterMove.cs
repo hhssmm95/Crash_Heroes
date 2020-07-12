@@ -153,10 +153,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             hpBar.SetMaxHealth(maxHP);
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 4.666f, transform.position.z - 3.5f);
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 6.806f, transform.position.z - 6f);
             //mainCamera.transform.position = cameraGuide.transform.position;
             //.transform.rotation = cameraGuide.transform.rotation;
-            cameraOffset = new Vector3(0, 4.666f, -3.5f); //mainCamera.transform.position - transform.position;
+            cameraOffset = new Vector3(0, 6.806f, -6f); //mainCamera.transform.position - transform.position;
             //cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
             //cameraLoc.playerCheck = true;
             //cameraLoc.player = gameObject;

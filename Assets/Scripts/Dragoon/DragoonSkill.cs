@@ -35,15 +35,15 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Awake()
     {
+        player = gameObject.GetComponent<CharacterMove>();
+        dragoonAnim = gameObject.GetComponent<Animator>();
+        player.job = Global.Classes.Dragoon;
+
         if (photonView.IsMine)
         {
             isMine = true;
 
-            player = gameObject.GetComponent<CharacterMove>();
-            dragoonAnim = gameObject.GetComponent<Animator>();
-
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            player.job = Global.Classes.Dragoon;
         }
 
     }
@@ -70,7 +70,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-        if(isMine && !player.isDead && !player.isStun)
+        if(/*isMine && */!player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Dragoon_Attack", RpcTarget.All);

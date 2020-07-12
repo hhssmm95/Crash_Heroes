@@ -31,15 +31,15 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Awake()
     {
+
+        player = gameObject.GetComponent<CharacterMove>();
+        archerAnim = gameObject.GetComponent<Animator>();
+        player.job = Global.Classes.Archer;
         if (photonView.IsMine)
         {
             isMine = true;
 
-            player = gameObject.GetComponent<CharacterMove>();
-            archerAnim = gameObject.GetComponent<Animator>();
-
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            player.job = Global.Classes.Archer;
         }
     }
 
@@ -52,7 +52,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.atk = 61;
         player.def = 32;
 
-        //attack_Cooltime = 1.0f;
+        attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 7.0f;
         player.skill_1_Cost = 20;
         player.skill_2_Cooltime = 14.0f;
@@ -68,7 +68,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (isMine && !player.isDead && !player.isStun)
+        if (/*isMine && */!player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Archer_Attack", RpcTarget.All);
