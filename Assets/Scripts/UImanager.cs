@@ -157,59 +157,63 @@ public class UImanager : MonoBehaviour
         {
             text_Time.text = "0";
         }
-        if (player.skill_1_Off == true)
-        {
-            float percent = player.skill_1_Timer / player.skill_1_Cooltime;
-            slot1.fillAmount = percent;
-        }
-        else
-        {
-            slot1.fillAmount = 1f;
-        }
 
-        if (player.skill_2_Off == true)
+        if (initComplete)
         {
-            float percent = player.skill_2_Timer / player.skill_2_Cooltime;
-            slot2.fillAmount = percent;
-        }
-        else
-        {
-            slot2.fillAmount = 1f;
-        }
+            if (player.skill_1_Off == true)
+            {
+                float percent = player.skill_1_Timer / player.skill_1_Cooltime;
+                slot1.fillAmount = percent;
+            }
+            else
+            {
+                slot1.fillAmount = 1f;
+            }
 
-        if (player.skill_3_Off == true)
-        {
-            float percent = player.skill_3_Timer / player.skill_3_Cooltime;
-            slot3.fillAmount = percent;
-        }
-        else
-        {
-            slot3.fillAmount = 1f;
-        }
+            if (player.skill_2_Off == true)
+            {
+                float percent = player.skill_2_Timer / player.skill_2_Cooltime;
+                slot2.fillAmount = percent;
+            }
+            else
+            {
+                slot2.fillAmount = 1f;
+            }
 
-        if (player.skill_4_Off == true)
-        {
-            float percent = player.skill_4_Timer / player.skill_4_Cooltime;
-            slot4.fillAmount = percent;
-        }
-        else
-        {
-            slot4.fillAmount = 1f;
-        }
+            if (player.skill_3_Off == true)
+            {
+                float percent = player.skill_3_Timer / player.skill_3_Cooltime;
+                slot3.fillAmount = percent;
+            }
+            else
+            {
+                slot3.fillAmount = 1f;
+            }
 
-        if (player.skill_5_Off == true)
-        {
-            float percent = player.skill_5_Timer / player.skill_5_Cooltime;
-            slot5.fillAmount = percent;
-        }
-        else
-        {
-            slot5.fillAmount = 1f;
-        }
+            if (player.skill_4_Off == true)
+            {
+                float percent = player.skill_4_Timer / player.skill_4_Cooltime;
+                slot4.fillAmount = percent;
+            }
+            else
+            {
+                slot4.fillAmount = 1f;
+            }
+
+            if (player.skill_5_Off == true)
+            {
+                float percent = player.skill_5_Timer / player.skill_5_Cooltime;
+                slot5.fillAmount = percent;
+            }
+            else
+            {
+                slot5.fillAmount = 1f;
+            }
 
 
-        hpControl();
-        mpControl();
+            hpControl();
+            mpControl();
+        }
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
