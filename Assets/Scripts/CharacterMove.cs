@@ -7,7 +7,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public HealthBar hpBar;
     //public GameObject cameraGuide;
     Vector3 cameraOffset;
-    private Animator myAnim;
+    public Animator myAnim;
     //private Animator myAnim2;
     private Rigidbody myRig;
 
@@ -81,9 +81,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float skill_5_Timer;
 
     //private int score;
-    private WarriorSkill wSkill;
-    private ArcherSkill aSkill;
-    private DragoonSkill dSkill;
+    public WarriorSkill wSkill;
+    public ArcherSkill aSkill;
+    public DragoonSkill dSkill;
+
+    public string user;
     //MageSkill mSkill;
     void Start()
     {
@@ -175,7 +177,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         isDead = false;
         dying = false;
-        if (isMine/*gameObject.CompareTag("Player")*/)
+        if (photonView.IsMine/*gameObject.CompareTag("Player")*/)
         {
             hpBar.gameObject.SetActive(false);
 
@@ -222,12 +224,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
+        user = photonView.Owner.NickName;
         if(isDead)
         {
             OnDead();
         }
 
-        if (isMine)
+        if (photonView.IsMine)
         {
             mainCamera.transform.position = transform.position + cameraOffset;
             //mainCamera.transform.position = cameraGuide.transform.position;
@@ -420,7 +423,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnDamage(float damage)
     {
-        if (isMine && !isDamaging && !isDead)
+        if (photonView.IsMine && !isDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
@@ -433,7 +436,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnHeavyDamage(float damage)
     {
-        if (isMine && !isDamaging && !isDead)
+        if (photonView.IsMine && !isDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("HeavyDamage");
@@ -446,21 +449,21 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnSlow(float rate, float time)
     {
-        if (isMine && !isDead)
+        if (photonView.IsMine && !isDead)
             StartCoroutine(Slow(rate, time));
     }
 
     [PunRPC]
     public void OnStun(float time)
     {
-        if (isMine && !isDead)
+        if (photonView.IsMine && !isDead)
             StartCoroutine(Stun(time));
     }
 
     [PunRPC]
     public void OnBurn(float duration, float damage)
     {
-        if (isMine && !isDead)
+        if (photonView.IsMine && !isDead)
         {
             if(isBurn)
             {
@@ -478,7 +481,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnHeal(float amount)
     {
-        if (isMine && !isDead)
+        if (photonView.IsMine && !isDead)
         {
             hp += amount;
             if (hp > maxHP)

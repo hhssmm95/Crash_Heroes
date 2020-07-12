@@ -70,7 +70,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-        if(/*isMine && */!player.isDead && !player.isStun)
+        if(photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Dragoon_Attack", RpcTarget.All);
