@@ -14,7 +14,7 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
     {
         warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
         dir = warrior.transform.forward;
-        //Destroy(gameObject, 3);
+        Destroy(gameObject, 3.0f);
         //transform.rotation = Quaternion.LookRotation(dir);
     }
 
@@ -32,6 +32,7 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
             var enemy = other.GetComponent<CharacterMove>();
             enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, warrior.atk*1.5f);
             hit = true;
+            
         }
     }
 

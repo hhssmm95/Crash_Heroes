@@ -15,6 +15,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
         if (gameObject.tag == "BigArrow")
             speed *= 2;
+        Destroy(gameObject, 5.0f);
     }
 
     // Update is called once per frame
