@@ -60,7 +60,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.atk = 64.0f;
         player.def = 39.0f;
 
-        //attack_Cooltime = 1.0f;
+        attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 12.0f;
         player.skill_1_Cost = 30.0f;
         player.skill_2_Cooltime = 8.0f;
