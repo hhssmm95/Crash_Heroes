@@ -251,8 +251,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
 
                 Move();
-                Jump();
-                Dash();
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                    photonView.RPC("Jump", RpcTarget.All);
+                if (Input.GetKeyDown(KeyCode.Mouse1))
+                    photonView.RPC("Dash", RpcTarget.All);
+                //Dash();
                 //Skill_1();
             }
             else
@@ -389,10 +393,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             
         }
     }
+    [PunRPC]
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
             //바닥에 있으면 점프를 실행
             if (isGround)
             {
@@ -401,23 +404,20 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 myAnim.SetTrigger("Jump");
                 myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
-
             else
             {
                 return;
             }
-        }
-
     }
 
+    [PunRPC]
     void Dash()
     {
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            isDashing = true;
-            myAnim.SetTrigger("Dash");
-        }
+
+        isDashing = true;
+        myAnim.SetTrigger("Dash");
+
     }
 
     [PunRPC]
