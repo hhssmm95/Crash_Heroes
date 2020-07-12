@@ -25,7 +25,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Warrior") && other.gameObject.layer.ToString() == "Player" && !hit)
+        if (!other.CompareTag("Archer") && other.gameObject.layer.ToString() == "Player" && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
 
