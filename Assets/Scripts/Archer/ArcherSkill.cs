@@ -27,6 +27,9 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem ArcherVX2_1; //평타1
     public ParticleSystem ArcherVX2_2; //평타2
 
+    public string ownerObject;
+    public string animName;
+
     public bool isMine;
     // Start is called before the first frame update
     void Awake()
@@ -68,6 +71,9 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        ownerObject = player.gameObject.name;
+        animName = archerAnim.name;
+
         if (photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
@@ -115,62 +121,60 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-   
+
 
     [PunRPC]
     void Archer_Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+        player.isAttacking = true;
+        attackOff = true;
+        comboContinue = true;
+
+        if (comboTimer > 3.0f)
         {
-            player.isAttacking = true;
-            attackOff = true;
-            comboContinue = true;
+            archerAnim.SetInteger("Combo", 0);
+            comboContinue = false;
+        }
+        comboTimer = 0;
 
-            if (comboTimer > 3.0f)
-            {
-                archerAnim.SetInteger("Combo", 0);
-                comboContinue = false;
-            }
-            comboTimer = 0;
+        Vector3 dir = transform.forward;
 
-            Vector3 dir = transform.forward;
+        if (archerAnim.GetInteger("Combo") == 0)
+        {
+            archerAnim.SetTrigger("FirstAttack");
 
-            if (archerAnim.GetInteger("Combo") == 0)
-            {
-                archerAnim.SetTrigger("FirstAttack");
+            PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
 
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
+        }
+        else if (archerAnim.GetInteger("Combo") == 1)
+        {
+            archerAnim.SetTrigger("SecondAttack");
 
-            }
-            else if (archerAnim.GetInteger("Combo") == 1)
-            {
-                archerAnim.SetTrigger("SecondAttack");
+            PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
 
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
-                
-            }
-            else if (archerAnim.GetInteger("Combo") == 2)
-            {
-                archerAnim.SetTrigger("ThirdAttack");
+        }
+        else if (archerAnim.GetInteger("Combo") == 2)
+        {
+            archerAnim.SetTrigger("ThirdAttack");
 
-                PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-
-                
-            }
-
+            PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
 
         }
+
+
+
+
     }
 
     [PunRPC]
     void Archer_Skill1()
     {
-        if (player.mp >= player.skill_1_Cost)
+        if (player.mp >= player.skill_1_Cost && !player.isDead)
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            player.isAttacking = true;
+            //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             archerAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
@@ -185,7 +189,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill2()
     {
-        if (player.mp >= player.skill_2_Cost)
+        if (player.mp >= player.skill_2_Cost && !player.isDead)
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
@@ -210,7 +214,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill3()
     {
-        if (player.mp >= player.skill_3_Cost)
+        if (player.mp >= player.skill_3_Cost && !player.isDead)
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
@@ -223,7 +227,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill4()
     {
-        if (player.mp >= player.skill_4_Cost)
+        if (player.mp >= player.skill_4_Cost && !player.isDead)
         {
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;
@@ -237,7 +241,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill5()
     {
-        if (player.mp >= player.skill_5_Cost)
+        if (player.mp >= player.skill_5_Cost && !player.isDead)
         {
             player.skill_5_Off = true;
             player.mp -= player.skill_5_Cost;
@@ -283,5 +287,10 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        if (stream.IsWriting) stream.SendNext(ownerObject);
+        else ownerObject = (string)stream.ReceiveNext();
+
+        if (stream.IsWriting) stream.SendNext(animName);
+        else animName = (string)stream.ReceiveNext();
     }
 }

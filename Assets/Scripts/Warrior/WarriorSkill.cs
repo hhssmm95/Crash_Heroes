@@ -34,7 +34,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject WarriorSkill3Pos;
 
     public bool isMine;
-
+    public string ownerObject;
+    public string animName;
     void Awake()
     {
         //if(CompareTag("Player"))
@@ -77,6 +78,9 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        ownerObject = player.gameObject.name;
+        animName = warriorAnim.name;
+
         if (photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
@@ -301,5 +305,11 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        
+        if (stream.IsWriting) stream.SendNext(ownerObject);
+        else ownerObject = (string)stream.ReceiveNext();
+
+        if (stream.IsWriting) stream.SendNext(animName);
+        else animName = (string)stream.ReceiveNext();
     }
 }
