@@ -9,6 +9,7 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
     public Transform[] spawn_point;
     private NickNameList nickNameList;
     public PhotonView PV;
+    private bool[] ready = { true, true, true, true};
 
     public GameObject characterPanel;
     public GameObject knightImage;
@@ -21,6 +22,8 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
     public bool archerPick = false;
     public bool dragoonPick = false;
     public bool magePick = false;
+
+    private bool IsSpawn = false;
 
     public int playerNum = 0;
     private void Start()
@@ -35,17 +38,17 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
                 break;
             }
         }
-        Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
-        Debug.Log(nickNameList.myNickName);
-    }
 
-    private void Update()
-    {
-        if(PhotonNetwork.PlayerList.Length == nickNameList.NameList.Length)
+        if (PhotonNetwork.PlayerList.Length == nickNameList.playerCount)
         {
             characterPanel.SetActive(true);
-        }
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                ready[i] = false;
+            }
+        }    
     }
+
     public void Spawn()
     {
         PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);

@@ -8,6 +8,7 @@ using Photon.Realtime;
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     private NickNameList nickNameList;
+    public int playerCount = 0;
 
     [Header("MainPanel")]
     public GameObject MainPanel;
@@ -194,6 +195,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
         }
         RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
+        playerCount = PhotonNetwork.PlayerList.Length;
     }
     #endregion
 

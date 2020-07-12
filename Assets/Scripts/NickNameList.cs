@@ -8,6 +8,7 @@ public class NickNameList : MonoBehaviour
     private NetworkManager networkManager;
     public string[] NameList;
     public string myNickName;
+    public int playerCount = 0;
 
     public bool isStart = false;
     private void Start()
@@ -17,10 +18,11 @@ public class NickNameList : MonoBehaviour
     }
     private void Update()
     {
+        playerCount = networkManager.playerCount;
         for (int i = 0; i < networkManager.NickNameList.Length; i++)
         {
-            NameList[i] = networkManager.NickNameList[i].text;
-            myNickName = networkManager.NickNameInput.text;
+             NameList[i] = networkManager.NickNameList[i].text;
+             myNickName = networkManager.NickNameInput.text;
         }
     }
 }
