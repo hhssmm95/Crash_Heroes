@@ -153,10 +153,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             hpBar.SetMaxHealth(maxHP);
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 4.666f, transform.position.z - 2.72f);
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 4.666f, transform.position.z - 3.5f);
             //mainCamera.transform.position = cameraGuide.transform.position;
             //.transform.rotation = cameraGuide.transform.rotation;
-            cameraOffset = mainCamera.transform.position - transform.position;
+            cameraOffset = new Vector3(0, 4.666f, -3.5f); //mainCamera.transform.position - transform.position;
             //cameraLoc = mainCamera.gameObject.GetComponent<CameraLocator>();
             //cameraLoc.playerCheck = true;
             //cameraLoc.player = gameObject;
@@ -520,25 +520,25 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         //if (stream.IsWriting) stream.SendNext(hpBar);
         //else hpBar = (HealthBar)stream.ReceiveNext();
 
-        if (stream.IsWriting)
-        {
-            //stream.SendNext(isGround);
-            stream.SendNext(maxHP);
-            stream.SendNext(maxMP);
-            stream.SendNext(hp);
-            stream.SendNext(mp);
-            stream.SendNext(atk);
-            stream.SendNext(def);
-            //stream.SendNext(isDashing);
-            stream.SendNext(isStun);
-            stream.SendNext(isDead);
-            stream.SendNext(speed);
-            stream.SendNext(isAttacking);
-        }
-        else
-        {
-            maxHP = (float)stream.ReceiveNext();
-        }
+        //if (stream.IsWriting)
+        //{
+        //    //stream.SendNext(isGround);
+        //    stream.SendNext(maxHP);
+        //    stream.SendNext(maxMP);
+        //    stream.SendNext(hp);
+        //    stream.SendNext(mp);
+        //    stream.SendNext(atk);
+        //    stream.SendNext(def);
+        //    //stream.SendNext(isDashing);
+        //    stream.SendNext(isStun);
+        //    stream.SendNext(isDead);
+        //    stream.SendNext(speed);
+        //    stream.SendNext(isAttacking);
+        //}
+        //else
+        //{
+        //    maxHP = (float)stream.ReceiveNext();
+        //}
         
     }
 }
