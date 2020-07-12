@@ -252,8 +252,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 Move();
 
-                if (Input.GetKeyDown(KeyCode.Space))
-                    photonView.RPC("Jump", RpcTarget.All);
+                //if (Input.GetKeyDown(KeyCode.Space))
+                //    photonView.RPC("Jump", RpcTarget.All);
+                Jump();
                 if (Input.GetKeyDown(KeyCode.Mouse1))
                     photonView.RPC("Dash", RpcTarget.All);
                 //Dash();
@@ -393,7 +394,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             
         }
     }
-    [PunRPC]
+
+    //[PunRPC]
     void Jump()
     {
             //바닥에 있으면 점프를 실행
@@ -520,6 +522,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+
+        if (stream.IsWriting) stream.SendNext(isGround);
+        else isGround = (bool)stream.ReceiveNext();
+
         //if (stream.IsWriting) stream.SendNext(hpBar);
         //else hpBar = (HealthBar)stream.ReceiveNext();
 

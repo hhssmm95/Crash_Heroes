@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class GroundSense : MonoBehaviour
+public class GroundSense : MonoBehaviourPunCallbacks, IPunObservable
 {
     //private GameObject player; //플레이어 오브젝트 
     CharacterMove player;
@@ -38,5 +39,13 @@ public class GroundSense : MonoBehaviour
     {
         if (!other.CompareTag("Player") && isGround == false)
             isGround = true;
+    }
+
+    
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting) stream.SendNext(isGround);
+        else isGround = (bool)stream.ReceiveNext();
     }
 }
