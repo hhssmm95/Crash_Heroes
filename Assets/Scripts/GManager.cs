@@ -77,7 +77,7 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
     {
         if (pickNum == 1 && knightPick == false)
         {
-            pickName = "Knight";
+            pickName = "Prefebs/Knight";
             knightPick = true;
             knightImage.transform.GetChild(0).gameObject.SetActive(false);
             knightImage.transform.GetChild(2).gameObject.SetActive(true);
