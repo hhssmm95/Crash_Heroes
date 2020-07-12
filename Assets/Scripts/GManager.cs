@@ -39,6 +39,13 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
         Debug.Log(nickNameList.myNickName);
     }
 
+    private void Update()
+    {
+        if(PhotonNetwork.PlayerList.Length == nickNameList.NameList.Length)
+        {
+            characterPanel.SetActive(true);
+        }
+    }
     public void Spawn()
     {
         PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);
@@ -97,18 +104,4 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
             mageImage.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-    //    if (stream.IsWriting) stream.SendNext(knightPick);
-    //    else knightPick = (bool)stream.ReceiveNext();
-
-    //    if (stream.IsWriting) stream.SendNext(archerPick);
-    //    else archerPick = (bool)stream.ReceiveNext();
-
-    //    if (stream.IsWriting) stream.SendNext(dragoonPick);
-    //    else dragoonPick = (bool)stream.ReceiveNext();
-
-    //    if (stream.IsWriting) stream.SendNext(magePick);
-    //    else magePick = (bool)stream.ReceiveNext();
-    //}
 }
