@@ -274,7 +274,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         float originSpeed = player.speed;
 
-        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3);
+        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
 
         player.speed *= 1.2f;
         yield return new WaitForSecondsRealtime(5.0f);
