@@ -28,22 +28,21 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        photonView.RPC("Locate", RpcTarget.All);
+        Locate();
     }
-
-    [PunRPC]
+    
     private void OnParticleCollision(GameObject other)
     {
         ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
-        //Debug.Log("파티클충돌");
-        if (!other.CompareTag("Dragoon") && other.layer.ToString() == "Player" && !hit)
+        Debug.Log(gameObject.name + "파티클충돌 with" + other.layer.ToString());
+        if (!photonView.IsMine && !other.CompareTag("Dragoon") && other.layer.ToString() == "Player" && other.GetComponent<PhotonView>().IsMine && !hit)
         {
             //Debug.Log("VX충돌");
             var enemy = other.GetComponent<CharacterMove>();
             if (gameObject.CompareTag("DragoonSkill1"))
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk*1.2f);
-                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk*1.2f, -transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f, -transform.forward);
                 //enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
@@ -64,8 +63,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             hit = true;
         }
     }
-
-    [PunRPC]
+    
     void Locate()
     {
         if (gameObject.CompareTag("DragoonAttack1"))

@@ -13,16 +13,17 @@ public class UImanager : MonoBehaviour
 
     public CharacterMove player;
     public bool playerCheck;
-    bool initComplete;
+    public bool initComplete;
 
-    Image slot1;
-    Image slot2;
-    Image slot3;
-    Image slot4;
-    Image slot5;
+    public Image slot1;
+    public Image slot2;
+    public Image slot3;
+    public Image slot4;
+    public Image slot5;
 
     GameObject hpOrb;
     GameObject mpOrb;
+    GameObject stBar;
     //WarriorSkill wSkill;
     //ArcherSkill aSkill;
     //DragoonSkill dSkill;
@@ -88,8 +89,10 @@ public class UImanager : MonoBehaviour
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         hpOrb = GameObject.FindWithTag("hpOrb");
         mpOrb = GameObject.FindWithTag("mpOrb");
+        stBar = GameObject.FindWithTag("stOrb");
         hpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", -1.6f);
         mpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", -1.6f);
+        stBar.GetComponent<Image>().material.SetFloat("PositionUV_X_1", -1.09f);
         //hpOrb.GetComponent<Renderer>().material.SetFloat("PositionUV_Y_1", -1.6f);
         //mpOrb.GetComponent<Renderer>().material.SetFloat("PositionUV_Y_1", -1.6f);
 
@@ -109,6 +112,12 @@ public class UImanager : MonoBehaviour
         float result = percent * -3.2f + 1.6f;
         mpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", result);
         //mpOrb.fillAmount = percent;
+    }
+    void stControl()
+    {
+        float percent = player.st / player.maxST;
+        float result = percent * -2.18f + 1.09f;
+        stBar.GetComponent<Image>().material.SetFloat("PositionUV_X_1", result);
     }
 
     private void Update()
@@ -213,6 +222,7 @@ public class UImanager : MonoBehaviour
 
             hpControl();
             mpControl();
+            stControl();
         }
 
         if(Input.GetKeyDown(KeyCode.Escape))

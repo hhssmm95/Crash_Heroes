@@ -29,13 +29,12 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         //photonView.RPC("Locate", RpcTarget.All);
         Locate();
     }
-
-    private void OnParticleCollision(GameObject other)
+    private void OnTriggerEnter(Collider other)
     {
-        ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
-        Debug.Log("파티클충돌");
-        if (!other.CompareTag("Warrior") && other.layer.ToString() == "Player" && !hit)
+        Debug.Log(gameObject.name + "파티클충돌 ");
+        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9 && Warrior.isAttacking && !hit)
         {
+            
             var enemy = other.GetComponent<CharacterMove>();
             //enemy.OnDamage(10);
 
@@ -45,16 +44,16 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             //}
             if (tag == "WarriorAttack3")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk*1.2f);
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
             }
             else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk*0.9f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 0.9f, Warrior.transform.forward);
 
             }
             else
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
             }
 
             hit = true;

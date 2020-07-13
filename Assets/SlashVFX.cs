@@ -13,7 +13,7 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
-        dir = warrior.transform.forward;
+        //dir = warrior.transform.forward;
         Destroy(gameObject, 3.0f);
         //transform.rotation = Quaternion.LookRotation(dir);
     }
@@ -21,16 +21,16 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        transform.position += dir * speed * Time.deltaTime;
+        transform.position += (-transform.right) * speed * Time.deltaTime;
     }
     
     //[PunRPC]
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Warrior") && other.gameObject.layer.ToString() == "Player" && !hit)
+        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9 && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, warrior.atk*1.5f);
+            enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, warrior.atk*1.5f, -transform.right);
             hit = true;
             
         }

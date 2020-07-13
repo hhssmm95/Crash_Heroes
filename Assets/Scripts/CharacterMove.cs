@@ -25,10 +25,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float mp;
     public float atk;
     public float def;
+    public float maxST = 100.0f;
+    public float st;
     private bool isDamaging;
     public bool isDashing;
     public bool isStun;
-
+    public float hpRegen;
+    public float mpRegen;
+    public float stRegen;
     public bool isBurn;
     float burnDuration;
     float burnDurationTimer;
@@ -36,7 +40,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     float burnTimer;
 
     float mpTimer;
+    float hpTimer;
+    float stTimer;
     float damageTimer;
+
+    bool isRunning;
 
     public float speed = 2.0f; // 캐릭터 이동속도
     private Quaternion movement;
@@ -47,6 +55,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     private Vector3 moveDirection;
     public bool isAttacking;
     float dashTimer;
+    float runTimer;
     private float h;
     private float v;
 
@@ -85,7 +94,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public ArcherSkill aSkill;
     public DragoonSkill dSkill;
 
+    public bool dashAttacking_warrior;
+    public bool stopWhileAttack;
+    float stopTimer;
+
     public string user;
+    public int Sync;
     //MageSkill mSkill;
     void Start()
     {
@@ -117,7 +131,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         else if (gameObject.tag == "Mage")
             job = Global.Classes.Mage;
 
-            switch (job)
+        switch (job)
         {
             case Global.Classes.Warrior:
                 wSkill.photonView.RPC("InitStatus", RpcTarget.All);
@@ -183,6 +197,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
             hp = maxHP;
             mp = maxMP;
+            st = maxST;
         }
     }
     void Move()
@@ -208,14 +223,31 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (Input.GetKey(KeyCode.LeftShift)) //달리기
         {
-            myAnim.SetBool("Run", true);
+            if (!isRunning)
+            {
+                st -= 5.0f;
+                isRunning = true;
+                myAnim.SetBool("Run", true);
+            }
+            else
+            {
+                runTimer += Time.deltaTime;
+                if(runTimer >= 1.0f)
+                {
+                    runTimer = 0;
+                    st -= 5.0f;
+                }
+            }
             transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
-
         }
         else
         {
             if (myAnim.GetBool("Run"))
+            {
                 myAnim.SetBool("Run", false);
+                isRunning = false;
+                runTimer = 0;
+            }
             transform.position += moveDirection * speed * Time.deltaTime;
         }
 
@@ -224,8 +256,21 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
+        if(!stopWhileAttack && isAttacking)
+        {
+            stopWhileAttack = true;
+        }
+        if(stopWhileAttack)
+        {
+            stopTimer += Time.deltaTime;
+            if(stopTimer >= 1.0f)
+            {
+                stopWhileAttack = false;
+                stopTimer = 0;
+            }
+        }
         user = photonView.Owner.NickName;
-        if(isDead)
+        if (isDead)
         {
             OnDead();
         }
@@ -240,14 +285,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (isDamaging)
             {
                 damageTimer += Time.deltaTime;
-                if (damageTimer >= 1.5f)
+                if (damageTimer >= 1.0f)
                 {
                     isDamaging = false;
                     damageTimer = 0;
                 }
             }
 
-            if (!isDead && !isDashing && !isStun) //사망처리중일 시 이동 불가
+            if (!isDead && !isDashing && !isStun && !stopWhileAttack) //사망처리중일 시 이동 불가
             {
 
                 Move();
@@ -256,7 +301,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //    photonView.RPC("Jump", RpcTarget.All);
                 if (Input.GetKeyDown(KeyCode.Space))
                     Jump();
-                if (Input.GetKeyDown(KeyCode.Mouse1))
+                if (Input.GetKeyDown(KeyCode.Mouse1) && st >= 20.0f)
                     photonView.RPC("Dash", RpcTarget.All);
                 //Dash();
                 //Skill_1();
@@ -298,23 +343,48 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-            if (mp / maxMP < 1 && isDead)
+            if (mp / maxMP < 1 && !isDead)
             {
                 mpTimer += Time.deltaTime;
 
-                if (mpTimer >= 0.2f)
+                if (mpTimer >= 1.0f)
                 {
                     mpTimer = 0;
-                    mp += 1;
+                    mp += mpRegen;// (mpRegen*0.1f);
+                    if (mp > maxMP)
+                        mp = maxMP;
                 }
             }
+            if (hp / maxHP < 1 && !isDead)
+            {
+                hpTimer += Time.deltaTime;
 
+                if (hpTimer >= 5.0f)
+                {
+                    hpTimer = 0;
+                    hp += hpRegen;
+                    if (hp > maxHP)
+                        hp = maxHP;
+                }
+            }
+            if (st / maxST < 1 && !isDead)
+            {
+                stTimer += Time.deltaTime;
+
+                if (stTimer >= 1.0f)
+                {
+                    stTimer = 0;
+                    st += stRegen;//(stRegen*0.1f);
+                    if (st > maxST)
+                        st = maxST;
+                }
+            }
 
             if (skill_1_Off)
             {
                 skill_1_Timer += Time.deltaTime;
-                if (skill_1_Timer >= 1.2f)
-                    isAttacking = false;
+                //if (skill_1_Timer >= 1.2f)
+                //    isAttacking = false;
                 if (skill_1_Timer >= skill_1_Cooltime)
                 {
                     skill_1_Off = false;
@@ -326,10 +396,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 skill_2_Timer += Time.deltaTime;
                 if (skill_2_Timer >= 1.0f)
                 {
-                    isAttacking = false;
                     if (job == Global.Classes.Warrior)
+                    {
                         wSkill.warriorAnim.SetBool("Skill2_2", false);
+                    }
                 }
+
                 if (skill_2_Timer >= skill_2_Cooltime)
                 {
                     skill_2_Off = false;
@@ -368,12 +440,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-            if (hp <= 0)
-                isDead = true;
+            //if (hp <= 0)
+            //    isDead = true;
 
             if (isBurn)
             {
-                if(burnDurationTimer >= burnDuration)
+                if (burnDurationTimer >= burnDuration)
                 {
                     isBurn = false;
                     burnTimer = 0;
@@ -386,66 +458,79 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 burnDuration += Time.deltaTime;
             }
 
-            if(isBurn && burnTimer >= 1.0f && !isDead)
+            if (isBurn && burnTimer >= 1.0f && !isDead)
             {
                 burnTimer = 0;
                 photonView.RPC("OnDamage", RpcTarget.All, burnDamage);
                 //OnBurn 함수만들어서 제어, if(isBurn) {Timer++;} 추가
             }
-            
+
+            hpBar.SetHealth(hp);
+
         }
     }
-
-    //[PunRPC]
-    void Jump()
-    {
+        //[PunRPC]
+        void Jump()
+        {
             //바닥에 있으면 점프를 실행
             if (isGround)
             {
                 //print("점프 가능 !");
                 isGround = false;
                 myAnim.SetTrigger("Jump");
+                Sync = 1;
                 myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
             else
             {
                 return;
             }
-    }
+        }
+    
 
     [PunRPC]
     void Dash()
     {
 
-
+        st -= 20;
         isDashing = true;
         myAnim.SetTrigger("Dash");
 
     }
 
     [PunRPC]
-    public void OnDamage(float damage)
+    public void OnDamage(float damage , Vector3 normal)
     {
         if (photonView.IsMine && !isDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+            Sync = 2;
+            myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
             hp -= damage;
             hpBar.SetHealth(hp);
+            if(hp<=0)
+            {
+                isDead = true;
+            }
         }
     }
 
     [PunRPC]
-    public void OnHeavyDamage(float damage)
+    public void OnHeavyDamage(float damage, Vector3 normal)
     {
         if (photonView.IsMine && !isDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("HeavyDamage");
-            myRig.AddForce(-transform.forward * jumpPower * 4 + transform.up * jumpPower / 2, ForceMode.Impulse);
+            Sync = 3;
+            myRig.AddForce(normal * jumpPower/2, ForceMode.Impulse);
             hp -= damage;
             hpBar.SetHealth(hp);
+            if (hp <= 0)
+            {
+                isDead = true;
+            }
         }
     }
 
@@ -498,6 +583,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (!dying)
         {
             dying = true;
+            //myAnim.Play("Die2");
             myAnim.SetBool("isDead", true);
         }
 
@@ -524,31 +610,65 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 
-        if (stream.IsWriting) stream.SendNext(isGround);
-        else isGround = (bool)stream.ReceiveNext();
-
-        //if (stream.IsWriting) stream.SendNext(hpBar);
-        //else hpBar = (HealthBar)stream.ReceiveNext();
-
-        //if (stream.IsWriting)
+        if (stream.IsWriting)
+        { 
         //{
-        //    //stream.SendNext(isGround);
-        //    stream.SendNext(maxHP);
-        //    stream.SendNext(maxMP);
-        //    stream.SendNext(hp);
-        //    stream.SendNext(mp);
-        //    stream.SendNext(atk);
-        //    stream.SendNext(def);
-        //    //stream.SendNext(isDashing);
-        //    stream.SendNext(isStun);
-        //    stream.SendNext(isDead);
-        //    stream.SendNext(speed);
-        //    stream.SendNext(isAttacking);
-        //}
-        //else
-        //{
-        //    maxHP = (float)stream.ReceiveNext();
-        //}
-        
+            stream.SendNext(Sync);
+        //    stream.SendNext(skill_1_Off);
+        //    stream.SendNext(skill_2_Off);
+        //    stream.SendNext(skill_3_Off);
+        //    stream.SendNext(skill_4_Off);
+        //    stream.SendNext(skill_5_Off);
+        //    stream.SendNext(skill_1_Cooltime);
+        //    stream.SendNext(skill_2_Cooltime);
+        //    stream.SendNext(skill_3_Cooltime);
+        //    stream.SendNext(skill_4_Cooltime);
+        //    stream.SendNext(skill_5_Cooltime);
+        //    stream.SendNext(skill_1_Timer);
+        //    stream.SendNext(skill_2_Timer);
+        //    stream.SendNext(skill_3_Timer);
+        //    stream.SendNext(skill_4_Timer);
+        //    stream.SendNext(skill_5_Timer);
+            Sync = 0;
+
+
+        }
+        else
+        {
+            Sync = (int)stream.ReceiveNext();
+            //skill_1_Off = (bool)stream.ReceiveNext();
+            //skill_2_Off = (bool)stream.ReceiveNext();
+            //skill_3_Off = (bool)stream.ReceiveNext();
+            //skill_4_Off = (bool)stream.ReceiveNext();
+            //skill_5_Off = (bool)stream.ReceiveNext();
+            //skill_1_Cooltime = (float)stream.ReceiveNext();
+            //skill_2_Cooltime = (float)stream.ReceiveNext();
+            //skill_3_Cooltime = (float)stream.ReceiveNext();
+            //skill_4_Cooltime = (float)stream.ReceiveNext();
+            //skill_5_Cooltime = (float)stream.ReceiveNext();
+            //skill_1_Timer = (float)stream.ReceiveNext();
+            //skill_2_Timer = (float)stream.ReceiveNext();
+            //skill_3_Timer = (float)stream.ReceiveNext();
+            //skill_4_Timer = (float)stream.ReceiveNext();
+            //skill_5_Timer = (float)stream.ReceiveNext();
+
+            switch (Sync)
+            {
+                case 1:
+                    myAnim.SetTrigger("Jump");
+                    Sync = 0;
+                    break;
+
+                case 2:
+                    myAnim.SetTrigger("Damage");
+                    Sync = 0;
+                    break;
+
+                case 3:
+                    myAnim.SetTrigger("HeavyDamage");
+                    Sync = 0;
+                    break;
+            }
+        }
     }
 }

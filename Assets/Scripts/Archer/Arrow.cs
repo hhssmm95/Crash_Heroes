@@ -7,12 +7,13 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 {
     //CharacterMove Archer;
     float atk;
+    Vector3 normal;
     float speed = 10;
     bool hit;
     void Start()
     {
         atk = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>().atk;
-
+        normal = GameObject.FindGameObjectWithTag("Archer").transform.forward;
         if (gameObject.tag == "BigArrow")
             speed *= 2;
         Destroy(gameObject, 5.0f);
@@ -26,21 +27,21 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Archer") && other.gameObject.layer.ToString() == "Player" && !hit)
+        if (!photonView.IsMine && !other.CompareTag("Archer") && other.gameObject.layer == 9 && other.GetComponent<PhotonView>().IsMine && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
 
             if (gameObject.tag == "BigArrow")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.5f);
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.5f, normal);
             }
             else if (gameObject.tag == "MultiArrow")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.2f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.2f, normal);
             }
             else
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f);
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.3f, normal);
             }
             hit = true;
         }

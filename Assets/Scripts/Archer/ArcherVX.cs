@@ -30,16 +30,15 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        photonView.RPC("Locate", RpcTarget.All);
+        Locate();
     }
 
     //[PunRPC]
-    private void OnParticleCollision(GameObject other)
-    {
-        ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
 
-        //Debug.Log("파티클충돌");
-        if (!other.CompareTag("Archer") && other.layer.ToString() == "Player" && !hit)
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(gameObject.name + "파티클충돌 with" + other.gameObject.layer.ToString());
+        if (!other.CompareTag("Archer") && other.gameObject.layer == 9 && Archer.isAttacking && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
             //enemy.OnDamage(10);
@@ -50,19 +49,18 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             //}
             if (tag == "ArcherVX1")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk, Archer.transform.forward);
             }
             else
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
             }
 
 
             hit = true;
         }
     }
-
-    [PunRPC]
+    
     void Locate()
     {
         if (gameObject.CompareTag("ArcherAttack1"))
