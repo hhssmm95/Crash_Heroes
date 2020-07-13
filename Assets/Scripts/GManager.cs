@@ -62,10 +62,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        for (int i = 0; i < 4; i++)
-        {
-            Debug.Log(pickList[i] + "지속확인" + i);
-        }
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    Debug.Log(pickList[i] + "지속확인" + i);
+        //}
         if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
         {
             TimerAndGameOver();

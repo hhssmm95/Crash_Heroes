@@ -368,6 +368,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     hp += hpRegen;
                     if (hp > maxHP)
                         hp = maxHP;
+                    hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
                 }
             }
             if (st / maxST < 1 && !isDead)

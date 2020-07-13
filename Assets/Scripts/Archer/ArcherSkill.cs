@@ -189,7 +189,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.Instantiate("Prefebs/VFX/ArcherVX1", ArcherSkill1Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX1.transform.rotation);
             }
             //transform.rotation = Quaternion.LookRotation(dir);
-            StartCoroutine("Skill_Hit");
+            StartCoroutine("Skill1_Hit");
         }
 
     }
@@ -197,7 +197,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill2()
     {
-        if (photonView.IsMine && player.mp >= player.skill_2_Cost && !player.isDead)
+        if (player.mp >= player.skill_2_Cost && !player.isDead)
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
@@ -224,7 +224,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Archer_Skill3()
     {
-        if (photonView.IsMine && player.mp >= player.skill_3_Cost && !player.isDead)
+        if (player.mp >= player.skill_3_Cost && !player.isDead)
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
@@ -234,6 +234,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
+
 
     [PunRPC]
     void Archer_Skill4()
@@ -286,6 +287,14 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+    IEnumerator Skill1_Hit()
+    {
+        //yield return new WaitForSeconds(0.05f);
+        player.isAttacking = true;
+        yield return new WaitForSeconds(0.4f);
+        player.isAttacking = false;
+
+    }
 
     IEnumerator Archer_Skill4_Effect()
     {
