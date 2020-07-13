@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -237,7 +238,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         { 
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            //PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel(1);
         }
     }
