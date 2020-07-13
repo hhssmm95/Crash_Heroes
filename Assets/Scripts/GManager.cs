@@ -12,6 +12,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     private NickNameList nickNameList;
     public PhotonView PV;
     public CharacterMove characterMove;
+    public AudioClip[] musicList;
+    AudioSource audioSource;
 
     public GameObject characterPanel;
     public GameObject knightImage;
@@ -41,6 +43,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+        audioSource = GetComponent<AudioSource>();
+
+        StartCoroutine("PlayMusicList", 0);
 
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
@@ -59,6 +64,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 pickList[i] = false;
             }
         }
+
+        
     }
 
     private void Update()
@@ -72,6 +79,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    #region 캐릭터 생성
     public void Spawn()
     {
         PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);
@@ -124,6 +132,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         pickList[playerNum] = true;
     }
+    #endregion
+
+    #region 타이머
     public void TimerAndGameOver()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -140,6 +151,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+
     [PunRPC]
     public void WinOrLose()
     {
@@ -153,11 +165,23 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         //시간이 다 되면
         uiManager.SetActive(false);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(4);
         PhotonNetwork.CurrentRoom.IsOpen = true;
         PhotonNetwork.CurrentRoom.IsVisible = true;
         PhotonNetwork.LoadLevel(0);
     }
+
+    #endregion
+
+    #region 음악
+    IEnumerator PlayMusicList(int num)
+    {
+        audioSource.clip = musicList[num];
+        audioSource.Play();
+        audioSource.loop = true;
+        yield return 0;
+    }
+    #endregion
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

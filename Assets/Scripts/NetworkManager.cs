@@ -9,6 +9,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     private NickNameList nickNameList;
     public int playerCount = 0;
+    public AudioClip[] musicList;
+    AudioSource audioSource;
 
     [Header("MainPanel")]
     public GameObject MainPanel;
@@ -40,6 +42,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
         if(PhotonNetwork.InRoom)
         {
@@ -53,6 +56,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             //LobbyPanel.SetActive(true);
             //NickNameInput.text = nickNameList.myNickName;
         }
+
+        StartCoroutine("PlayMusicList", 0);
     }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
@@ -130,6 +135,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
+        StartCoroutine("PlayMusicList", 1);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         myList.Clear();
     }
@@ -161,6 +167,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         RoomPanel.SetActive(true);
+        StartCoroutine("PlayMusicList", 2);
         RoomRenewal();
         ChatInput.text = "";
         for (int i = 0; i < ChatText.Length; i++) ChatText[i].text = "";
@@ -247,6 +254,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(1);
         }
     }
-    
+
+    #endregion
+
+    #region 음악
+    IEnumerator PlayMusicList(int num)
+    {
+        audioSource.clip = musicList[num];
+        audioSource.Play();
+        audioSource.loop = true;
+        yield return 0;
+    }
     #endregion
 }
