@@ -30,6 +30,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public int playerNum = 0;
     public bool[] pickList = { true, true, true, true };
     public bool isPickCheck = false;
+
+    public bool isSpawn = false;
     private void Start()
     {
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
@@ -119,12 +121,15 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void Timer()
     {
-        LimitTime -= Time.deltaTime;
-        text_Time.text = Mathf.Round(LimitTime).ToString();
-
-        if (LimitTime <= 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            text_Time.text = "0";
+            LimitTime -= Time.deltaTime;
+            text_Time.text = Mathf.Round(LimitTime).ToString();
+
+            if (LimitTime <= 0)
+            {
+                text_Time.text = "0";
+            }
         }
     }
 
