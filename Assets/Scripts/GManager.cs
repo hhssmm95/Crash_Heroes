@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using System;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class GManager : MonoBehaviourPunCallbacks//IPunObservable
+public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public Transform[] spawn_point;
     private NickNameList nickNameList;
     public PhotonView PV;
-    private bool[] ready = { true, true, true, true};
 
     public GameObject characterPanel;
     public GameObject knightImage;
     public GameObject archerImage;
     public GameObject dragoonImage;
     public GameObject mageImage;
+    public GameObject victoryPanel;
+    public GameObject DefeatPanel;
+    public GameObject exitButton;
+    public GameObject uiManager;
+
+    public Text text_Time;
+    public float LimitTime = 300;
 
     public string pickName = null;
     public bool knightPick = false;
@@ -23,13 +31,16 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
     public bool dragoonPick = false;
     public bool magePick = false;
 
-    private bool IsSpawn = false;
-
     public int playerNum = 0;
+    public bool[] pickList = { true, true, true, true };
+    public bool isPickCheck = false;
+
+    public bool isSpawn = false;
     private void Start()
     {
+        text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
-        
+
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
             if (nickNameList.NameList[i] == nickNameList.myNickName)
@@ -44,9 +55,21 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
             characterPanel.SetActive(true);
             for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
             {
-                ready[i] = false;
+                pickList[i] = false;
             }
-        }    
+        }
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.Log(pickList[i] + "지속확인" + i);
+        }
+        if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
+        {
+            TimerAndGameOver();
+        }
     }
 
     public void Spawn()
@@ -54,26 +77,19 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
         PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);
     }
 
-    private static void Shuffle<T>(T[] array)
+    public void Pick(int num)
     {
-        for (int i = 0; i < array.Length; i++)
+        if (isPickCheck == false)
         {
-            System.Random ran = new System.Random();
-            int randomValue = ran.Next(0, array.Length);
-            T temp = array[i];
-            array[i] = array[randomValue];
-            array[randomValue] = temp;
+            isPickCheck = true;
+            PV.RPC("PickCheck", RpcTarget.All, num, playerNum);
+            characterPanel.SetActive(false);
+            Spawn();
         }
     }
 
-    public void Pick(int num)
-    {
-        PV.RPC("PickCheck", RpcTarget.All, num);
-        characterPanel.SetActive(false);
-        Spawn();
-    }
     [PunRPC]
-    public void PickCheck(int pickNum)
+    public void PickCheck(int pickNum, int playerNum)
     {
         if (pickNum == 1 && knightPick == false)
         {
@@ -106,5 +122,53 @@ public class GManager : MonoBehaviourPunCallbacks//IPunObservable
             mageImage.transform.GetChild(0).gameObject.SetActive(false);
             mageImage.transform.GetChild(2).gameObject.SetActive(true);
         }
+        pickList[playerNum] = true;
+    }
+    public void TimerAndGameOver()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            LimitTime -= Time.deltaTime;
+            text_Time.text = Mathf.Round(LimitTime).ToString();
+
+            if (LimitTime <= 0)
+            {
+                LimitTime = 0;
+                text_Time.text = "0";
+                victoryPanel.SetActive(true);
+                exitButton.SetActive(true);
+            }
+        }
+    }
+
+    private void GameOver()
+    {
+        PhotonNetwork.LeaveRoom();
+        uiManager.SetActive(false);
+        //PhotonNetwork.LoadLevel(0);
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void GameOut()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = true;
+        PhotonNetwork.CurrentRoom.IsVisible = true;
+        PhotonNetwork.LoadLevel(0);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (stream.IsWriting) stream.SendNext(pickList[i]);
+            else pickList[i] = (bool)stream.ReceiveNext();
+        }
+
+        if (stream.IsWriting) stream.SendNext(text_Time.text);
+        else text_Time.text = (string)stream.ReceiveNext();
     }
 }

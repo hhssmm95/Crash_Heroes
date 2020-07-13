@@ -37,6 +37,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
+    private bool isConnecting = false;
 
     private void Start()
     {
@@ -104,13 +105,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
+        isConnecting = true;
         PhotonNetwork.GameVersion = "0.0.0";
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        if (isConnecting)
+        {
+            PhotonNetwork.JoinLobby();
+        }
     }
 
     public override void OnJoinedLobby()
@@ -171,7 +176,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         RoomRenewal();
-        //NickNameRPC(newPlayer.NickName);
         ChatRPC("<color=yellow>" + newPlayer.NickName + "님이 참가하셨습니다</color>");
     }
 
@@ -230,7 +234,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
-        {
+        { 
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            //PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.LoadLevel(1);
         }
     }
