@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -38,11 +37,22 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
-    private bool isConnecting = false;
 
     private void Start()
     {
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+        if(PhotonNetwork.InRoom)
+        {
+            //방으로 돌아가기
+            RoomPanel.SetActive(true);
+            NickNameInput.text = nickNameList.myNickName;
+            RoomRenewal();
+
+            //로비로 돌아가기
+            //PhotonNetwork.LeaveRoom();
+            //LobbyPanel.SetActive(true);
+            //NickNameInput.text = nickNameList.myNickName;
+        }
     }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
@@ -106,17 +116,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
-        isConnecting = true;
         PhotonNetwork.GameVersion = "0.0.0";
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        if (isConnecting)
-        {
-            PhotonNetwork.JoinLobby();
-        }
+        PhotonNetwork.JoinLobby();
+        
     }
 
     public override void OnJoinedLobby()
@@ -124,7 +131,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        //WelcomeText.text = PhotonNetwork.LocalPlayer.NickName + "님 환영합니다";
         myList.Clear();
     }
 

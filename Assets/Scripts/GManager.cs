@@ -11,6 +11,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public Transform[] spawn_point;
     private NickNameList nickNameList;
     public PhotonView PV;
+    public CharacterMove characterMove;
 
     public GameObject characterPanel;
     public GameObject knightImage;
@@ -62,13 +63,12 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        for (int i = 0; i < 4; i++)
-        {
-            Debug.Log(pickList[i] + "지속확인" + i);
-        }
         if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
         {
-            TimerAndGameOver();
+            if (LimitTime > 0)
+            {
+                TimerAndGameOver();
+            }
         }
     }
 
@@ -130,31 +130,30 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             LimitTime -= Time.deltaTime;
             text_Time.text = Mathf.Round(LimitTime).ToString();
-
             if (LimitTime <= 0)
             {
                 LimitTime = 0;
                 text_Time.text = "0";
-                victoryPanel.SetActive(true);
-                exitButton.SetActive(true);
+                PV.RPC("WinOrLose", RpcTarget.All);
+                StartCoroutine("GameOut");
+                //exitButton.SetActive(true);
             }
         }
     }
-
-    private void GameOver()
+    [PunRPC]
+    public void WinOrLose()
     {
-        PhotonNetwork.LeaveRoom();
+        //살아있으면 승리
+        //victoryPanel.SetActive(true);
+        //죽어있으면 패배
+        //DefeatPanel.SetActive(true);
+    }
+
+    IEnumerator GameOut()
+    {
+        //시간이 다 되면
         uiManager.SetActive(false);
-        //PhotonNetwork.LoadLevel(0);
-    }
-
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    public void GameOut()
-    {
+        yield return new WaitForSeconds(3);
         PhotonNetwork.CurrentRoom.IsOpen = true;
         PhotonNetwork.CurrentRoom.IsVisible = true;
         PhotonNetwork.LoadLevel(0);
