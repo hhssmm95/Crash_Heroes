@@ -162,11 +162,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 break;
         }
 
+        hpBar.GetComponent<PhotonView>().RPC("SetMaxHealth", RpcTarget.All, maxHP);
+
         if (photonView.IsMine)
         {
             isMine = true;
 
-            hpBar.SetMaxHealth(maxHP);
+            //hpBar.SetMaxHealth(maxHP);
+
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 6.806f, transform.position.z - 6f);
@@ -193,7 +196,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         dying = false;
         if (photonView.IsMine/*gameObject.CompareTag("Player")*/)
         {
-            hpBar.gameObject.SetActive(false);
+            //hpBar.gameObject.SetActive(false);
 
             hp = maxHP;
             mp = maxMP;
@@ -465,7 +468,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //OnBurn 함수만들어서 제어, if(isBurn) {Timer++;} 추가
             }
 
-            hpBar.SetHealth(hp);
+            //hpBar.SetHealth(hp);
 
         }
     }
@@ -507,11 +510,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myAnim.SetTrigger("Damage");
             Sync = 2;
             myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
-            hp -= damage;
-            hpBar.SetHealth(hp);
+            if (def <= damage)
+            {
+                hp -= (damage - def);
+                Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+            }
+            //hpBar.SetHealth(hp);
+            hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
             if(hp<=0)
             {
                 isDead = true;
+                Debug.Log(gameObject.name + "(이)가 사망");
             }
         }
     }
@@ -525,11 +534,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myAnim.SetTrigger("HeavyDamage");
             Sync = 3;
             myRig.AddForce(normal * jumpPower/2, ForceMode.Impulse);
-            hp -= damage;
-            hpBar.SetHealth(hp);
+            if (def <= damage)
+            {
+                hp -= (damage - def);
+                Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 중상을 입음");
+            }
+            //hpBar.SetHealth(hp);
+            hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
             if (hp <= 0)
             {
                 isDead = true;
+                Debug.Log(gameObject.name + "(이)가 사망");
             }
         }
     }

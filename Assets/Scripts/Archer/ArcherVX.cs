@@ -37,7 +37,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(gameObject.name + "파티클충돌 with" + other.gameObject.layer.ToString());
+        //Debug.Log(gameObject.name + "파티클충돌 with" + other.gameObject.layer.ToString());
         if (!other.CompareTag("Archer") && other.gameObject.layer == 9 && Archer.isAttacking && !hit)
         {
             var enemy = other.GetComponent<CharacterMove>();
@@ -50,10 +50,14 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             if (tag == "ArcherVX1")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk, Archer.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
             }
             else
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
             }
 
 

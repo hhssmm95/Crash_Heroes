@@ -31,6 +31,7 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
         {
             var enemy = other.GetComponent<CharacterMove>();
             enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, warrior.atk*1.5f, -transform.right);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + warrior.atk * 1.5f + "감소 전 피해를 입힘.");
             hit = true;
             
         }

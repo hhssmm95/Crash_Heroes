@@ -31,7 +31,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(gameObject.name + "파티클충돌 ");
+        //Debug.Log(gameObject.name + "파티클충돌 ");
         if (!other.CompareTag("Warrior") && other.gameObject.layer == 9 && Warrior.isAttacking && !hit)
         {
             
@@ -45,15 +45,17 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             if (tag == "WarriorAttack3")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
             }
             else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 0.9f, Warrior.transform.forward);
-
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.9f + "감소 전 피해를 입힘.");
             }
             else
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
             }
 
             hit = true;
