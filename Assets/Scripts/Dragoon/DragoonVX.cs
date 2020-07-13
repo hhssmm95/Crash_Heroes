@@ -6,8 +6,8 @@ using Photon.Pun;
 public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove Dragoon;
-    ParticleSystem particle;
-    List<ParticleCollisionEvent> collisionEvents;
+    //ParticleSystem particle;
+    //List<ParticleCollisionEvent> collisionEvents;
 
     Transform Atk2Pos;
     Transform Skill1Pos;
@@ -16,16 +16,18 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
-        particle = GetComponent<ParticleSystem>();
-        collisionEvents = new List<ParticleCollisionEvent>();
+        //particle = GetComponent<ParticleSystem>();
+        //collisionEvents = new List<ParticleCollisionEvent>();
 
-        Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAttack2Pos").GetComponent<Transform>();
-        Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
+        if(tag == "DragoonAttack2")
+            Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAttack2Pos").GetComponent<Transform>();
+        if(tag == "DragoonSkill1")
+            Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
 
         Destroy(gameObject, 1.0f);
     }
+    
 
-    // Update is called once per frame
     void Update()
     {
         Locate();
@@ -33,25 +35,29 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     
     private void OnParticleCollision(GameObject other)
     {
-        ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
-        Debug.Log(gameObject.name + "파티클충돌 with" + other.layer.ToString());
-        if (!photonView.IsMine && !other.CompareTag("Dragoon") && other.layer.ToString() == "Player" && other.GetComponent<PhotonView>().IsMine && !hit)
+        //ParticlePhysicsExtensions.GetCollisionEvents(particle, other, collisionEvents);
+        //Debug.Log(gameObject.name + "파티클충돌 with" + other.layer.ToString());
+        if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 && Dragoon.isAttacking && !hit)
         {
             //Debug.Log("VX충돌");
             var enemy = other.GetComponent<CharacterMove>();
-            if (gameObject.CompareTag("DragoonSkill1"))
+
+
+            if (tag == "DragoonSkill1")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk*1.2f, -transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.2f + "감소 전 피해를 입힘.");
                 enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f, -transform.forward);
+                //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                 //enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
-            else if(gameObject.CompareTag("DragoonSkill2"))
+            else if(tag == "DragoonSkill2")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.5f);
                 return;
             }
-            else if(gameObject.CompareTag("DragoonAttack3"))
+            else if(tag == "DragoonAttack3")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.3f);
             }

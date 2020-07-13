@@ -9,7 +9,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public Animator warriorAnim;
     Camera mainCamera;
 
-    public float attack_Cooltime = 1.0f;
+    public float attack_Cooltime;
     public float attack_Cost;
 
 
@@ -116,7 +116,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 0)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -206,7 +206,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public void Warrior_Skill1()
     {
 
-        if (player.mp >= player.skill_1_Cost && !player.isDead)
+        if (player.mp >= player.skill_1_Cost)
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
@@ -219,11 +219,11 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill2()
     {
-        if (player.mp >= player.skill_2_Cost && !player.isDead)
+        if (player.mp >= player.skill_2_Cost)
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            player.isAttacking = true;
+            //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             warriorAnim.SetTrigger("Skill2_1");
             warriorAnim.SetBool("Skill2_2", true);
@@ -235,7 +235,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill3()
     {
-        if (player.mp >= player.skill_3_Cost && !player.isDead)
+        if (player.mp >= player.skill_3_Cost)
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
@@ -250,7 +250,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Warrior_Skill4()
     {
-        if (player.mp >= player.skill_4_Cost && !player.isDead)
+        if (player.mp >= player.skill_4_Cost)
         {
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;

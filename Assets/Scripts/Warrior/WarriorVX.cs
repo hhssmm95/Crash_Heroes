@@ -6,8 +6,8 @@ using Photon.Pun;
 public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove Warrior;
-    ParticleSystem particle;
-    List<ParticleCollisionEvent> collisionEvents;
+    //ParticleSystem particle;
+    //List<ParticleCollisionEvent> collisionEvents;
     Transform wAtk2Pos;
 
     bool hit;
@@ -15,8 +15,8 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     void Start()
     {
         Warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
-        particle = GetComponent<ParticleSystem>();
-        collisionEvents = new List<ParticleCollisionEvent>();
+        //particle = GetComponent<ParticleSystem>();
+        //collisionEvents = new List<ParticleCollisionEvent>();
         if (tag == "WarriorAttack2")
             wAtk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
 

@@ -318,7 +318,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
 
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
-                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1))
+                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1) && isDead && isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;

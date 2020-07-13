@@ -48,6 +48,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+    [PunRPC]
     public void InitStatus()
     {
 
@@ -93,8 +94,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (attackOff)
             {
                 attack_Timer += Time.deltaTime;
-                if (attack_Timer >= 1.0f)
-                    player.isAttacking = false;
+                //if (attack_Timer >= 1.0f)
+                //    player.isAttacking = false;
                 if (attack_Timer >= attack_Cooltime)
                 {
                     attackOff = false;
@@ -108,7 +109,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -125,43 +126,48 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Dragoon_Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
+        player.isAttacking = true;
+        attackOff = true;
+        comboContinue = true;
+
+        if (comboTimer > 3.0f)
         {
-            player.isAttacking = true;
-            attackOff = true;
-            comboContinue = true;
+            dragoonAnim.SetInteger("Combo", 0);
+            comboContinue = false;
+        }
+        comboTimer = 0;
 
-            if (comboTimer > 3.0f)
-            {
-                dragoonAnim.SetInteger("Combo", 0);
-                comboContinue = false;
-            }
-            comboTimer = 0;
+        Vector3 dir = player.transform.forward;
+        if (dragoonAnim.GetInteger("Combo") == 0)
+        {
+            dragoonAnim.SetTrigger("FirstAttack");
+            if (photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
+            
+        }
+        else if (dragoonAnim.GetInteger("Combo") == 1)
+        {
+            dragoonAnim.SetTrigger("SecondAttack");
+            if (photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
 
-            Vector3 dir = player.transform.forward;
-            if (dragoonAnim.GetInteger("Combo") == 0)
-            {
-                dragoonAnim.SetTrigger("FirstAttack");
-                Instantiate(DragoonVX0_1, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
-
-            }
-            else if (dragoonAnim.GetInteger("Combo") == 1)
-            {
-                dragoonAnim.SetTrigger("SecondAttack");
-                Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-
-            }
-            else if (dragoonAnim.GetInteger("Combo") == 2)
-            {
-                dragoonAnim.SetTrigger("ThirdAttack");
-                Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
-
-            }
-
-
-            //transform.rotation = Quaternion.LookRotation(dir);
+            //Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
 
         }
+        else if (dragoonAnim.GetInteger("Combo") == 2)
+        {
+            dragoonAnim.SetTrigger("ThirdAttack");
+            if (photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
+
+            //Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
+
+        }
+
+
+        //transform.rotation = Quaternion.LookRotation(dir);
+
+
 
 
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
@@ -174,15 +180,16 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            player.isAttacking = true;
+            //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             dragoonAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
 
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(DragoonVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-            PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-
+            if (photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+            StartCoroutine("Skill_Hit");
         }
 
     }
@@ -194,14 +201,17 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            player.isAttacking = true;
+            //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             dragoonAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
 
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
-            PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+            if(photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+
+            StartCoroutine("Skill_Hit");
         }
 
     }
@@ -216,7 +226,10 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             dragoonAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-            PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+            if(photonView.IsMine)
+                PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+
+            StartCoroutine("Skill_Hit");
         }
 
     }
@@ -268,6 +281,16 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.def = originDef;
         
     }
+
+    IEnumerator Skill_Hit()
+    {
+        //yield return new WaitForSeconds(0.01f);
+        player.isAttacking = true;
+        yield return new WaitForSeconds(0.25f);
+        player.isAttacking = false;
+
+    }
+    
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
