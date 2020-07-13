@@ -67,7 +67,7 @@ public class UImanager : MonoBehaviour
 
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Start()

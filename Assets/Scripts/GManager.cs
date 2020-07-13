@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -18,6 +19,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject mageImage;
     public GameObject victoryPanel;
     public GameObject DefeatPanel;
+    public GameObject exitButton;
+    public GameObject uiManager;
 
     public Text text_Time;
     public float LimitTime = 300;
@@ -37,6 +40,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
             if (nickNameList.NameList[i] == nickNameList.myNickName)
@@ -131,8 +135,29 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 LimitTime = 0;
                 text_Time.text = "0";
+                victoryPanel.SetActive(true);
+                exitButton.SetActive(true);
             }
         }
+    }
+
+    private void GameOver()
+    {
+        PhotonNetwork.LeaveRoom();
+        uiManager.SetActive(false);
+        //PhotonNetwork.LoadLevel(0);
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void GameOut()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = true;
+        PhotonNetwork.CurrentRoom.IsVisible = true;
+        PhotonNetwork.LoadLevel(0);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
