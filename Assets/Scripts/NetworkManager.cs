@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     private NickNameList nickNameList;
     public int playerCount = 0;
+    public AudioClip[] musicList;
+    AudioSource audioSource;
 
     [Header("MainPanel")]
     public GameObject MainPanel;
@@ -38,11 +39,25 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
-    private bool isConnecting = false;
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
+        if(PhotonNetwork.InRoom)
+        {
+            //방으로 돌아가기
+            RoomPanel.SetActive(true);
+            NickNameInput.text = nickNameList.myNickName;
+            RoomRenewal();
+
+            //로비로 돌아가기
+            //PhotonNetwork.LeaveRoom();
+            //LobbyPanel.SetActive(true);
+            //NickNameInput.text = nickNameList.myNickName;
+        }
+
+        StartCoroutine("PlayMusicList", 0);
     }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
@@ -106,25 +121,22 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
-        isConnecting = true;
         PhotonNetwork.GameVersion = "0.0.0";
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        if (isConnecting)
-        {
-            PhotonNetwork.JoinLobby();
-        }
+        PhotonNetwork.JoinLobby();
+        
     }
 
     public override void OnJoinedLobby()
     {
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
+        StartCoroutine("PlayMusicList", 1);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        //WelcomeText.text = PhotonNetwork.LocalPlayer.NickName + "님 환영합니다";
         myList.Clear();
     }
 
@@ -155,6 +167,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         RoomPanel.SetActive(true);
+        StartCoroutine("PlayMusicList", 2);
         RoomRenewal();
         ChatInput.text = "";
         for (int i = 0; i < ChatText.Length; i++) ChatText[i].text = "";
@@ -241,6 +254,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(1);
         }
     }
-    
+
+    #endregion
+
+    #region 음악
+    IEnumerator PlayMusicList(int num)
+    {
+        audioSource.clip = musicList[num];
+        audioSource.Play();
+        audioSource.loop = true;
+        yield return 0;
+    }
     #endregion
 }
