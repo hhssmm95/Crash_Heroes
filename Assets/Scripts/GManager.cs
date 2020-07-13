@@ -64,8 +64,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 pickList[i] = false;
             }
         }
-
-        
     }
 
     private void Update()
