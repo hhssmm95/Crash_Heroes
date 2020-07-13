@@ -7,10 +7,6 @@ public class UImanager : MonoBehaviour
 {
     private static UImanager instance;
 
-    public GameObject MenuUI;
-
-    bool isMenuUI = false;
-
     public CharacterMove player;
     public bool playerCheck;
     bool initComplete;
@@ -28,8 +24,7 @@ public class UImanager : MonoBehaviour
     //DragoonSkill dSkill;
     //MageSkill mSkill;
 
-    public Text text_Time;
-    public float LimitTime;
+    
 
     public static UImanager Instance
     {
@@ -85,7 +80,6 @@ public class UImanager : MonoBehaviour
         slot3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
         slot4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         slot5 = GameObject.FindWithTag("CoolTime_Slot_5").GetComponent<Image>();
-        text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         hpOrb = GameObject.FindWithTag("hpOrb");
         mpOrb = GameObject.FindWithTag("mpOrb");
         hpOrb.GetComponent<Image>().material.SetFloat("PositionUV_Y_1", -1.6f);
@@ -150,13 +144,7 @@ public class UImanager : MonoBehaviour
         }
 
 
-        LimitTime -= Time.deltaTime;
-        text_Time.text = "" + Mathf.Round(LimitTime);
-
-        if(LimitTime <= 0)
-        {
-            text_Time.text = "0";
-        }
+        
 
         if (initComplete)
         {
@@ -213,21 +201,6 @@ public class UImanager : MonoBehaviour
 
             hpControl();
             mpControl();
-        }
-
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isMenuUI == false)
-            {
-                MenuUI.SetActive(true);
-                isMenuUI = true;
-            }
-
-            else
-            {
-                MenuUI.SetActive(false);
-                isMenuUI = false;
-            }
         }
     }
 }

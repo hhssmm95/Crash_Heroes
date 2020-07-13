@@ -232,6 +232,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         {
             PhotonNetwork.LoadLevel(1);
+            PhotonNetwork.CurrentRoom.IsOpen = false;
         }
     }
     
