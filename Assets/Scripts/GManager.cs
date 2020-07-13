@@ -23,7 +23,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject uiManager;
 
     public Text text_Time;
-    public float LimitTime = 300;
+    public float LimitTime = 200;
 
     public string pickName = null;
     public bool knightPick = false;
