@@ -10,13 +10,14 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public Transform[] spawn_point;
     private NickNameList nickNameList;
     public PhotonView PV;
-    
 
     public GameObject characterPanel;
     public GameObject knightImage;
     public GameObject archerImage;
     public GameObject dragoonImage;
     public GameObject mageImage;
+    public GameObject victoryPanel;
+    public GameObject DefeatPanel;
 
     public Text text_Time;
     public float LimitTime = 300;
@@ -63,7 +64,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
         {
-            Timer();
+            TimerAndGameOver();
         }
     }
 
@@ -119,7 +120,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
         pickList[playerNum] = true;
     }
-    public void Timer()
+    public void TimerAndGameOver()
     {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -128,6 +129,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
             if (LimitTime <= 0)
             {
+                LimitTime = 0;
                 text_Time.text = "0";
             }
         }
