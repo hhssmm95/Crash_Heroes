@@ -161,11 +161,12 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (archerAnim.GetInteger("Combo") == 2)
         {
+            SoundManager.Instance.ArcherSoundPlay(4);
+            SoundManager.Instance.ArcherSoundPlay(0);
             archerAnim.SetTrigger("ThirdAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-            SoundManager.Instance.ArcherSoundPlay(4);
-            SoundManager.Instance.ArcherSoundPlay(0);
+            
 
         }
 
@@ -213,6 +214,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             Quaternion rot1 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, -5.0f));
             Quaternion rot2 = ArcherArrow.transform.rotation * Quaternion.Euler(new Vector3(0, 0, 5.0f));
 
+            SoundManager.Instance.ArcherSoundPlay(5);
+            SoundManager.Instance.ArcherSoundPlay(1);
             if (photonView.IsMine)
             {
                 PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
@@ -221,8 +224,6 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
                 PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
             }
-            SoundManager.Instance.ArcherSoundPlay(5);
-            SoundManager.Instance.ArcherSoundPlay(1);
         }
 
     }

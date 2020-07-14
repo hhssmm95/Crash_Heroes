@@ -44,6 +44,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     float stTimer;
     float damageTimer;
 
+    float moveTimer;
+
+
     bool isRunning;
 
     public float speed = 2.0f; // 캐릭터 이동속도
@@ -259,6 +262,29 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     // Update is called once per frame
     void Update()
     {
+        if(myAnim.GetBool("Move"))
+        {
+            moveTimer += Time.deltaTime;
+            if(moveTimer >= 0.5f)
+            {
+                moveTimer = 0;
+                SoundManager.Instance.FootstepsSoundPlay(0);
+            }
+        }
+        else if(myAnim.GetBool("Run"))
+        {
+            moveTimer += Time.deltaTime;
+            if (moveTimer >= 0.3f)
+            {
+                moveTimer = 0;
+                SoundManager.Instance.FootstepsSoundPlay(0);
+            }
+        }
+        else
+        {
+            moveTimer = 0;
+        }
+
         if(!stopWhileAttack && isAttacking)
         {
             stopWhileAttack = true;

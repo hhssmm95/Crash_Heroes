@@ -93,4 +93,9 @@ public class SoundManager : MonoBehaviour
         audioSource.clip = hitSoundList[num];
         audioSource.Play();
     }
+    public void FootstepsSoundPlay(int num)
+    {
+        audioSource.clip = footStepsSoundList[num];
+        audioSource.Play();
+    }
 }
