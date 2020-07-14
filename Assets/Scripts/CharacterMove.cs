@@ -274,7 +274,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         else if(myAnim.GetBool("Run"))
         {
             moveTimer += Time.deltaTime;
-            if (moveTimer >= 0.3f)
+            if (moveTimer >= 0.2f)
             {
                 moveTimer = 0;
                 SoundManager.Instance.FootstepsSoundPlay(0);
