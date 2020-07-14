@@ -11,11 +11,15 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     //bool turn;
     public CharacterMove Dragoon;
     public GameObject flame;
+    public GameObject breathPos;
     //Quaternion newRotation;
     Vector3 dir;
     Vector3 masterPos;
     public bool isCheck;
     bool destroying;
+
+    float soundTimer;
+    bool soundBool;
     void Awake()
     {
 
@@ -44,6 +48,18 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
         //    newRotation = Quaternion.LookRotation(new Vector3(0, 0, -1.0f));
         //    transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, speed/3 * Time.deltaTime);
         //}
+
+
+        if(soundBool)
+        {
+            soundTimer += Time.deltaTime;
+        }
+
+        if (soundBool && soundTimer >= 1.0f)
+        {
+            soundTimer = 0;
+            SoundManager.Instance.DragonSoundPlay(0);
+        }
     }
 
     //[PunRPC]
@@ -54,6 +70,8 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
             //if (transform.localPosition.z <= originZ + 22.0f && transform.localPosition.z >= originZ + 18.0f)
             if (isCheck)
             {
+                soundBool = false;
+                soundTimer = 0;
                 dragonAnimator.SetBool("Gliding", false);
 
                 dragonAnimator.SetBool("HoverBasic", true);
@@ -64,12 +82,15 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
             else
             {
                 transform.position += transform.forward * speed * Time.deltaTime;
+                if (!soundBool)
+                    soundBool = true;
             }
         }
 
         if (dragonAnimator.GetBool("Flying"))
         {
-
+            if (!soundBool)
+                soundBool = true;
             transform.position += transform.forward * speed * Time.deltaTime;
             if(!destroying)
             {
@@ -80,18 +101,31 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
         
     }
 
-        IEnumerator DragonBreath()
+    [PunRPC]
+    void Breath()
+    {
+        if(photonView.IsMine)
         {
-            //flame.Play();
-            flame.SetActive(true);
-            yield return new WaitForSeconds(2.5f);
-            flame.SetActive(false);
-            //turn = true;
-            //yield return new WaitForSeconds(1.0f);
-            dragonAnimator.SetBool("HoverBasic", false);
-            dragonAnimator.SetBool("Hover", false);
-            dragonAnimator.SetBool("Flying", true);
+            PhotonNetwork.Instantiate("Prefebs/Flames", breathPos.transform.position, breathPos.transform.rotation);
+            
         }
+    }
+
+    IEnumerator DragonBreath()
+    {
+        //flame.Play();
+        //flame.SetActive(true);
+        if(photonView.IsMine)
+            photonView.RPC("Breath", RpcTarget.All);
+        SoundManager.Instance.DragonSoundPlay(1);
+        yield return new WaitForSeconds(2.5f);
+        //flame.SetActive(false);
+        //turn = true;
+        //yield return new WaitForSeconds(1.0f);
+        dragonAnimator.SetBool("HoverBasic", false);
+        dragonAnimator.SetBool("Hover", false);
+        dragonAnimator.SetBool("Flying", true);
+    }
         // Update is called once per frame
 
 

@@ -149,6 +149,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.ArcherSoundPlay(7);
         }
         else if (archerAnim.GetInteger("Combo") == 1)
         {
@@ -156,13 +157,15 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.ArcherSoundPlay(7);
         }
         else if (archerAnim.GetInteger("Combo") == 2)
         {
             archerAnim.SetTrigger("ThirdAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-
+            SoundManager.Instance.ArcherSoundPlay(4);
+            SoundManager.Instance.ArcherSoundPlay(0);
 
         }
 
@@ -190,6 +193,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
             //transform.rotation = Quaternion.LookRotation(dir);
             StartCoroutine("Skill1_Hit");
+            SoundManager.Instance.ArcherSoundPlay(8);
         }
 
     }
@@ -217,6 +221,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
                 PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
             }
+            SoundManager.Instance.ArcherSoundPlay(5);
+            SoundManager.Instance.ArcherSoundPlay(1);
         }
 
     }
@@ -267,14 +273,17 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator Archer_Skill3_Delay()
     {
+        SoundManager.Instance.ArcherSoundPlay(3);
         yield return new WaitForSeconds(1.0f);
         Vector3 dir = transform.forward;
-
         //transform.rotation = Quaternion.LookRotation(dir);
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
 
+        SoundManager.Instance.ArcherSoundPlay(6);
+
+        SoundManager.Instance.ArcherSoundPlay(2);
     }
 
 
@@ -302,6 +311,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         float originAtk = player.atk;
         player.atk *= 1.25f;
         player.speed *= 1.1f;
+        SoundManager.Instance.ArcherSoundPlay(9);
         yield return new WaitForSecondsRealtime(20.0f);
         player.atk = originAtk;
         player.speed = originSpeed;
@@ -311,6 +321,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         float originSpeed = player.speed;
 
+        SoundManager.Instance.ArcherSoundPlay(10);
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
 
         player.speed *= 1.2f;

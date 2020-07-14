@@ -62,7 +62,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
 
-
+            SoundManager.Instance.HitSoundPlay(0);
 
             hit = true;
         }

@@ -43,6 +43,7 @@ public class ArcherSkill1VX : MonoBehaviourPunCallbacks, IPunObservable
             enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
 
+            SoundManager.Instance.HitSoundPlay(0);
             hit = true;
         }
     }

@@ -48,6 +48,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
                 enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.3f, normal);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
             }
+            SoundManager.Instance.HitSoundPlay(1);
             hit = true;
         }
 

@@ -57,7 +57,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
             }
-
+            SoundManager.Instance.HitSoundPlay(0);
             hit = true;
         }
     }

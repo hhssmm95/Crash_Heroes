@@ -172,6 +172,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.KnightSoundPlay(0);
         }
         else if (warriorAnim.GetInteger("Combo") == 1)
         {
@@ -179,6 +180,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.KnightSoundPlay(1);
         }
         else if (warriorAnim.GetInteger("Combo") == 2)
         {
@@ -186,6 +188,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.KnightSoundPlay(2);
 
         }
 
@@ -268,6 +271,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_5_Off = true;
             player.mp -= player.skill_5_Cost;
             healing = true;
+            SoundManager.Instance.KnightSoundPlay(6);
         }
     }
 
@@ -295,6 +299,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
         StartCoroutine("Skill_Hit");
+        SoundManager.Instance.KnightSoundPlay(2);
     }
     
     IEnumerator Warrior_Skill2_VFX()
@@ -303,10 +308,12 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_1", new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
         StartCoroutine("Skill_Hit");
+        SoundManager.Instance.KnightSoundPlay(3);
         yield return new WaitForSeconds(0.2f);
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_2", new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
         StartCoroutine("Skill_Hit");
+        SoundManager.Instance.KnightSoundPlay(3);
     }
 
     IEnumerator Warrior_Skill3_VFX()
@@ -316,6 +323,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.4f);
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
+        SoundManager.Instance.KnightSoundPlay(5);
     }
 
     IEnumerator Warrior_Skill4_Effect()
@@ -324,7 +332,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         float originDef = player.def;
 
         warriorAnim.SetTrigger("Skill4");
-
+        SoundManager.Instance.KnightSoundPlay(4);
         player.atk *= 1.3f;
         player.def *= 1.3f;
         yield return new WaitForSeconds(20.0f);

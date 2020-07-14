@@ -459,13 +459,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     return;
                 }
                 burnTimer += Time.deltaTime;
-                burnDuration += Time.deltaTime;
+                burnDurationTimer += Time.deltaTime;
             }
 
             if (isBurn && burnTimer >= 1.0f && !isDead)
             {
                 burnTimer = 0;
-                photonView.RPC("OnDamage", RpcTarget.All, burnDamage);
+                photonView.RPC("OnTrueDamage", RpcTarget.All, burnDamage , -transform.forward);
                 //OnBurn 함수만들어서 제어, if(isBurn) {Timer++;} 추가
             }
 
@@ -540,6 +540,28 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 hp -= (damage - def);
                 Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 중상을 입음");
             }
+            //hpBar.SetHealth(hp);
+            hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
+            if (hp <= 0)
+            {
+                isDead = true;
+                Debug.Log(gameObject.name + "(이)가 사망");
+            }
+        }
+    }
+
+    [PunRPC]
+    public void OnTrueDamage(float damage, Vector3 normal)
+    {
+        if (photonView.IsMine && !isDamaging && !isDead)
+        {
+            isDamaging = true;
+            myAnim.SetTrigger("Damage");
+            Sync = 2;
+            myRig.AddForce(normal * (jumpPower / 3), ForceMode.Impulse);
+
+            hp -= damage;
+            
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
             if (hp <= 0)

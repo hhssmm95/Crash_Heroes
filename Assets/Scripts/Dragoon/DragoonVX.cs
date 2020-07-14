@@ -67,6 +67,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
             }
+            SoundManager.Instance.HitSoundPlay(0);
             //enemy.OnDamage(10);
             hit = true;
         }

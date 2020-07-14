@@ -10,7 +10,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] knightSoundList;
     public AudioClip[] archerSoundList;
     public AudioClip[] dragoonSoundList;
-    public AudioClip[] dragonSounList;
+    public AudioClip[] dragonSoundList;
     public AudioClip[] hitSoundList;
     public static SoundManager Instance
     {
@@ -70,10 +70,27 @@ public class SoundManager : MonoBehaviour
         audioSource.clip = archerSoundList[num];
         audioSource.Play();
     }
+    public void ArcherSoundPlay(int num1, int num2)
+    {
+        audioSource.clip = archerSoundList[num1];
+        audioSource.Play();
+        audioSource.clip = archerSoundList[num2];
+        audioSource.Play();
+    }
 
     public void DragoonSoundPlay(int num)
     {
         audioSource.clip = dragoonSoundList[num];
+        audioSource.Play();
+    }
+    public void DragonSoundPlay(int num)
+    {
+        audioSource.clip = dragonSoundList[num];
+        audioSource.Play();
+    }
+    public void HitSoundPlay(int num)
+    {
+        audioSource.clip = hitSoundList[num];
         audioSource.Play();
     }
 }

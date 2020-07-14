@@ -66,7 +66,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.skill_1_Cost = 25;
         player.skill_2_Cooltime = 15.0f;
         player.skill_2_Cost = 35;
-        player.skill_3_Cooltime = 60.0f;
+        player.skill_3_Cooltime = 10.0f;
         player.skill_3_Cost = 70;
         player.skill_4_Cooltime = 30.0f;
         player.skill_4_Cost = 40;
@@ -144,6 +144,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
             StartCoroutine("Skill_Hit");
+
+            SoundManager.Instance.DragoonSoundPlay(0);
         }
         else if (dragoonAnim.GetInteger("Combo") == 1)
         {
@@ -152,7 +154,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
             StartCoroutine("Skill_Hit");
             //Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-
+            SoundManager.Instance.DragoonSoundPlay(1);
         }
         else if (dragoonAnim.GetInteger("Combo") == 2)
         {
@@ -161,7 +163,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
             StartCoroutine("Skill_Hit");
             //Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
-
+            SoundManager.Instance.DragoonSoundPlay(2);
         }
 
 
@@ -190,6 +192,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.DragoonSoundPlay(3);
         }
 
     }
@@ -208,10 +211,13 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
-            if(photonView.IsMine)
+            if (photonView.IsMine)
+            {
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
 
+            }
             StartCoroutine("Skill_Hit");
+            SoundManager.Instance.DragoonSoundPlay(1);
         }
 
     }
@@ -226,9 +232,12 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             dragoonAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-            if(photonView.IsMine)
+            if (photonView.IsMine)
+            {
                 PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-
+                PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 5.0f, transform.position.z), transform.rotation);
+                SoundManager.Instance.DragoonSoundPlay(4);
+            }
             //StartCoroutine("Skill_Hit");
         }
 
@@ -258,6 +267,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+
+
     IEnumerator Dragoon_Skill4_Effect()
     {
         float originMaxHP = player.maxHP;
@@ -265,6 +276,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         player.maxHP += originMaxHP * 1.3f;
         player.hp += originMaxHP * 1.3f;
+        SoundManager.Instance.DragoonSoundPlay(5);
         yield return new WaitForSeconds(20.0f);
         player.hp = originMaxHP * (player.hp / player.maxHP);
         player.maxHP = originMaxHP;
@@ -275,6 +287,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator Dragoon_Skill5_Effect()
     {
         float originDef = player.def;
+        SoundManager.Instance.DragoonSoundPlay(6);
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.5f);
         player.def *= 0.8f;
         yield return new WaitForSeconds(20.0f);

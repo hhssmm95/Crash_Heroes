@@ -14,6 +14,8 @@ public class Breath : MonoBehaviourPunCallbacks
         Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
         VX = GetComponent<ParticleSystem>();
         collisionEvents = new List<ParticleCollisionEvent>();
+        //collisionEvents = new List<ParticleCollisionEvent>();
+        Destroy(gameObject, 3.0f);
     }
 
     // Update is called once per frame
@@ -24,14 +26,16 @@ public class Breath : MonoBehaviourPunCallbacks
     private void OnParticleCollision(GameObject other)
     {
         ParticlePhysicsExtensions.GetCollisionEvents(VX, other, collisionEvents);
-        //Debug.Log("파티클충돌");
-        if (other.gameObject.layer == 9 && Dragoon.isAttacking && !hit)
+        for (int i = 0; i < collisionEvents.Count; i++)
         {
-            Debug.Log("브레스타격");
-            var enemy = other.GetComponent<CharacterMove>();
-            //enemy.OnDamage(10);
-            enemy.GetComponent<PhotonView>().RPC("OnBurn", RpcTarget.All, 10.0f, Dragoon.atk * 0.25f);
-            hit = true;
+            if (other.gameObject.layer == 9 && !hit)
+            {
+                Debug.Log("브레스타격");
+                var enemy = other.GetComponent<CharacterMove>();
+                //enemy.OnDamage(10);
+                enemy.GetComponent<PhotonView>().RPC("OnBurn", RpcTarget.All, 10.0f, Dragoon.atk * 0.25f);
+                hit = true;
+            }
         }
     }
     
