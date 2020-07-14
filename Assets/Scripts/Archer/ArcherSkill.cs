@@ -161,12 +161,11 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (archerAnim.GetInteger("Combo") == 2)
         {
-            SoundManager.Instance.ArcherSoundPlay(4);
-            SoundManager.Instance.ArcherSoundPlay(0);
             archerAnim.SetTrigger("ThirdAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-            
+            SoundManager.Instance.ArcherSoundPlay(4);
+            SoundManager.Instance.ArcherSoundPlay(0);
 
         }
 
@@ -218,11 +217,11 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             SoundManager.Instance.ArcherSoundPlay(1);
             if (photonView.IsMine)
             {
-                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
 
-                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x + 0.1f, transform.position.y + 0.7f, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot1);
 
-                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x - 0.1f, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
+                PhotonNetwork.Instantiate("Prefebs/MultiArrow", new Vector3(transform.position.x - 0.1f, transform.position.y + 0.7f, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * rot2);
             }
         }
 
@@ -280,7 +279,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         //transform.rotation = Quaternion.LookRotation(dir);
 
         if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
+            PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
 
         SoundManager.Instance.ArcherSoundPlay(6);
 
