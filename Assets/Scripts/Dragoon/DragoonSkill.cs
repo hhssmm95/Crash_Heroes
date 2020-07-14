@@ -143,14 +143,14 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             dragoonAnim.SetTrigger("FirstAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
-            
+            StartCoroutine("Skill_Hit");
         }
         else if (dragoonAnim.GetInteger("Combo") == 1)
         {
             dragoonAnim.SetTrigger("SecondAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-
+            StartCoroutine("Skill_Hit");
             //Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
 
         }
@@ -159,7 +159,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             dragoonAnim.SetTrigger("ThirdAttack");
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
-
+            StartCoroutine("Skill_Hit");
             //Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
 
         }
@@ -229,7 +229,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if(photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
 
-            StartCoroutine("Skill_Hit");
+            //StartCoroutine("Skill_Hit");
         }
 
     }
@@ -286,7 +286,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         //yield return new WaitForSeconds(0.01f);
         player.isAttacking = true;
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.4f);
         player.isAttacking = false;
 
     }
