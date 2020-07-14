@@ -15,9 +15,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public AudioClip[] musicList;
     AudioSource audioSource;
 
-    public GameObject knightPrefeb;
-    public GameObject archerPrefeb;
-    public GameObject dragoonPrefeb;
+    public bool[] deadList;
+
+    public GameObject player;
 
     public GameObject characterPanel;
     public GameObject knightImage;
@@ -39,10 +39,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool magePick = false;
 
     public int playerNum = 0;
+    public int count = 0;
     public bool[] pickList = { true, true, true, true };
     public bool isPickCheck = false;
-
-    public bool isSpawn = false;
+    public bool isTimeOver = false;
     private void Start()
     {
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
@@ -50,7 +50,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         audioSource = GetComponent<AudioSource>();
         
         StartCoroutine("PlayMusicList", 0);
-
+        
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
         {
             if (nickNameList.NameList[i] == nickNameList.myNickName)
@@ -67,26 +67,50 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 pickList[i] = false;
             }
+            deadList = new bool[PhotonNetwork.PlayerList.Length];
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                deadList[i] = false;
+            }
         }
     }
 
     private void Update()
     {
+        count = PhotonNetwork.PlayerList.Length;
+
         if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
         {
-            if (LimitTime > 0)
+            if (isTimeOver == false)
             {
                 TimerAndGameOver();
             }
         }
 
+        if(player.GetComponent<CharacterMove>().isDead == true)
+        {
+            PV.RPC("DeadUpdate", RpcTarget.All, playerNum);
+        }
 
+        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if (count != 1 && deadList[i] == true)
+            {
+                count--;
+            }
+
+            if(count == 1)
+            {
+                LimitTime = 0;
+                break;
+            }
+        }
     }
 
     #region 캐릭터 생성
     public void Spawn()
     {
-        PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation);
+        player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
     }
 
     public void Pick(int num)
@@ -145,8 +169,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             LimitTime -= Time.deltaTime;
             text_Time.text = Mathf.Round(LimitTime).ToString();
-            if (LimitTime <= 0)
+            if (LimitTime < 0)
             {
+                isTimeOver = true;
                 LimitTime = 0;
                 text_Time.text = "0";
                 PV.RPC("WinOrLose", RpcTarget.All);
@@ -155,14 +180,25 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+    [PunRPC]
+    private void DeadUpdate(int playerNum)
+    {
+        deadList[playerNum] = true; // player.GetComponent<CharacterMove>().isDead;
+    }
 
     [PunRPC]
     private void WinOrLose()
     {
         //살아있으면 승리
-        victoryPanel.SetActive(true);
+        if (player.GetComponent<CharacterMove>().isDead == false)
+        {
+            victoryPanel.SetActive(true);
+        }
         //죽어있으면 패배
-        //DefeatPanel.SetActive(true);
+        if(player.GetComponent<CharacterMove>().isDead == true)
+        { 
+            DefeatPanel.SetActive(true);
+        }
     }
 
     IEnumerator GameOut()
@@ -191,8 +227,20 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            if (stream.IsWriting) stream.SendNext(pickList[i]);
-            else pickList[i] = (bool)stream.ReceiveNext();
+            if (stream.IsWriting)
+            {
+                stream.SendNext(pickList[i]);
+                stream.SendNext(deadList[i]);
+                //stream.SendNext(player.GetComponent<CharacterMove>().isDead);
+            }
+            else
+            {
+                pickList[i] = (bool)stream.ReceiveNext();
+                deadList[i] = (bool)stream.ReceiveNext();
+                //player.GetComponent<CharacterMove>().isDead = (bool)stream.ReceiveNext();
+            }
+
+            
         }
 
         if (stream.IsWriting) stream.SendNext(text_Time.text);
