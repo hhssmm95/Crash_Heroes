@@ -15,6 +15,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public AudioClip[] musicList;
     AudioSource audioSource;
 
+    public GameObject knightPrefeb;
+    public GameObject archerPrefeb;
+    public GameObject dragoonPrefeb;
+
     public GameObject characterPanel;
     public GameObject knightImage;
     public GameObject archerImage;
@@ -44,7 +48,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
         audioSource = GetComponent<AudioSource>();
-
+        
         StartCoroutine("PlayMusicList", 0);
 
         for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
@@ -75,6 +79,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 TimerAndGameOver();
             }
         }
+
+
     }
 
     #region 캐릭터 생성
@@ -151,10 +157,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    public void WinOrLose()
+    private void WinOrLose()
     {
         //살아있으면 승리
-        //victoryPanel.SetActive(true);
+        victoryPanel.SetActive(true);
         //죽어있으면 패배
         //DefeatPanel.SetActive(true);
     }
