@@ -128,8 +128,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             job = Global.Classes.Archer;
         else if (gameObject.tag == "Dragoon")
             job = Global.Classes.Dragoon;
-        else if (gameObject.tag == "Mage")
-            job = Global.Classes.Mage;
+        //else if (gameObject.tag == "Mage")
+        //    job = Global.Classes.Mage;
 
         switch (job)
         {

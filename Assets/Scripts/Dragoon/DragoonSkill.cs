@@ -81,15 +81,15 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 photonView.RPC("Dragoon_Attack", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                photonView.RPC("Dragoon_Skill1", RpcTarget.All);
+                photonView.RPC("DragoonSkill1", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
-                photonView.RPC("Dragoon_Skill2", RpcTarget.All);
+                photonView.RPC("DragoonSkill2", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
-                photonView.RPC("Dragoon_Skill3", RpcTarget.All);
+                photonView.RPC("DragoonSkill3", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
-                photonView.RPC("Dragoon_Skill4", RpcTarget.All);
+                photonView.RPC("DragoonSkill4", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
-                photonView.RPC("Dragoon_Skill5", RpcTarget.All);
+                photonView.RPC("DragoonSkill5", RpcTarget.All);
 
             if (attackOff)
             {

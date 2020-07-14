@@ -20,7 +20,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         //collisionEvents = new List<ParticleCollisionEvent>();
 
         if(tag == "DragoonAttack2")
-            Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAttack2Pos").GetComponent<Transform>();
+            Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAtack2Pos").GetComponent<Transform>();
         if(tag == "DragoonSkill1")
             Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
 
@@ -80,7 +80,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         {
             transform.position = new Vector3(Atk2Pos.position.x, Atk2Pos.position.y, Atk2Pos.position.z);
         }
-        else if (gameObject.CompareTag("DragoonAttck3"))
+        else if (gameObject.CompareTag("DragoonAttack3"))
         {
             transform.position = new Vector3(Dragoon.transform.position.x + 0.2f, Dragoon.transform.position.y + 0.15f, Dragoon.transform.position.z - 0.1f);
         }

@@ -23,8 +23,8 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-
-        photonView.RPC("Move", RpcTarget.All);
+        Move();
+        //photonView.RPC("Move", RpcTarget.All);
         //if(turn)
         //{
 
@@ -33,7 +33,7 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
         //}
     }
 
-    [PunRPC]
+    //[PunRPC]
     void Move()
     {
         if (dragonAnimator.GetBool("Gliding"))
