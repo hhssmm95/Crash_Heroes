@@ -126,7 +126,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void Dragoon_Attack()
     {
-        player.isAttacking = true;
+        //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
 

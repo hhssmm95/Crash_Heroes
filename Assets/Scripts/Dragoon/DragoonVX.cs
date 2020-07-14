@@ -19,7 +19,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         //particle = GetComponent<ParticleSystem>();
         //collisionEvents = new List<ParticleCollisionEvent>();
 
-        if(tag == "DragoonAttack2")
+        if(tag == "DragoonAttack2" || tag == "DragoonSkill2")
             Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAtack2Pos").GetComponent<Transform>();
         if(tag == "DragoonSkill1")
             Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
