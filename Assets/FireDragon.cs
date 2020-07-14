@@ -13,14 +13,17 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject flame;
     //Quaternion newRotation;
     Vector3 dir;
-
+    Vector3 masterPos;
+    public bool isCheck;
+    bool destroying;
     void Awake()
     {
 
         dragonAnimator = GetComponent<Animator>();
-        flame = GameObject.FindGameObjectWithTag("DragonBreath");
+        //flame = GameObject.FindGameObjectWithTag("DragonBreath");
         Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
         dir = Dragoon.transform.forward;
+        masterPos = Dragoon.transform.position;
     }
     void Start()
     {
@@ -47,8 +50,9 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     void Move()
     {
         if (dragonAnimator.GetBool("Gliding"))
-        { 
-            if (transform.localPosition.z <= originZ + 22.0f && transform.localPosition.z >= originZ + 18.0f)
+        {
+            //if (transform.localPosition.z <= originZ + 22.0f && transform.localPosition.z >= originZ + 18.0f)
+            if (isCheck)
             {
                 dragonAnimator.SetBool("Gliding", false);
 
@@ -57,37 +61,43 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
                 StartCoroutine("DragonBreath");
                 return;
             }
-            transform.position += transform.forward * speed * Time.deltaTime;
+            else
+            {
+                transform.position += transform.forward * speed * Time.deltaTime;
+            }
         }
 
         if (dragonAnimator.GetBool("Flying"))
         {
-            if (transform.localPosition.z <= originZ + 42.0f && transform.localPosition.z >= 38.0f)
+
+            transform.position += transform.forward * speed * Time.deltaTime;
+            if(!destroying)
             {
-                Destroy(gameObject);
-                return;
+                destroying = true;
+                Destroy(gameObject, 2.5f);
             }
-            transform.position += dir * speed * Time.deltaTime;
         }
+        
     }
 
-    IEnumerator DragonBreath()
-    {
-        //flame.Play();
-        flame.SetActive(true);
-        yield return new WaitForSeconds(2.5f);
-        flame.SetActive(false);
-        //turn = true;
-        //yield return new WaitForSeconds(1.0f);
-        dragonAnimator.SetBool("HoverBasic", false);
-        dragonAnimator.SetBool("Hover", false);
-        dragonAnimator.SetBool("Flying", true);
-    }
-    // Update is called once per frame
+        IEnumerator DragonBreath()
+        {
+            //flame.Play();
+            flame.SetActive(true);
+            yield return new WaitForSeconds(2.5f);
+            flame.SetActive(false);
+            //turn = true;
+            //yield return new WaitForSeconds(1.0f);
+            dragonAnimator.SetBool("HoverBasic", false);
+            dragonAnimator.SetBool("Hover", false);
+            dragonAnimator.SetBool("Flying", true);
+        }
+        // Update is called once per frame
 
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-
-    }
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            //throw new System.NotImplementedException();
+        }
+    
 }
