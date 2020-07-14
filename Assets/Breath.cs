@@ -8,11 +8,13 @@ public class Breath : MonoBehaviourPunCallbacks, IPunObservable
     ParticleSystem VX;
     List<ParticleCollisionEvent> collisionEvents;
     CharacterMove Dragoon;
+    bool hit;
     void Start()
     {
+        Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
         VX = GetComponent<ParticleSystem>();
         collisionEvents = new List<ParticleCollisionEvent>();
-
+        
     }
 
     // Update is called once per frame
@@ -24,7 +26,7 @@ public class Breath : MonoBehaviourPunCallbacks, IPunObservable
     {
         //ParticlePhysicsExtensions.GetCollisionEvents(ArcherVX1, other, collisionEvents);
         //Debug.Log("파티클충돌");
-        if (!other.CompareTag("Dragoon") && other.gameObject.layer.ToString() == "Player")
+        if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 && Dragoon.isAttacking && !hit)
         {
             Debug.Log("브레스타격");
             var enemy = other.GetComponent<CharacterMove>();
