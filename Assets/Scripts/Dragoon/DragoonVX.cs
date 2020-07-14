@@ -13,7 +13,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     Transform Skill1Pos;
 
     bool hit;
-    void Start()
+    void Awake()
     {
         Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
         //particle = GetComponent<ParticleSystem>();
@@ -24,7 +24,12 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         if(tag == "DragoonSkill1")
             Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
 
-        Destroy(gameObject, 1.0f);
+        
+    }
+
+    void Start()
+    {
+        Destroy(gameObject, 1.3f);
     }
     
 
@@ -43,25 +48,24 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
             if (tag == "DragoonSkill1")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.2f, -transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.2f, Dragoon.transform.forward);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.2f + "감소 전 피해를 입힘.");
-                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f, -transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                 //enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
             else if (tag == "DragoonSkill2")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.5f);
-                return;
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.5f, Dragoon.transform.forward);
             }
             else if (tag == "DragoonAttack3")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.3f);
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.3f, Dragoon.transform.forward);
             }
             else
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
             }
             //enemy.OnDamage(10);
             hit = true;

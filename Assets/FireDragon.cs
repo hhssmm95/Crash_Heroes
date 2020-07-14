@@ -9,11 +9,12 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     Animator dragonAnimator;
     float speed = 10;
     //bool turn;
-    public FlamesToggle flame;
+    public GameObject flame;
     Quaternion newRotation;
     void Start()
     {
         dragonAnimator = GetComponent<Animator>();
+        flame = GameObject.FindGameObjectWithTag("DragonBreath");
         //originY = transform.position.y;
         originZ = transform.localPosition.z;
 
@@ -37,8 +38,8 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     void Move()
     {
         if (dragonAnimator.GetBool("Gliding"))
-        {
-            if (transform.localPosition.z <= originZ * 2 - 20.0f)
+        { 
+            if (transform.localPosition.z <= originZ + 22.0f && transform.localPosition.z >= originZ + 18.0f)
             {
                 dragonAnimator.SetBool("Gliding", false);
 
@@ -63,10 +64,10 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator DragonBreath()
     {
-        flame.activateFlame = true;
-        flame.flameObject.SetActive(true);
+        //flame.Play();
+        flame.SetActive(true);
         yield return new WaitForSeconds(2.5f);
-        flame.activateFlame = false;
+        flame.SetActive(false);
         //turn = true;
         //yield return new WaitForSeconds(1.0f);
         dragonAnimator.SetBool("HoverBasic", false);
@@ -78,5 +79,6 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+
     }
 }
