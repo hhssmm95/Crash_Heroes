@@ -161,6 +161,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
+        for (int i = 0; i < 4; i++)
+        {
+            nickNameList.NameList[i] = "";
+        }
         PhotonNetwork.LeaveRoom();
     }
 
