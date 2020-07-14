@@ -9,15 +9,24 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     Animator dragonAnimator;
     float speed = 10;
     //bool turn;
+    public CharacterMove Dragoon;
     public GameObject flame;
-    Quaternion newRotation;
-    void Start()
+    //Quaternion newRotation;
+    Vector3 dir;
+
+    void Awake()
     {
+
         dragonAnimator = GetComponent<Animator>();
         flame = GameObject.FindGameObjectWithTag("DragonBreath");
+        Dragoon = GameObject.FindGameObjectWithTag("Dragoon").GetComponent<CharacterMove>();
+        dir = Dragoon.transform.forward;
+    }
+    void Start()
+    {
         //originY = transform.position.y;
         originZ = transform.localPosition.z;
-
+        Vector3 dir = Dragoon.transform.forward;
         dragonAnimator.SetBool("Gliding", true);
 
     }
@@ -53,12 +62,12 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
 
         if (dragonAnimator.GetBool("Flying"))
         {
-            if (transform.localPosition.z <= originZ * 2 - 40.0f)
+            if (transform.localPosition.z <= originZ + 42.0f && transform.localPosition.z >= 38.0f)
             {
                 Destroy(gameObject);
                 return;
             }
-            transform.position += transform.forward * speed * Time.deltaTime;
+            transform.position += dir * speed * Time.deltaTime;
         }
     }
 
