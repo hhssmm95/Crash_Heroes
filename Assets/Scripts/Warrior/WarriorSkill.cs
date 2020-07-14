@@ -12,8 +12,6 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public float attack_Cooltime;
     public float attack_Cost;
 
-
-
     public bool attackOff;
     public float attack_Timer;
     public bool comboContinue;
@@ -36,6 +34,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public bool isMine;
     public string ownerObject;
     public string animName;
+
     void Awake()
     {
         //if(CompareTag("Player"))
