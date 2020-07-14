@@ -25,7 +25,7 @@ public class Breath : MonoBehaviourPunCallbacks
     {
         ParticlePhysicsExtensions.GetCollisionEvents(VX, other, collisionEvents);
         //Debug.Log("파티클충돌");
-        if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 && Dragoon.isAttacking && !hit)
+        if (other.gameObject.layer == 9 && Dragoon.isAttacking && !hit)
         {
             Debug.Log("브레스타격");
             var enemy = other.GetComponent<CharacterMove>();
