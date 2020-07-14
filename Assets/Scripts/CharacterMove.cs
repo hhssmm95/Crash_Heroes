@@ -241,7 +241,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 if(runTimer >= 1.0f)
                 {
                     runTimer = 0;
-                    st -= 5.0f;
+                    st -= 9.0f;
                 }
             }
             transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
