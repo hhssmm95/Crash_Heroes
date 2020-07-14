@@ -54,7 +54,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         player.maxHP = 532;
         player.maxMP = 274;
-        player.atk = 68;
+        player.atk = 62;
         player.def = 36;
 
         player.hpRegen = 7;
@@ -66,7 +66,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.skill_1_Cost = 25;
         player.skill_2_Cooltime = 15.0f;
         player.skill_2_Cost = 35;
-        player.skill_3_Cooltime = 10.0f;
+        player.skill_3_Cooltime = 60.0f;
         player.skill_3_Cost = 70;
         player.skill_4_Cooltime = 30.0f;
         player.skill_4_Cost = 40;

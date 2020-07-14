@@ -53,7 +53,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         player.maxHP = 539;
         player.maxMP = 280;
-        player.atk = 61;
+        player.atk = 73;
         player.def = 32;
 
         player.hpRegen = 6;

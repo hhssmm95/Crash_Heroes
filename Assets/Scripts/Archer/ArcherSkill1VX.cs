@@ -38,8 +38,8 @@ public class ArcherSkill1VX : MonoBehaviourPunCallbacks, IPunObservable
         {
             CharacterMove enemy = other.GetComponent<CharacterMove>();
 
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk, Archer.transform.forward);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk + "감소 전 피해를 입힘.");
+            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 1.2f, Archer.transform.forward);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk*1.2f + "감소 전 피해를 입힘.");
             enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
 
