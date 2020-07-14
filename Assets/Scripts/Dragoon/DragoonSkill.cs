@@ -235,7 +235,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
             {
                 PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-                PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 5.0f, transform.position.z), transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z), transform.rotation);
                 SoundManager.Instance.DragoonSoundPlay(4);
             }
             //StartCoroutine("Skill_Hit");
