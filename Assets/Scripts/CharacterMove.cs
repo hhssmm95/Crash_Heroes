@@ -4,15 +4,12 @@ using UnityEngine;
 using Photon.Pun;
 public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
-    public HealthBar hpBar;
-    //public GameObject cameraGuide;
+    public HealthBar hpBar; 
     Vector3 cameraOffset;
     public Animator myAnim;
-    //private Animator myAnim2;
     private Rigidbody myRig;
 
     private Camera mainCamera;
-    //private CameraLocator cameraLoc;
     public Global.Classes job;
 
     //private float delay = 1.0f; //점프 딜레이를 위한 카운터
@@ -25,39 +22,48 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float mp;
     public float atk;
     public float def;
-    public float maxST = 100.0f;
-    public float st;
-    private bool isDamaging;
-    public bool isDashing;
-    public bool isStun;
-    public float hpRegen;
+    public float maxST = 100.0f; //최대 스테미나통
+    public float st; //현재 스테미나
+
+    public float hpRegen; //체력,마나,스테 자연회복량
     public float mpRegen;
     public float stRegen;
-    public bool isBurn;
-    float burnDuration;
-    float burnDurationTimer;
-    float burnDamage;
-    float burnTimer;
 
-    float mpTimer;
+    float mpTimer; //초당 자연회복 간격 타이머
     float hpTimer;
     float stTimer;
-    float damageTimer;
 
-    float moveTimer;
+    bool isRunning; //달리기(쉬프트) 체크 트리거
+
+    private bool isDamaging; // 피격 처리중 체크 트리거
+    public bool isDashing; // 대쉬중 체크 트리거
+    public bool isStun; //기절 체크 트리거 
+    public bool isBurn; //화상 체크 트리거
+
+    float burnDuration; //화상 지속시간
+    float burnDurationTimer; // 화상 지속시간 타이머
+    float burnDamage; //화상 틱데미지량
+    float burnTimer; //화상 틱데미지 간격 타이머
+
+    float damageTimer; //피격처리(무적시간) 타이머
+
+    float moveTimer; //걷는 사운드 세부조절 타이머
 
 
-    bool isRunning;
 
     public float speed = 2.0f; // 캐릭터 이동속도
-    private Quaternion movement;
+
+    //private Quaternion movement;
+
     private float jumpPower = 5.0f;
     private float rotateSpeed = 10.0f;
+
     public bool isDead; // ※전역변수, true일때 즉시 사망 애니메이션 진행
-    //public GameObject GameOverPanel;
-    private Vector3 moveDirection;
-    public bool isAttacking;
-    float dashTimer;
+
+    private Vector3 moveDirection; //이동 방향
+    public bool isAttacking; //공격중 체크 트리거 (캐릭터별 Skill 스크립트에서 제어)
+
+    float dashTimer; //대쉬 거리(대쉬 시간) 체크 타이머
     float runTimer;
     private float h;
     private float v;
@@ -227,7 +233,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (!isAttacking)
             myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.LeftShift)) //달리기
+        if (Input.GetKeyDown(KeyCode.LeftShift)) //달리기
         {
             if (!isRunning)
             {
@@ -235,18 +241,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 isRunning = true;
                 myAnim.SetBool("Run", true);
             }
-            else
-            {
-                runTimer += Time.deltaTime;
-                if(runTimer >= 1.0f)
-                {
-                    runTimer = 0;
-                    st -= 9.0f;
-                }
-            }
             transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
         }
-        else
+        if(Input.GetKeyUp(KeyCode.LeftShift))
         {
             if (myAnim.GetBool("Run"))
             {
@@ -254,7 +251,18 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 isRunning = false;
                 runTimer = 0;
             }
+
             transform.position += moveDirection * speed * Time.deltaTime;
+        }
+
+        if (isRunning)
+        {
+            runTimer += Time.deltaTime;
+            if (runTimer >= 1.0f)
+            {
+                runTimer = 0;
+                st -= 9.0f;
+            }
         }
 
     }
