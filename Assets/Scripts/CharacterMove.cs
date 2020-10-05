@@ -252,8 +252,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 runTimer = 0;
             }
 
-            transform.position += moveDirection * speed * Time.deltaTime;
         }
+
+        transform.position += moveDirection * speed * Time.deltaTime; //이동 최종 연산
 
         if (isRunning)
         {
