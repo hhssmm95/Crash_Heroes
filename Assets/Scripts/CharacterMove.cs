@@ -218,11 +218,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
 
-        if (h != 0 || v != 0)
+        if ((h != 0 || v != 0) && !isRunning)
             myAnim.SetBool("Move", true);
-        else
+        else if (h == 0 && v == 0)
         {
             myAnim.SetBool("Move", false);
+            myAnim.SetBool("Run", false);
+            isRunning = false;
+            runTimer = 0;
             return;
         }
         
@@ -233,21 +236,23 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (!isAttacking)
             myRig.rotation = Quaternion.Slerp(myRig.rotation, newRotation, rotateSpeed * Time.deltaTime);
 
-        if (Input.GetKeyDown(KeyCode.LeftShift)) //달리기
+        if (Input.GetKey(KeyCode.LeftShift)) //달리기
         {
             if (!isRunning)
             {
                 stTimer = 0;
                 st -= 5.0f;
                 isRunning = true;
+
                 myAnim.SetBool("Run", true);
             }
-            
+
         }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        else
         {
-            if (myAnim.GetBool("Run"))
+            if (isRunning)
             {
+
                 myAnim.SetBool("Run", false);
                 isRunning = false;
                 runTimer = 0;
