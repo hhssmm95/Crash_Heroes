@@ -37,6 +37,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool archerPick = false;
     public bool dragoonPick = false;
     public bool magePick = false;
+    public bool characterPick = false;
 
     public int playerNum = 0;
     public int count = 0;
@@ -77,32 +78,35 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        count = PhotonNetwork.PlayerList.Length;
-
-        if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
+        if (characterPick == true)
         {
-            if (isTimeOver == false)
+            count = PhotonNetwork.PlayerList.Length;
+
+            if (pickList[0] == true && pickList[1] == true && pickList[2] == true && pickList[3] == true)
             {
-                TimerAndGameOver();
-            }
-        }
-
-        if(player.GetComponent<CharacterMove>().isDead == true)
-        {
-            PV.RPC("DeadUpdate", RpcTarget.All, playerNum);
-        }
-
-        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            if (count != 1 && deadList[i] == true)
-            {
-                count--;
+                if (isTimeOver == false)
+                {
+                    TimerAndGameOver();
+                }
             }
 
-            if(count == 1)
+            if (player.GetComponent<CharacterMove>().isDead == true)
             {
-                LimitTime = 0;
-                break;
+                PV.RPC("DeadUpdate", RpcTarget.All, playerNum);
+            }
+
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                if (count != 1 && deadList[i] == true)
+                {
+                    count--;
+                }
+
+                if (count == 1)
+                {
+                    LimitTime = 0;
+                    break;
+                }
             }
         }
     }
@@ -111,6 +115,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public void Spawn()
     {
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
+        characterPick = true;
     }
 
     public void Pick(int num)
