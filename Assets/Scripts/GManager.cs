@@ -174,8 +174,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 isTimeOver = true;
                 LimitTime = 0;
                 text_Time.text = "0";
-                PV.RPC("WinOrLose", RpcTarget.All);
-                StartCoroutine("GameOut"); 
+                //PV.RPC("WinOrLose", RpcTarget.All);
+                //StartCoroutine("GameOut"); 
 
                 //exitButton.SetActive(true);
             }

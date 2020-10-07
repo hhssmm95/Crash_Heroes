@@ -237,11 +237,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             if (!isRunning)
             {
+                stTimer = 0;
                 st -= 5.0f;
                 isRunning = true;
                 myAnim.SetBool("Run", true);
             }
-            transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
+            
         }
         if(Input.GetKeyUp(KeyCode.LeftShift))
         {
@@ -254,7 +255,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         }
 
-        transform.position += moveDirection * speed * Time.deltaTime; //이동 최종 연산
 
         if (isRunning)
         {
@@ -264,6 +264,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 runTimer = 0;
                 st -= 9.0f;
             }
+            transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
+        }
+        else
+        {
+            transform.position += moveDirection * speed * Time.deltaTime; //이동 최종 연산
         }
 
     }
@@ -406,7 +411,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
                 }
             }
-            if (st / maxST < 1 && !isDead)
+            if (st / maxST < 1 && !isDead && !isRunning) //달리고있지 않을때 스태미나 자동 회복
             {
                 stTimer += Time.deltaTime;
 
