@@ -16,6 +16,8 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
     Vector3 dir;
     Vector3 masterPos;
     public bool isCheck;
+   // public bool breathEnd;
+    //float breathEndTimer;
     bool destroying;
 
     float soundTimer;
@@ -50,7 +52,7 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
         //}
 
 
-        if(soundBool)
+        if (soundBool)
         {
             soundTimer += Time.deltaTime;
         }
@@ -60,6 +62,18 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
             soundTimer = 0;
             SoundManager.Instance.DragonSoundPlay(0);
         }
+        //if (breathEnd)
+        //{
+        //    breathEndTimer += Time.deltaTime;
+        //    if (breathEndTimer >= 2.5f)
+        //    {
+        //        breathEnd = false;
+        //        dragonAnimator.SetBool("HoverBasic", false);
+        //        dragonAnimator.SetBool("Hover", false);
+        //        dragonAnimator.SetBool("Flying", true);
+        //    }
+
+        //}
     }
 
     //[PunRPC]
@@ -92,46 +106,51 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
             if (!soundBool)
                 soundBool = true;
             transform.position += transform.forward * speed * Time.deltaTime;
-            if(!destroying)
+            if (!destroying)
             {
                 destroying = true;
                 Destroy(gameObject, 2.5f);
             }
         }
-        
+
     }
 
     [PunRPC]
     void Breath()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             PhotonNetwork.Instantiate("Prefebs/Flames", breathPos.transform.position, breathPos.transform.rotation);
-            
+
         }
     }
 
     IEnumerator DragonBreath()
     {
+
+        //breathEnd = true;
         //flame.Play();
         //flame.SetActive(true);
-        if(photonView.IsMine)
+        if (photonView.IsMine)
             photonView.RPC("Breath", RpcTarget.All);
         SoundManager.Instance.DragonSoundPlay(1);
         yield return new WaitForSeconds(2.5f);
         //flame.SetActive(false);
         //turn = true;
         //yield return new WaitForSeconds(1.0f);
+
         dragonAnimator.SetBool("HoverBasic", false);
         dragonAnimator.SetBool("Hover", false);
         dragonAnimator.SetBool("Flying", true);
+
+        yield return null;
     }
-        // Update is called once per frame
+    // Update is called once per frame
 
 
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            //throw new System.NotImplementedException();
-        }
-    
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        //throw new System.NotImplementedException();
+    }
+
 }
