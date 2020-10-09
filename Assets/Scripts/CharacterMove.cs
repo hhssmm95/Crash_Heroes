@@ -278,6 +278,32 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     }
 
+    void CooltimeReset()
+    {
+        if(Input.GetKey(KeyCode.P))
+        {
+            skill_1_Off = false;
+            skill_1_Timer = 0;
+
+            skill_2_Off = false;
+            skill_2_Timer = 0;
+
+            skill_3_Off = false;
+            skill_3_Timer = 0;
+
+            skill_4_Off = false;
+            skill_4_Timer = 0;
+
+            skill_5_Off = false;
+            skill_5_Timer = 0;
+
+            mp = maxMP;
+            st = maxST;
+            hp = maxHP;
+        }
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -375,7 +401,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-
+            CooltimeReset();
 
 
 

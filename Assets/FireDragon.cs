@@ -134,7 +134,7 @@ public class FireDragon : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
             photonView.RPC("Breath", RpcTarget.All);
         SoundManager.Instance.DragonSoundPlay(1);
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(3.0f);
         //flame.SetActive(false);
         //turn = true;
         //yield return new WaitForSeconds(1.0f);

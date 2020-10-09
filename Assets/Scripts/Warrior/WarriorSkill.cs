@@ -30,6 +30,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public ParticleSystem WarriorVX3;
     public GameObject WarriorSkill3Pos;
+    
 
     public bool isMine;
     public string ownerObject;
@@ -93,7 +94,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
                 photonView.RPC("Warrior_Skill3", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
-                photonView.RPC("Warrior_Skill4", RpcTarget.All);
+                //photonView.RPC("Warrior_Skill4", RpcTarget.All);
+                Warrior_Skill4();
             if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
                 photonView.RPC("Warrior_Skill5", RpcTarget.All);
 
@@ -249,7 +251,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    [PunRPC]
+    //[PunRPC]
     public void Warrior_Skill4()
     {
         if (player.mp >= player.skill_4_Cost)
@@ -329,12 +331,15 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         float originAtk = player.atk;
         float originDef = player.def;
+        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorBuffEffect", new Vector3(transform.position.x, transform.position.y+0.1f, transform.position.z), transform.rotation);
+        buffEffect.transform.parent = gameObject.transform;
 
         warriorAnim.SetTrigger("Skill4");
         SoundManager.Instance.KnightSoundPlay(4);
         player.atk *= 1.3f;
         player.def *= 1.3f;
         yield return new WaitForSeconds(20.0f);
+        Destroy(buffEffect);
 
         player.atk = originAtk;
         player.def = originDef;
