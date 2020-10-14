@@ -117,6 +117,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
         LobbyInfoText.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + "로비 / " + PhotonNetwork.CountOfPlayers + "접속";
+
+        if (ChatInput.text != "" && Input.GetKeyDown(KeyCode.Return))
+        {
+            Send();
+            //Debug.Log("send via return key");
+        }
+        //엔터키를 통한 채팅 입력
     }
 
     public void Connect()
@@ -224,7 +231,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     #region 채팅
     public void Send()
     {
-        PV.RPC("ChatRPC", RpcTarget.All, PhotonNetwork.NickName + " : " + ChatInput.text);
+        if(ChatInput.text!="" && ChatInput.text !="\n")
+            PV.RPC("ChatRPC", RpcTarget.All, PhotonNetwork.NickName + " : " + ChatInput.text);
         ChatInput.text = "";
     }
 
