@@ -7,7 +7,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 {
     CharacterMove player;
     Animator mageAnim;
-    Camera mainCamera;
+    public Camera mainCamera;
 
     public float attack_Cooltime;
     public float attack_Cost;
@@ -36,7 +36,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         player = gameObject.GetComponent<CharacterMove>();
         mageAnim = gameObject.GetComponent<Animator>();
         player.job = Global.Classes.Mage;
-
         if (photonView.IsMine)
         {
             isMine = true;
@@ -58,7 +57,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.hpRegen = 5;
         player.mpRegen = 9;
         player.stRegen = 5;
-
         attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 10.0f;
         player.skill_1_Cost = 30;

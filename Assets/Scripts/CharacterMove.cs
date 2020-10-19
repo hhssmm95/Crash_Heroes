@@ -159,7 +159,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 break;
 
             case Global.Classes.Mage:
-                dSkill.photonView.RPC("InitStatus", RpcTarget.All);
+                mSkill.photonView.RPC("InitStatus", RpcTarget.All);
                 //maxHP = 524;
                 //maxMP = 326;
                 //atk = 65;
