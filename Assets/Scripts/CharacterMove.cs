@@ -102,6 +102,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public WarriorSkill wSkill;
     public ArcherSkill aSkill;
     public DragoonSkill dSkill;
+    public MageSkill mSkill;
 
     public bool dashAttacking_warrior;
     public bool stopWhileAttack;
@@ -119,7 +120,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         wSkill = gameObject.GetComponent<WarriorSkill>();
         aSkill = gameObject.GetComponent<ArcherSkill>();
         dSkill = gameObject.GetComponent<DragoonSkill>();
-        //mSkill = gameObject.GetComponent<MageSkill>();
+        mSkill = gameObject.GetComponent<MageSkill>();
 
 
         //if (wSkill != null)
@@ -137,8 +138,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             job = Global.Classes.Archer;
         else if (gameObject.tag == "Dragoon")
             job = Global.Classes.Dragoon;
-        //else if (gameObject.tag == "Mage")
-        //    job = Global.Classes.Mage;
+        else if (gameObject.tag == "Mage")
+            job = Global.Classes.Mage;
 
         switch (job)
         {
@@ -158,6 +159,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 break;
 
             case Global.Classes.Mage:
+                dSkill.photonView.RPC("InitStatus", RpcTarget.All);
                 //maxHP = 524;
                 //maxMP = 326;
                 //atk = 65;
