@@ -149,6 +149,15 @@ public class UImanager : MonoBehaviour
                     slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_42", typeof(Sprite)) as Sprite;
                     slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_28", typeof(Sprite)) as Sprite;
                     break;
+
+                case Global.Classes.Mage:
+                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_08", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_28", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_46", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_46", typeof(Sprite)) as Sprite;
+                    break;
+
             }
         }
 
