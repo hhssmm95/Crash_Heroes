@@ -273,6 +273,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_5_Cost;
             healing = true;
             SoundManager.Instance.KnightSoundPlay(6);
+            StartCoroutine("Warrior_Skill5_Effect");
         }
     }
 
@@ -343,6 +344,16 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         player.atk = originAtk;
         player.def = originDef;
+    }
+
+    IEnumerator Warrior_Skill5_Effect()
+    {
+        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        buffEffect.transform.parent = gameObject.transform;
+        
+        yield return new WaitForSeconds(1.2f);
+        Destroy(buffEffect);
+        
     }
 
 
