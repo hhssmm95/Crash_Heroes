@@ -324,9 +324,16 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         SoundManager.Instance.ArcherSoundPlay(10);
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
 
+        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        buffEffect.transform.parent = gameObject.transform;
+
         player.speed *= 1.2f;
-        yield return new WaitForSecondsRealtime(5.0f);
+        yield return new WaitForSeconds(1.2f);
+        Destroy(buffEffect);
+        yield return new WaitForSeconds(3.8f);
         player.speed = originSpeed;
+
+        
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

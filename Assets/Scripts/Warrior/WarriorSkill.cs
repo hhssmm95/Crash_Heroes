@@ -264,7 +264,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    [PunRPC]
+    //[PunRPC]
     public void Warrior_Skill5()
     {
         if(player.mp >= player.skill_5_Cost)
