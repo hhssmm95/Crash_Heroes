@@ -110,7 +110,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        Screen.SetResolution(1920, 1080, true);
+        Screen.SetResolution(1920, 1080, false);
     }
 
     private void Update()
@@ -128,6 +128,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
+        if (NickNameInput.text == "" || NickNameInput.text.Length > 6) return;
         PhotonNetwork.GameVersion = "0.0.0";
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -163,7 +164,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     #region 방
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 100) : RoomInput.text, new RoomOptions { MaxPlayers = 3 });
+        PhotonNetwork.CreateRoom(RoomInput.text == "" ? "Room" + Random.Range(0, 100) : RoomInput.text, new RoomOptions { MaxPlayers = 3}) ;
     }
 
     public void LeaveRoom()
