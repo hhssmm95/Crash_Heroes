@@ -24,6 +24,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject archerImage;
     public GameObject dragoonImage;
     public GameObject mageImage;
+    public GameObject lenaImage;
     public GameObject victoryPanel;
     public GameObject DefeatPanel;
     public GameObject exitButton;
@@ -37,6 +38,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool archerPick = false;
     public bool dragoonPick = false;
     public bool magePick = false;
+    public bool lenaPick = false;
     public bool characterPick = false;
 
     public int playerNum = 0;
@@ -162,6 +164,14 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             magePick = true;
             mageImage.transform.GetChild(0).gameObject.SetActive(false);
             mageImage.transform.GetChild(2).gameObject.SetActive(true);
+        }
+
+        if (pickNum == 5 && lenaPick == false)
+        {
+            pickName = "Prefebs/Lena";
+            lenaPick = true;
+            lenaImage.transform.GetChild(0).gameObject.SetActive(false);
+            lenaImage.transform.GetChild(2).gameObject.SetActive(true);
         }
         pickList[playerNum] = true;
     }
