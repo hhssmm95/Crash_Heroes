@@ -23,8 +23,6 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAtack2Pos").GetComponent<Transform>();
         if(tag == "DragoonSkill1")
             Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
-
-        
     }
 
     void Start()

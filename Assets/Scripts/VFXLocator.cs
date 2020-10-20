@@ -8,6 +8,7 @@ public class VFXLocator : MonoBehaviourPunCallbacks, IPunObservable
     GameObject Warrior;
     GameObject Archer;
     GameObject Dragoon;
+    GameObject Mage;
     //GameObject Mage;
     //GameObject[] Player; //0: warrior , 1: archer, 2: dragoon, 3: mage
     Transform wAtk2Pos;
@@ -20,6 +21,7 @@ public class VFXLocator : MonoBehaviourPunCallbacks, IPunObservable
         Warrior = GameObject.FindGameObjectWithTag("Warrior");
         Archer = GameObject.FindGameObjectWithTag("Archer");
         Dragoon = GameObject.FindGameObjectWithTag("Dragoon");
+        Mage = GameObject.FindGameObjectWithTag("Mage");
         // Warrior = GameObject.FindGameObjectWithTag("Warrior");
 
         //player = GameObject.FindGameObjectWithTag("Player");

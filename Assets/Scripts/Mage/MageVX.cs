@@ -10,9 +10,13 @@ public class MageVX : MonoBehaviour
     //List<ParticleCollisionEvent> collisionEvents;
     Transform mAtkPos;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         Mage = GameObject.FindGameObjectWithTag("Mage").GetComponent<CharacterMove>();
+    }
+    void Start()
+    {
+        
         //particle = GetComponent<ParticleSystem>();
         //collisionEvents = new List<ParticleCollisionEvent>();
         Destroy(gameObject, 1.0f);
@@ -27,5 +31,9 @@ public class MageVX : MonoBehaviour
     void Locate()
     {
 
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
     }
 }

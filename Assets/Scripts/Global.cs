@@ -12,7 +12,9 @@ public static class Global
         Warrior,
         Archer,
         Dragoon,
-        Mage
+        Mage,
+        Lena
+            
     }
 
 

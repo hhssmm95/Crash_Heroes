@@ -102,6 +102,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public WarriorSkill wSkill;
     public ArcherSkill aSkill;
     public DragoonSkill dSkill;
+    public MageSkill mSkill;
+    public LenaSkill lSkill;
 
     public bool dashAttacking_warrior;
     public bool stopWhileAttack;
@@ -119,8 +121,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         wSkill = gameObject.GetComponent<WarriorSkill>();
         aSkill = gameObject.GetComponent<ArcherSkill>();
         dSkill = gameObject.GetComponent<DragoonSkill>();
-        //mSkill = gameObject.GetComponent<MageSkill>();
-
+        mSkill = gameObject.GetComponent<MageSkill>();
+        lSkill = gameObject.GetComponent<LenaSkill>();
 
         //if (wSkill != null)
         //    job = Global.Classes.Warrior;
@@ -137,9 +139,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             job = Global.Classes.Archer;
         else if (gameObject.tag == "Dragoon")
             job = Global.Classes.Dragoon;
-        //else if (gameObject.tag == "Mage")
-        //    job = Global.Classes.Mage;
-
+        else if (gameObject.tag == "Mage")
+            job = Global.Classes.Mage;
+        else if (gameObject.tag == "Lena")
+            job = Global.Classes.Lena;
         switch (job)
         {
             case Global.Classes.Warrior:
@@ -158,16 +161,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 break;
 
             case Global.Classes.Mage:
-                //maxHP = 524;
-                //maxMP = 326;
-                //atk = 65;
-                //def = 29;
-                //skill.attack_Cooltime = 0.5f;
-                //skill.skill_1_Cooltime = 3.0f;
-                //skill.skill_2_Cooltime = 3.0f;
-                //skill.skill_3_Cooltime = 3.0f;
-                //skill.skill_4_Cooltime = 3.0f;
+                mSkill.photonView.RPC("InitStatus", RpcTarget.All);
 
+                break;
+
+            case Global.Classes.Lena:
+                lSkill.photonView.RPC("InitStatus", RpcTarget.All);
                 break;
         }
 

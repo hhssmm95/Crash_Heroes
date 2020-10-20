@@ -158,6 +158,13 @@ public class UImanager : MonoBehaviour
                     slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_46", typeof(Sprite)) as Sprite;
                     break;
 
+                case Global.Classes.Lena:
+                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_23", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_39", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_24", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_50", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Priestskill_06", typeof(Sprite)) as Sprite;
+                    break;
             }
         }
 
