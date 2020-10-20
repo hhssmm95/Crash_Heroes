@@ -57,23 +57,23 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     public void InitStatus()
     {
 
-        player.maxHP = 582.0f;
-        player.maxMP = 263.0f;
-        player.atk = 64.0f;
-        player.def = 39.0f;
-        player.hpRegen = 9.0f;
-        player.mpRegen = 7;
-        player.stRegen = 7;
+        player.maxHP = 550.0f;
+        player.maxMP = 300.0f;
+        player.atk = 66.0f;
+        player.def = 33.0f;
+        player.hpRegen = 7.0f;
+        player.mpRegen = 8.0f;
+        player.stRegen = 5.0f;
         attack_Cooltime = 1.0f;
-        player.skill_1_Cooltime = 12.0f;
-        player.skill_1_Cost = 30.0f;
-        player.skill_2_Cooltime = 8.0f;
+        player.skill_1_Cooltime = 6.0f;
+        player.skill_1_Cost = 20.0f;
+        player.skill_2_Cooltime = 9.0f;
         player.skill_2_Cost = 25.0f;
-        player.skill_3_Cooltime = 20.0f;
-        player.skill_3_Cost = 50.0f;
-        player.skill_4_Cooltime = 30.0f;
-        player.skill_4_Cost = 40.0f;
-        player.skill_5_Cooltime = 60.0f;
+        player.skill_3_Cooltime = 18.0f;
+        player.skill_3_Cost = 45.0f;
+        player.skill_4_Cooltime = 95.0f;
+        player.skill_4_Cost = 125.0f;
+        player.skill_5_Cooltime = 30.0f;
         player.skill_5_Cost = 100.0f;
     }
 
@@ -86,18 +86,18 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
-                photonView.RPC("Warrior_Attack", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                photonView.RPC("Warrior_Skill1", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
-                photonView.RPC("Warrior_Skill2", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
-                photonView.RPC("Warrior_Skill3", RpcTarget.All);
-            if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
-                //photonView.RPC("Warrior_Skill4", RpcTarget.All);
-                Warrior_Skill4();
-            if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
-                photonView.RPC("Warrior_Skill5", RpcTarget.All);
+                photonView.RPC("Lena_Attack", RpcTarget.All);
+            //if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
+            //    photonView.RPC("Warrior_Skill1", RpcTarget.All);
+            //if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
+            //    photonView.RPC("Warrior_Skill2", RpcTarget.All);
+            //if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
+            //    photonView.RPC("Warrior_Skill3", RpcTarget.All);
+            //if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
+            //    //photonView.RPC("Warrior_Skill4", RpcTarget.All);
+            //    Warrior_Skill4();
+            //if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
+            //    photonView.RPC("Warrior_Skill5", RpcTarget.All);
 
 
             if (attackOff)
@@ -153,7 +153,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    void Warrior_Attack()
+    void Lena_Attack()
     {
         player.isAttacking = true;
         attackOff = true;
@@ -170,24 +170,24 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (lenaAnim.GetInteger("Combo") == 0)
         {
             lenaAnim.SetTrigger("FirstAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * LenaVX1_1.transform.rotation);
+            //if (photonView.IsMine)
+            //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * LenaVX1_1.transform.rotation);
             StartCoroutine("Skill_Hit");
             SoundManager.Instance.KnightSoundPlay(0);
         }
         else if (lenaAnim.GetInteger("Combo") == 1)
         {
             lenaAnim.SetTrigger("SecondAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", LenaAttack2Pos.transform.position, Quaternion.LookRotation(dir) * LenaVX1_2.transform.rotation);
+            //if (photonView.IsMine)
+            //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", LenaAttack2Pos.transform.position, Quaternion.LookRotation(dir) * LenaVX1_2.transform.rotation);
             StartCoroutine("Skill_Hit");
             SoundManager.Instance.KnightSoundPlay(1);
         }
         else if (lenaAnim.GetInteger("Combo") == 2)
         {
             lenaAnim.SetTrigger("ThirdAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * LenaVX1_3.transform.rotation).GetComponent<PhotonView>();
+            //if (photonView.IsMine)
+            //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * LenaVX1_3.transform.rotation).GetComponent<PhotonView>();
             StartCoroutine("Skill_Hit");
             SoundManager.Instance.KnightSoundPlay(2);
 
@@ -197,12 +197,12 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (player.dashAttacking_warrior && collision.gameObject.layer == 9 && player.isAttacking)
-        {
-            CharacterMove enemy = collision.gameObject.GetComponent<CharacterMove>();
+        //if (player.dashAttacking_warrior && collision.gameObject.layer == 9 && player.isAttacking)
+        //{
+        //    CharacterMove enemy = collision.gameObject.GetComponent<CharacterMove>();
 
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, player.atk * 0.8f, player.transform.forward);
-        }
+        //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, player.atk * 0.8f, player.transform.forward);
+        //}
 
     }
 
@@ -214,8 +214,18 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            StartCoroutine("Warrior_Skill1_Play");
+
+            lenaAnim.SetTrigger("Skill1");
+            Vector3 dir = player.transform.forward;
+
+            //if (photonView.IsMine)
+            //    PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+            StartCoroutine("Skill_Hit");
+            //SoundManager.Instance.DragoonSoundPlay(3);
+
+            //StartCoroutine("Warrior_Skill1_Play");
         }
+
 
 
     }
