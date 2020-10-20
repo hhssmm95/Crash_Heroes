@@ -42,7 +42,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         player = gameObject.GetComponent<CharacterMove>();
         lenaAnim = gameObject.GetComponent<Animator>();
-        player.job = Global.Classes.Warrior;
+        player.job = Global.Classes.Lena;
 
         if (photonView.IsMine)
         {
