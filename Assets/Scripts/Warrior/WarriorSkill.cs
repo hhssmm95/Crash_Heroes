@@ -52,6 +52,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
+    
 
     [PunRPC]
     public void InitStatus()
@@ -270,8 +271,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_2_Cost;
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill2_1");
-            warriorAnim.SetBool("Skill2_2", true);
+            warriorAnim.SetTrigger("Skill2");
+            //warriorAnim.SetBool("Skill2_2", true);
             StartCoroutine("Warrior_Skill2_VFX");
         }
 
