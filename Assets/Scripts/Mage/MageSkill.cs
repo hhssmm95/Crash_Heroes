@@ -313,7 +313,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         skill = true;
         yield return new WaitForSeconds(0.2f);
         StartCoroutine("Skill_Hit");
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(1.6f);
         skill = false;
     }
 
