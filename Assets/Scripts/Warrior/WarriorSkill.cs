@@ -122,7 +122,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 1 && !player.isDead && !player.isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -236,7 +236,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (player.dashAttacking_warrior && collision.gameObject.layer == 9 && player.isAttacking)
+        if (player.dashAttacking_warrior && collision.gameObject.layer == 9)
         {
             CharacterMove enemy = collision.gameObject.GetComponent<CharacterMove>();
 
@@ -253,7 +253,9 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            StartCoroutine("Warrior_Skill1_Play");
+            //StartCoroutine("Warrior_Skill1_Play");
+
+            warriorAnim.SetTrigger("Skill1");
         }
 
 
@@ -325,23 +327,31 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    IEnumerator Warrior_Skill1_Play()
+    void DashAttackOn()
     {
-        //playerAnim.stop
         player.isDashing = true;
-        warriorAnim.SetTrigger("Dash");
-        player.isAttacking = true;
         player.dashAttacking_warrior = true;
-        yield return new WaitForSeconds(0.1f);
+    }
+    void DashAttackOff()
+    {
         player.dashAttacking_warrior = false;
-        warriorAnim.SetTrigger("ThirdAttack");
-        player.isAttacking = false;
         Vector3 dir = player.transform.forward;
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
         StartCoroutine("Skill_Hit");
         SoundManager.Instance.KnightSoundPlay(2);
     }
+
+    //IEnumerator Warrior_Skill1_Play()
+    //{
+    //    //playerAnim.stop
+    //    //player.isDashing = true;
+    //    //warriorAnim.SetTrigger("Dash");
+    //    //player.isAttacking = true;
+    //    //yield return new WaitForSeconds(0.1f);
+    //    //player.isAttacking = false;
+    //    yield return null;
+    //}
     
     IEnumerator Warrior_Skill2_VFX()
     {
