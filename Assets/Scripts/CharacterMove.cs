@@ -180,7 +180,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
             //SkillControl skill = gameObject.GetComponent<SkillControl>();
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 6.806f, transform.position.z - 6f);
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 3.806f, transform.position.z - 3f); //원래6
             //mainCamera.transform.position = cameraGuide.transform.position;
             //.transform.rotation = cameraGuide.transform.rotation;
             cameraOffset = new Vector3(0, 6.806f, -6f); //mainCamera.transform.position - transform.position;
