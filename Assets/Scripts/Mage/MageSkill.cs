@@ -31,6 +31,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     Ray rayn;
 
     private bool isMine;
+    private bool skill;
 
     void Awake()
     {
@@ -43,7 +44,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
-
+        skill = false;
     }
 
     [PunRPC]
@@ -105,7 +106,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (!(player.hp <= 0))
+            if (!(player.hp <= 0) && skill == true)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -304,6 +305,16 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.4f);
         player.isAttacking = false;
 
+
+    }
+
+    IEnumerator Spell()
+    {
+        skill = true;
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine("Skill_Hit");
+        yield return new WaitForSeconds(0.6f);
+        skill = false;
     }
 
 
