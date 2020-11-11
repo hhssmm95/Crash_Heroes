@@ -18,7 +18,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public float comboTimer;
 
 
-    public GameObject Skill1Pos;
+    public GameObject SkillPos;
     public GameObject Attack2Pos;
 
     public ParticleSystem MageVX0_1;
@@ -27,7 +27,8 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public ParticleSystem MageVX1;
     public ParticleSystem MageVX2;
-    
+
+    Ray rayn;
 
     private bool isMine;
 
@@ -104,8 +105,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-
-            if (Input.GetKeyDown(KeyCode.Mouse0) && mageAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
+            if (!(player.hp <= 0))
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -113,9 +113,21 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
                     Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    transform.rotation = Quaternion.LookRotation(dir);
+                    Attack2Pos.transform.position = transform.position + dir;
+                    //transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
+
+                if (Input.GetKeyDown(KeyCode.Mouse0) && mageAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
+            {
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                
+
+            }
+
+            
         }
     }
 
@@ -186,7 +198,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill1VX", SkillPos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             StartCoroutine("Skill_Hit");
             //SoundManager.Instance.MageSoundPlay(3);
         }
