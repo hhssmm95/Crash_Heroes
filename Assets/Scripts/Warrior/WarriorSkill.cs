@@ -35,7 +35,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public bool isMine;
     public string ownerObject;
     public string animName;
-
+    public int combo = 1;
     void Awake()
     {
         //if(CompareTag("Player"))
@@ -86,18 +86,23 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
-                photonView.RPC("Warrior_Attack", RpcTarget.All);
+                //photonView.RPC("Warrior_Attack", RpcTarget.All);
+                Warrior_Attack();
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                photonView.RPC("Warrior_Skill1", RpcTarget.All);
+                //photonView.RPC("Warrior_Skill1", RpcTarget.All);
+                Warrior_Skill1();
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
-                photonView.RPC("Warrior_Skill2", RpcTarget.All);
+                //photonView.RPC("Warrior_Skill2", RpcTarget.All);
+                Warrior_Skill2();
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
-                photonView.RPC("Warrior_Skill3", RpcTarget.All);
+                //photonView.RPC("Warrior_Skill3", RpcTarget.All);
+                Warrior_Skill3();
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
                 //photonView.RPC("Warrior_Skill4", RpcTarget.All);
                 Warrior_Skill4();
             if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
-                photonView.RPC("Warrior_Skill5", RpcTarget.All);
+                //photonView.RPC("Warrior_Skill5", RpcTarget.All);
+                Warrior_Skill5();
 
 
             if (attackOff)
@@ -152,7 +157,11 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
+    void ComboCounter(int count)
+    {
+        combo = count;
+    }
+
     void Warrior_Attack()
     {
         player.isAttacking = true;
@@ -161,39 +170,69 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         if (comboTimer > 3.0f)
         {
-            warriorAnim.SetInteger("Combo", 0);
+            //warriorAnim.SetInteger("Combo", 0);
+            combo = 1;
             comboContinue = false;
         }
         comboTimer = 0;
 
         Vector3 dir = player.transform.forward;
-        if (warriorAnim.GetInteger("Combo") == 0)
+
+        switch(combo)
         {
-            warriorAnim.SetTrigger("FirstAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
-            StartCoroutine("Skill_Hit");
-            SoundManager.Instance.KnightSoundPlay(0);
-        }
-        else if (warriorAnim.GetInteger("Combo") == 1)
-        {
-            warriorAnim.SetTrigger("SecondAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
-            StartCoroutine("Skill_Hit");
-            SoundManager.Instance.KnightSoundPlay(1);
-        }
-        else if (warriorAnim.GetInteger("Combo") == 2)
-        {
-            warriorAnim.SetTrigger("ThirdAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
-            StartCoroutine("Skill_Hit");
-            SoundManager.Instance.KnightSoundPlay(2);
+            case 1:
+                warriorAnim.SetTrigger("FirstAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+                StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(0);
+                break;
+
+            case 2:
+                warriorAnim.SetTrigger("SecondAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
+                StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(1);
+                break;
+
+            case 3:
+                warriorAnim.SetTrigger("ThirdAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
+                StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(2);
+                break;
 
         }
+        //if (combo == 1/*warriorAnim.GetInteger("Combo") == 0*/)
+        //{
+        //    warriorAnim.SetTrigger("FirstAttack");
+        //    if (photonView.IsMine)
+        //        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
+        //    StartCoroutine("Skill_Hit");
+        //    SoundManager.Instance.KnightSoundPlay(0);
+        //}
+        //else if (combo == 2/*warriorAnim.GetInteger("Combo") == 1*/)
+        //{
+        //    warriorAnim.SetTrigger("SecondAttack");
+        //    if (photonView.IsMine)
+        //        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
+        //    StartCoroutine("Skill_Hit");
+        //    SoundManager.Instance.KnightSoundPlay(1);
+        //}
+        //else if (combo == 3/*warriorAnim.GetInteger("Combo") == 2*/)
+        //{
+        //    warriorAnim.SetTrigger("ThirdAttack");
+        //    //if (photonView.IsMine)
+        //    //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
+        //    StartCoroutine("Skill_Hit");
+        //    SoundManager.Instance.KnightSoundPlay(2);
+
+        //}
 
     }
+    
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -206,7 +245,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
            
     }
 
-    [PunRPC]
+    
     public void Warrior_Skill1()
     {
 

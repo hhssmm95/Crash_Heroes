@@ -14,7 +14,8 @@ public class LastCombo : StateMachineBehaviour
      //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (stateInfo.normalizedTime >= 0.9f && !trigger)
+        //if (stateInfo.normalizedTime >= 0.9f && !trigger)
+        if (stateInfo.normalizedTime >= 1.0f && !trigger)
         {
             trigger = true;
             animator.SetInteger("Combo", 0);
