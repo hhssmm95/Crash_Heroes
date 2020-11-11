@@ -106,7 +106,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (!(player.hp <= 0) && skill == true)
+            if (!(player.hp <= 0) && !skill)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -225,7 +225,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
 
             }
-            StartCoroutine("Skill_Hit");
+            StartCoroutine("Spell");
             //SoundManager.Instance.MageSoundPlay(1);
         }
 
