@@ -33,8 +33,6 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     
 
     public bool isMine;
-    public string ownerObject;
-    public string animName;
     public int combo = 1;
     void Awake()
     {
@@ -117,11 +115,14 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                     attack_Timer = 0;
                 }
             }
+
+
             if (comboContinue)
             {
 
                 comboTimer += Time.deltaTime;
             }
+
 
             if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 1 && !player.isDead && !player.isStun)
             {
@@ -134,6 +135,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                     transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
+
 
             if(healing && !player.isDead)
             {
@@ -165,7 +167,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Warrior_Attack()
     {
-        player.isAttacking = true;
+        //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
 

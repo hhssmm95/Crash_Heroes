@@ -26,9 +26,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject BigArrow;
     public ParticleSystem ArcherVX2_1; //평타1
     public ParticleSystem ArcherVX2_2; //평타2
-
-    public string ownerObject;
-    public string animName;
+    
     public int combo = 1;
 
     public bool isMine;
@@ -141,7 +139,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     //[PunRPC]
     void Archer_Attack()
     {
-        player.isAttacking = true;
+        //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
 
@@ -350,6 +348,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         float originSpeed = player.speed;
         float originAtk = player.atk;
+
+        archerAnim.SetTrigger("Skill4");
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
         SoundManager.Instance.ArcherSoundPlay(9);

@@ -372,8 +372,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 //
                 //    photonView.RPC("Jump", RpcTarget.All);
-                if (Input.GetKeyDown(KeyCode.Space))
-                    Jump();
+                //if (Input.GetKeyDown(KeyCode.Space))
+                //    Jump();
                 if (Input.GetKeyDown(KeyCode.Mouse1) && st >= 20.0f)
                     photonView.RPC("Dash", RpcTarget.All);
                 //Dash();
