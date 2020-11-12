@@ -692,7 +692,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             dying = true;
             //myAnim.Play("Die2");
-            myAnim.SetBool("isDead", true);
+            //myAnim.SetBool("isDead", true);
+            myAnim.SetTrigger("isDead");
         }
 
     }
