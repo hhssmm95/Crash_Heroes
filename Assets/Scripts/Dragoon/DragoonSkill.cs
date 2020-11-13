@@ -30,7 +30,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public GameObject Dragon;
     public GameObject DragonSpawn;
-
+    
+    public GameObject area;
     private bool isMine;
     int combo = 1;
     void Awake()
@@ -253,6 +254,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             dragoonAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
 
+
+
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
             if (photonView.IsMine)
@@ -274,14 +277,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             dragoonAnim.SetTrigger("Skill3");
-            Vector3 dir = player.transform.forward;
-            //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-            if (photonView.IsMine)
-            {
-                PhotonNetwork.Instantiate("Prefebs/FireDragon", new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-                PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z), transform.rotation);
-                SoundManager.Instance.DragoonSoundPlay(4);
-            }
+            StartCoroutine("Dragoon_Skill3_Effect");
             //StartCoroutine("Skill_Hit");
         }
 
@@ -311,14 +307,42 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+    IEnumerator Dragoon_Skill3_Effect()
+    {
+        Vector3 dir = player.transform.forward;
+        Vector3 pos;
 
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            if (photonView.IsMine)
+            {
+                Destroy(PhotonNetwork.Instantiate("Prefebs/SkillArea", transform.position + pos, Quaternion.LookRotation(dir) * area.transform.rotation), 5.0f);
+            }
+
+
+            //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+            if (photonView.IsMine)
+            {
+                PhotonNetwork.Instantiate("Prefebs/FireDragon", DragonSpawn.transform.position, Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+                //PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z), transform.rotation);
+                SoundManager.Instance.DragoonSoundPlay(4);
+            }
+
+            yield return new WaitForSeconds(2.0f);
+            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0)), 8.0f);
+        }
+    }
 
     IEnumerator Dragoon_Skill4_Effect()
     {
         float originMaxHP = player.maxHP;
 
         dragoonAnim.SetTrigger("Skill4");
-        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
 
 
@@ -329,7 +353,6 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.hp = originMaxHP * (player.hp / player.maxHP);
         player.maxHP = originMaxHP;
         Destroy(buffEffect);
-        
     }
 
     IEnumerator Dragoon_Skill5_Effect()
@@ -347,8 +370,6 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(18.8f);
         player.def = originDef;
 
-       
-
     }
 
     IEnumerator Skill_Hit()
@@ -357,7 +378,6 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.isAttacking = true;
         yield return new WaitForSeconds(0.4f);
         player.isAttacking = false;
-
     }
     
 

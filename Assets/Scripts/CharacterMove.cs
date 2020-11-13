@@ -105,6 +105,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public MageSkill mSkill;
     public LenaSkill lSkill;
 
+    GameObject BurnEffect;
+
     public bool dashAttacking_warrior;
     public bool stopWhileAttack;
     float stopTimer;
@@ -662,15 +664,30 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (photonView.IsMine && !isDead)
         {
             if(isBurn)
-            {
+            {  
+                if(BurnEffect != null)
+                {
+                    Destroy(BurnEffect);
+                }
+
                 burnDurationTimer = 0;
                 burnDuration = duration;
                 burnDamage = damage;
+
+                BurnEffect = PhotonNetwork.Instantiate("Prefebs/VFX/OnBurnVX", new Vector3(transform.position.x, transform.position.y + 0.55f, transform.position.z), transform.rotation);
+                BurnEffect.transform.parent = gameObject.transform;
+                Destroy(BurnEffect, duration);
                 return;
             }
             isBurn = true;
             burnDuration = duration;
             burnDamage = damage;
+            if (isMine)
+            {
+                BurnEffect = PhotonNetwork.Instantiate("Prefebs/VFX/OnBurnVX", new Vector3(transform.position.x, transform.position.y + 0.55f, transform.position.z), transform.rotation);
+                BurnEffect.transform.parent = gameObject.transform;
+                Destroy(BurnEffect, duration);
+            }
         }
     }
 
