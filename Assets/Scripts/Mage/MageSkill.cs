@@ -106,15 +106,23 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (!(player.hp <= 0) && !skill)
+            if (!(player.hp <= 0) /* && !skill*/)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
-                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    Attack2Pos.transform.position = transform.position + dir;
+                    //Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+                    if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
+                        > 9.0f)
+                    {
+                        Attack2Pos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x,0,transform.position.z);
+                    }
+                    else
+                    {
+                        Attack2Pos.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                    }
                     //transform.rotation = Quaternion.LookRotation(dir);
                 }
             }
@@ -241,7 +249,11 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-            
+            if (photonView.IsMine)
+            {
+                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill3VX", Attack2Pos.transform.position, Quaternion.Euler(0, 0, 0));//Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
+
+            }
         }
 
     }
