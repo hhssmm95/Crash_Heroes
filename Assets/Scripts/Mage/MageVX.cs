@@ -11,6 +11,8 @@ public class MageVX : MonoBehaviour
     Transform mAtkPos;
 
     bool hit;
+    public float damageStart;
+    private float timer;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -18,16 +20,18 @@ public class MageVX : MonoBehaviour
     }
     void Start()
     {
-        
+
         //particle = GetComponent<ParticleSystem>();
         //collisionEvents = new List<ParticleCollisionEvent>();
-        Destroy(gameObject, 1.0f);
+        //Destroy(gameObject, 1.0f);
+        timer = 0.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
         Locate();
+        timer += Time.deltaTime;
     }
 
     void Locate()
@@ -61,12 +65,27 @@ public class MageVX : MonoBehaviour
             //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
             //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
             //}
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.9f, Mage.transform.forward);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.9f + "감소 전 피해를 입힘.");
+            if (damageStart < timer && timer < damageStart + 0.2f)
+            {
+                if (gameObject.name == "MageSkill1VX")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
+                }
+                if (gameObject.name == "MageSkill2VX")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.2f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.2f + "감소 전 피해를 입힘.");
+                }
+                if (gameObject.name == "MageSkill3VX")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.5f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.5f + "감소 전 피해를 입힘.");
+                }
+                //SoundManager.Instance.HitSoundPlay(0);
 
-            //SoundManager.Instance.HitSoundPlay(0);
-
-            hit = true;
+                //hit = true;
+            }
         }
     }
 
