@@ -65,13 +65,13 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.stRegen = 7;
         attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 12.0f;
-        player.skill_1_Cost = 30.0f;
-        player.skill_2_Cooltime = 8.0f;
-        player.skill_2_Cost = 25.0f;
-        player.skill_3_Cooltime = 20.0f;
-        player.skill_3_Cost = 50.0f;
-        player.skill_4_Cooltime = 30.0f;
-        player.skill_4_Cost = 40.0f;
+        player.skill_1_Cost = 25.0f;
+        player.skill_2_Cooltime = 28.0f;
+        player.skill_2_Cost = 30.0f;
+        player.skill_3_Cooltime = 18.0f;
+        player.skill_3_Cost = 40.0f;
+        player.skill_4_Cooltime = 118.0f;
+        player.skill_4_Cost = 126.0f;
         player.skill_5_Cooltime = 60.0f;
         player.skill_5_Cost = 100.0f;
     }
@@ -124,17 +124,17 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 1 && !player.isDead && !player.isStun)
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+            //if (Input.GetKeyDown(KeyCode.Mouse0) && warriorAnim.GetInteger("Combo") == 1 && !player.isDead && !player.isStun)
+            //{
+            //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    transform.rotation = Quaternion.LookRotation(dir);
-                }
-            }
+            //    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            //    {
+            //        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            //        transform.rotation = Quaternion.LookRotation(dir);
+            //    }
+            //}
 
 
             if(healing && !player.isDead)
@@ -171,6 +171,11 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         attackOff = true;
         comboContinue = true;
 
+        if(combo == 1)
+        {
+            SetLookAtMousePos();
+        }
+
         if (comboTimer > 3.0f)
         {
             //warriorAnim.SetInteger("Combo", 0);
@@ -186,24 +191,24 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 1:
                 warriorAnim.SetTrigger("FirstAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
-                StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation),1.0f);
+                //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(0);
                 break;
 
             case 2:
                 warriorAnim.SetTrigger("SecondAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
-                StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation),1.0f);
+                //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(1);
                 break;
 
             case 3:
                 warriorAnim.SetTrigger("ThirdAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation).GetComponent<PhotonView>();
-                StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation),1.0f);
+                //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(2);
                 break;
 
@@ -256,31 +261,36 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
-            //StartCoroutine("Warrior_Skill1_Play");
+            StartCoroutine("Warrior_Skill1_VFX");
 
-            warriorAnim.SetTrigger("Skill1");
         }
 
 
     }
 
-    [PunRPC]
+    //[PunRPC]
     public void Warrior_Skill2()
     {
         if (player.mp >= player.skill_2_Cost)
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            //player.isAttacking = true;
-            //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill2");
-            //warriorAnim.SetBool("Skill2_2", true);
             StartCoroutine("Warrior_Skill2_VFX");
         }
+        //if (player.mp >= player.skill_2_Cost)
+        //{
+        //    player.skill_2_Off = true;
+        //    player.mp -= player.skill_2_Cost;
+        //    //player.isAttacking = true;
+        //    //playerAnim.SetBool("Skill2", true);
+        //    warriorAnim.SetTrigger("Skill2");
+        //    //warriorAnim.SetBool("Skill2_2", true);
+        //    StartCoroutine("Warrior_Skill2_VFX");
+        //}
 
     }
 
-    [PunRPC]
+    //[PunRPC]
     public void Warrior_Skill3()
     {
         if (player.mp >= player.skill_3_Cost)
@@ -300,10 +310,12 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (player.mp >= player.skill_4_Cost)
         {
+            SetLookAtMousePos();
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;
-            //playerAnim.SetBool("Skill2", true);
-            StartCoroutine("Warrior_Skill4_Effect");
+
+           
+            StartCoroutine("Warrior_Skill4_VFX");
         }
 
     }
@@ -329,73 +341,78 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.isAttacking = false;
 
     }
-
-    void DashAttackOn()
+    
+    void SkillHitOn()
     {
-        player.isDashing = true;
-        player.dashAttacking_warrior = true;
+        player.isAttacking = true;
     }
-    void DashAttackOff()
+
+    void SkillHitOff()
     {
-        player.dashAttacking_warrior = false;
-        Vector3 dir = player.transform.forward;
+        player.isAttacking = false;
+    }
+
+    IEnumerator Warrior_Skill1_VFX()
+    {
         if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
-        StartCoroutine("Skill_Hit");
-        SoundManager.Instance.KnightSoundPlay(2);
+        {
+            SetLookAtMousePos();
+            warriorAnim.SetTrigger("Skill1");
+            GameObject effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill1VX", new Vector3(transform.position.x, transform.position.y + 0.53f, transform.position.z), transform.rotation);
+            effect.transform.parent = gameObject.transform;
+            Destroy(effect, 5.0f);
+        }
+        yield return null;
     }
-
-    //IEnumerator Warrior_Skill1_Play()
-    //{
-    //    //playerAnim.stop
-    //    //player.isDashing = true;
-    //    //warriorAnim.SetTrigger("Dash");
-    //    //player.isAttacking = true;
-    //    //yield return new WaitForSeconds(0.1f);
-    //    //player.isAttacking = false;
-    //    yield return null;
-    //}
     
     IEnumerator Warrior_Skill2_VFX()
     {
-        Vector3 dir = transform.forward;
-        if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_1", new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
-        StartCoroutine("Skill_Hit");
-        SoundManager.Instance.KnightSoundPlay(3);
-        yield return new WaitForSeconds(0.2f);
-        if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_2", new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
-        StartCoroutine("Skill_Hit");
-        SoundManager.Instance.KnightSoundPlay(3);
+        float originAtk = player.atk;
+        float originDef = player.def;
+        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        buffEffect.transform.parent = gameObject.transform;
+
+        warriorAnim.SetTrigger("Skill2");
+        SoundManager.Instance.KnightSoundPlay(4);
+        player.atk *= 2.0f;
+        //player.def *= 1.3f;
+        yield return new WaitForSeconds(8.0f);
+        Destroy(buffEffect);
+
+        player.atk = originAtk;
+        player.def = originDef;
+
+        //Vector3 dir = transform.forward;
+        //if (photonView.IsMine)
+        //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_1", new Vector3(transform.position.x, transform.position.y + 0.406f, transform.position.z + 0.1F), Quaternion.LookRotation(dir) * WarriorVX2_1.transform.rotation);
+        //StartCoroutine("Skill_Hit");
+        //SoundManager.Instance.KnightSoundPlay(3);
+        //yield return new WaitForSeconds(0.2f);
+        //if (photonView.IsMine)
+        //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill2_2", new Vector3(transform.position.x, transform.position.y + 0.656f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX2_2.transform.rotation);
+        //StartCoroutine("Skill_Hit");
+        //SoundManager.Instance.KnightSoundPlay(3);
     }
 
     IEnumerator Warrior_Skill3_VFX()
     {
-
+        SetLookAtMousePos();
         Vector3 dir = player.transform.forward;
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.45f);
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
         SoundManager.Instance.KnightSoundPlay(5);
     }
 
-    IEnumerator Warrior_Skill4_Effect()
+    IEnumerator Warrior_Skill4_VFX()
     {
-        float originAtk = player.atk;
-        float originDef = player.def;
-        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorBuffEffect", new Vector3(transform.position.x, transform.position.y+0.1f, transform.position.z), transform.rotation);
-        buffEffect.transform.parent = gameObject.transform;
-
+        player.isAttacking = true;
         warriorAnim.SetTrigger("Skill4");
-        SoundManager.Instance.KnightSoundPlay(4);
-        player.atk *= 1.3f;
-        player.def *= 1.3f;
-        yield return new WaitForSeconds(20.0f);
-        Destroy(buffEffect);
+        if (photonView.IsMine)
+            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation), 10.0f);
 
-        player.atk = originAtk;
-        player.def = originDef;
+       yield return new WaitForSeconds(3.5f);
+        player.isAttacking = false;
     }
 
     IEnumerator Warrior_Skill5_Effect()
@@ -408,6 +425,17 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         
     }
 
+    void SetLookAtMousePos()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            transform.rotation = Quaternion.LookRotation(dir);
+        }
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

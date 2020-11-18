@@ -32,6 +32,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     private bool isMine;
     private bool skill;
+    int combo = 1;
 
     void Awake()
     {
@@ -155,32 +156,31 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         comboTimer = 0;
 
         Vector3 dir = player.transform.forward;
-        if (mageAnim.GetInteger("Combo") == 0)
-        {
-            mageAnim.SetTrigger("FirstAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
-            StartCoroutine("Skill_Hit");
 
-            //SoundManager.Instance.MageSoundPlay(0);
-        }
-        else if (mageAnim.GetInteger("Combo") == 1)
+        switch (combo)
         {
-            mageAnim.SetTrigger("SecondAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
-            StartCoroutine("Skill_Hit");
-            //Instantiate(MageVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
-            //SoundManager.Instance.MageSoundPlay(1);
-        }
-        else if (mageAnim.GetInteger("Combo") == 2)
-        {
-            mageAnim.SetTrigger("ThirdAttack");
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-            StartCoroutine("Skill_Hit");
-            //Instantiate(MageVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-            //SoundManager.Instance.MageSoundPlay(2);
+            case 1:
+                mageAnim.SetTrigger("FirstAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", new Vector3(transform.position.x + 0.081f, transform.position.y + 0.557f, transform.position.z + 0.283f), Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
+                StartCoroutine("Skill_Hit");
+                break;
+
+            case 2:
+                mageAnim.SetTrigger("SecondAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
+                StartCoroutine("Skill_Hit");
+                break;
+
+            case 3:
+                mageAnim.SetTrigger("ThirdAttack");
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
+                StartCoroutine("Skill_Hit");
+                SoundManager.Instance.DragoonSoundPlay(2);
+                break;
+
         }
 
 

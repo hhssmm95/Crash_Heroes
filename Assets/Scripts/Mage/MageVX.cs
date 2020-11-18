@@ -65,27 +65,28 @@ public class MageVX : MonoBehaviour
             //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
             //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
             //}
-            if (damageStart < timer && timer < damageStart + 0.2f)
+            if (damageStart < timer && timer < damageStart + 0.2f) //1,3스킬의 타격판정은 0.2초
             {
                 if (gameObject.name == "MageSkill1VX")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward);
                     Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
                 }
-                if (gameObject.name == "MageSkill2VX")
-                {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.2f, Mage.transform.forward);
-                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.2f + "감소 전 피해를 입힘.");
-                }
+                
                 if (gameObject.name == "MageSkill3VX")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.5f, Mage.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.2f, Mage.transform.forward);
                     Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.5f + "감소 전 피해를 입힘.");
                 }
                 //SoundManager.Instance.HitSoundPlay(0);
 
                 //hit = true;
             }
+            if (gameObject.name == "MageSkill2VX"&& damageStart < timer && timer < damageStart + 0.35f)
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.45f, Mage.transform.forward);
+                Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.2f + "감소 전 피해를 입힘.");
+            }// 2스킬의 타격판정은 0.35초이다
         }
     }
 
