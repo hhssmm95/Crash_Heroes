@@ -160,7 +160,6 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 dragoonAnim.SetTrigger("FirstAttack");
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
-                StartCoroutine("Skill_Hit");
 
                 SoundManager.Instance.DragoonSoundPlay(0);
                 break;
@@ -169,8 +168,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 dragoonAnim.SetTrigger("SecondAttack");
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-                StartCoroutine("Skill_Hit");
-                SoundManager.Instance.DragoonSoundPlay(1);
+               SoundManager.Instance.DragoonSoundPlay(1);
                 break;
 
             case 3:
