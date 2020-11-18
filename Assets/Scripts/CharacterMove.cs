@@ -331,19 +331,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             moveTimer = 0;
         }
 
-        if(!stopWhileAttack && isAttacking)
-        {
-            stopWhileAttack = true;
-        }
-        if(stopWhileAttack)
-        {
-            stopTimer += Time.deltaTime;
-            if(stopTimer >= 1.0f)
-            {
-                stopWhileAttack = false;
-                stopTimer = 0;
-            }
-        }
+        //if(!stopWhileAttack && isAttacking)
+        //{
+        //    stopWhileAttack = true;
+        //}
+        //if(stopWhileAttack)
+        //{
+        //    stopTimer += Time.deltaTime;
+        //    if(stopTimer >= 1.0f)
+        //    {
+        //        stopWhileAttack = false;
+        //        stopTimer = 0;
+        //    }
+        //}
         user = photonView.Owner.NickName;
         if (isDead)
         {
@@ -377,7 +377,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //if (Input.GetKeyDown(KeyCode.Space))
                 //    Jump();
                 if (Input.GetKeyDown(KeyCode.Mouse1) && st >= 20.0f)
+                {
+                    SetLookAtMousePos();
                     photonView.RPC("Dash", RpcTarget.All);
+                }
                 //Dash();
                 //Skill_1();
             }
@@ -387,20 +390,21 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //    StartCoroutine(deadProcess()); //isDead가 true일 경우 즉시 사망처리 및 애니메이션 진행 코루틴 호출
             }
 
+           
 
+            // 마우스 위치 바라보는 코드 빠짐//
+            //if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
+            //    /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1) && isDead && isStun)
+            //{
+            //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit hit;
 
-            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Alpha4)
-                /*|| Input.GetKeyDown(KeyCode.Mouse0) */|| Input.GetKeyDown(KeyCode.Mouse1) && isDead && isStun)
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    transform.rotation = Quaternion.LookRotation(dir);
-                }
-            }
+            //    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            //    {
+            //        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            //        transform.rotation = Quaternion.LookRotation(dir);
+            //    }
+            //}
 
             CooltimeReset();
 
@@ -408,14 +412,16 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
             if (isDashing)
             {
-                transform.position += transform.forward * (speed * 3) * Time.deltaTime;
-                dashTimer += Time.deltaTime;
+                //isAttacking = true;
+                transform.position += transform.forward * (speed * 4) * Time.deltaTime;
+                //dashTimer += Time.deltaTime;
 
-                if (dashTimer >= 0.5f)
-                {
-                    isDashing = false;
-                    dashTimer = 0;
-                }
+                //if (dashTimer >= 0.5f)
+                //{
+                //    isDashing = false;
+                //    //isAttacking = false;
+                //    dashTimer = 0;
+                //}
             }
 
             if (mp / maxMP < 1 && !isDead)
@@ -569,7 +575,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     {
 
         st -= 20;
-        isDashing = true;
+        //isDashing = true;
         myAnim.SetTrigger("Dash");
 
     }
@@ -713,6 +719,37 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myAnim.SetTrigger("isDead");
         }
 
+    }
+
+    void SetLookAtMousePos()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            transform.rotation = Quaternion.LookRotation(dir);
+        }
+    }
+
+    public void ControlOff()
+    {
+        stopWhileAttack = true;
+    }
+
+    public void ControlOn()
+    {
+        stopWhileAttack = false;
+    }
+
+    public void DashOn()
+    {
+        isDashing = true;
+    }
+    public void DashOff()
+    {
+        isDashing = false;
     }
 
     IEnumerator Slow(float rate, float time)

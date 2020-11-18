@@ -11,7 +11,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     Transform wAtk2Pos;
 
     bool hit;
-
+    bool checkReady;
     void Start()
     {
         Warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
@@ -19,8 +19,10 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         //collisionEvents = new List<ParticleCollisionEvent>();
         if (tag == "WarriorAttack2")
             wAtk2Pos = GameObject.FindGameObjectWithTag("WarriorAttack2Pos").GetComponent<Transform>();
-
-        Destroy(gameObject, 1.0f);
+        else if(tag == "WarriorSkill4")
+        {
+            StartCoroutine("StayCheck");
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +44,9 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             //{
             //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk);
             //}
+
+
+
             if (tag == "WarriorAttack3")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
@@ -52,6 +57,16 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 0.9f, Warrior.transform.forward);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.9f + "감소 전 피해를 입힘.");
             }
+            else if(tag == "WarriorSkill1")
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 2.2f, Warrior.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 2.2f + "감소 전 피해를 입힘.");
+            }
+            else if(tag == "WarriorSkill4")
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
+            }
             else
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
@@ -60,9 +75,20 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             SoundManager.Instance.HitSoundPlay(0);
             hit = true;
         }
+
     }
 
-    
+    private void OnTriggerStay(Collider other)
+    {
+        if(checkReady && !other.CompareTag("Warrior") && other.gameObject.layer == 9 && Warrior.isAttacking && !hit)
+        {
+            var enemy = other.GetComponent<CharacterMove>();
+            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
+        }
+    }
+
+
     void Locate()
     {
         if (gameObject.CompareTag("WarriorAttack1"))
@@ -85,6 +111,11 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
+    IEnumerator StayCheck()
+    {
+        yield return new WaitForSeconds(0.8f);
+        checkReady = true;
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
