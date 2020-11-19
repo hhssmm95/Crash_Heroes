@@ -30,8 +30,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public ParticleSystem WarriorVX3;
     public GameObject WarriorSkill3Pos;
-    
 
+    public GameObject WMesh;
+    public GameObject WRoot;
+    Vector3 originPos;
     public bool isMine;
     public int combo = 1;
     void Awake()
@@ -315,7 +317,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_4_Cost;
 
            
-            StartCoroutine("Warrior_Skill4_VFX");
+            StartCoroutine("Warrior_Skill4_1_VFX");
         }
 
     }
@@ -404,15 +406,35 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         SoundManager.Instance.KnightSoundPlay(5);
     }
 
-    IEnumerator Warrior_Skill4_VFX()
+    IEnumerator Warrior_Skill4_1_VFX()
     {
-        player.isAttacking = true;
+        originPos = transform.position;
+        Quaternion.LookRotation(transform.right);
         warriorAnim.SetTrigger("Skill4");
+        player.isAttacking = true;
+        player.ControlOff();
         if (photonView.IsMine)
             Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation), 10.0f);
-
-       yield return new WaitForSeconds(3.5f);
+        yield return null;
+       //yield return new WaitForSeconds(3.5f);
+       // player.isAttacking = false;
+    }
+    IEnumerator Warrior_Skill4_2_VFX()
+    {
+        yield return new WaitForSeconds(3.0f);
         player.isAttacking = false;
+        var myRig = GetComponent<Rigidbody>().useGravity = true;
+        WMesh.SetActive(true);
+        WRoot.SetActive(true);
+        player.ControlOn();
+    }
+    void Invisible()
+    {
+        WMesh.SetActive(false);
+        WRoot.SetActive(false);
+        transform.position = new Vector3(originPos.x, originPos.y + 1.5f, originPos.z);
+        var myRig = GetComponent<Rigidbody>().useGravity = false;
+        StartCoroutine("Warrior_Skill4_2_VFX");
     }
 
     IEnumerator Warrior_Skill5_Effect()
