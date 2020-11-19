@@ -8,21 +8,19 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
     //CharacterMove Archer;
     float atk;
     Vector3 normal;
-    float speed = 10;
+    //float speed = 10;
     bool hit;
     void Start()
     {
         atk = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>().atk;
         normal = GameObject.FindGameObjectWithTag("Archer").transform.forward;
-        if (gameObject.tag == "BigArrow")
-            speed *= 2;
         Destroy(gameObject, 5.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += transform.up * speed * Time.deltaTime;
+        //transform.position += transform.up * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,24 +29,27 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
         {
             var enemy = other.GetComponent<CharacterMove>();
 
-            if (gameObject.tag == "BigArrow")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.8f, normal);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-                enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
-            }
-            else if (gameObject.tag == "MultiArrow")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.5f, normal);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-            }
-            else
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.3f, normal);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-            }
-            SoundManager.Instance.HitSoundPlay(1);
+            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
+
+            //if (gameObject.tag == "BigArrow")
+            //{
+            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.8f, normal);
+            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
+            //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
+            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
+            //}
+            //else if (gameObject.tag == "MultiArrow")
+            //{
+            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.5f, normal);
+            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
+            //}
+            //else
+            //{
+            //    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.3f, normal);
+            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
+            //}
+            //SoundManager.Instance.HitSoundPlay(1);
             hit = true;
         }
 
