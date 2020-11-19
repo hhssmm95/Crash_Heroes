@@ -31,25 +31,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
             enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
-
-            //if (gameObject.tag == "BigArrow")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.8f, normal);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-            //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
-            //}
-            //else if (gameObject.tag == "MultiArrow")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.5f, normal);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-            //}
-            //else
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 1.3f, normal);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.5f + "감소 전 피해를 입힘.");
-            //}
-            //SoundManager.Instance.HitSoundPlay(1);
+            SoundManager.Instance.HitSoundPlay(1);
             hit = true;
         }
 
