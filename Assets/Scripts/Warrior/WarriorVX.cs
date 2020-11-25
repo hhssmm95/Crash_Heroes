@@ -10,8 +10,11 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     //List<ParticleCollisionEvent> collisionEvents;
     Transform wAtk2Pos;
 
+    public float skill4Timer;
+    public bool s4HitReady;
     bool hit;
     bool checkReady;
+    public int count;
     void Start()
     {
         Warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
@@ -30,6 +33,14 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         //photonView.RPC("Locate", RpcTarget.All);
         Locate();
+        //if(checkReady)
+        //{
+        //    skill4Timer += Time.deltaTime;
+        //    if(skill4Timer >= 0.1f && !s4HitReady)
+        //    {
+        //        s4HitReady = true;
+        //    }
+        //}
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -80,11 +91,16 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerStay(Collider other)
     {
-        if(checkReady && !other.CompareTag("Warrior") && other.gameObject.layer == 9 && Warrior.isAttacking && !hit)
+        if(s4HitReady /*&& !other.CompareTag("Warrior")*/ && other.gameObject.layer == 9)
         {
+            s4HitReady = false;
+            //skill4Timer = 0.0f;
+            count++;
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
+            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 0.8f, transform.tag);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk* 0.8f + "감소 전 피해를 입힘.");
+            //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
+            //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
         }
     }
 
@@ -110,10 +126,9 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             transform.position = new Vector3(Warrior.transform.position.x, Warrior.transform.position.y + 0.656f, Warrior.transform.position.z + 0.1f);
 
     }
-
     IEnumerator StayCheck()
     {
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1.0f);
         checkReady = true;
     }
 

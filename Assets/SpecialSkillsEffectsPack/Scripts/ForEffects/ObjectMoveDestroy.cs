@@ -15,7 +15,7 @@ public class ObjectMoveDestroy : MonoBehaviour
     public float HitObjectDestroyTime;
     public float maxTime = 1;
     public float MoveSpeed = 10;
-    public bool isCheckHitTag;
+    public bool isCheckHitLayer;
     public string mtag;
     public bool isShieldActive = false;
 
@@ -65,9 +65,10 @@ public class ObjectMoveDestroy : MonoBehaviour
 
     void HitObj(RaycastHit hit)
     {
-        if (isCheckHitTag)
-            if (hit.transform.tag != mtag)
+        if (isCheckHitLayer)
+            if (hit.transform.gameObject.layer != 9)
                 return;
+            //if (hit.transform.tag != mtag)
         ishit = true;
         if(m_gameObjectTail)
             m_gameObjectTail.transform.parent = null;

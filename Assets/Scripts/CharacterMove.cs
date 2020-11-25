@@ -107,6 +107,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     GameObject BurnEffect;
 
+    bool isWS4Hit;
+    bool isDS4Hit;
+    bool isAS3Hit;
+
     public bool dashAttacking_warrior;
     public bool stopWhileAttack;
     float stopTimer;
@@ -239,10 +243,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (Input.GetKey(KeyCode.LeftShift)) //달리기
         {
-            if (!isRunning)
+            if (!isRunning && st>=20.0f)
             {
                 stTimer = 0;
-                st -= 5.0f;
+                st -= 20.0f;
                 isRunning = true;
 
                 myAnim.SetBool("Run", true);
@@ -264,13 +268,16 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (isRunning)
         {
-            runTimer += Time.deltaTime;
-            if (runTimer >= 1.0f)
+            if (st >= 10.0f)
             {
-                runTimer = 0;
-                st -= 9.0f;
+                runTimer += Time.deltaTime;
+                if (runTimer >= 1.0f)
+                {
+                    runTimer = 0;
+                    st -= 10.0f;
+                }
+                transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
             }
-            transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
         }
         else
         {
@@ -301,6 +308,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             mp = maxMP;
             st = maxST;
             hp = maxHP;
+            isDead = false;
         }
         
     }
@@ -605,6 +613,40 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     }
 
     [PunRPC]
+    public void OnSpecialDamage(float damage, string tag)
+    {
+        if (photonView.IsMine && !isDamaging && !isDead)
+        {
+            switch(tag)
+            {
+                case "WarriorSkill4" :
+                    myAnim.SetTrigger("Damage");
+                    if (def <= damage)
+                    {
+                        hp -= (damage - def);
+                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                    }
+                    //hpBar.SetHealth(hp);
+                    hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
+                    if (hp <= 0)
+                    {
+                        isDead = true;
+                        Debug.Log(gameObject.name + "(이)가 사망");
+                    }
+                    break;
+
+                case "ArcherSkill3":
+
+                    break;
+
+                case "DragoonSkill4":
+
+                    break;
+            }
+        }
+    }
+
+    [PunRPC]
     public void OnHeavyDamage(float damage, Vector3 normal)
     {
         if (photonView.IsMine && !isDamaging && !isDead)
@@ -627,6 +669,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             }
         }
     }
+
 
     [PunRPC]
     public void OnTrueDamage(float damage, Vector3 normal)

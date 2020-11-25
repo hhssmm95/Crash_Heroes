@@ -15,11 +15,15 @@ public class MultipleObjectsMake : _ObjectsMakeBase
     float m_delayTime;
     float m_count;
     float m_scalefactor;
-
+    WarriorVX warrior;
     void Start()
     {
         m_Time = m_Time2 = Time.time;
         m_scalefactor = VariousEffectsScene.m_gaph_scenesizefactor; //transform.parent.localScale.x; 
+
+        if (transform.parent.parent.tag == "WarriorSkill4")
+            warrior = transform.parent.parent.GetComponent<WarriorVX>();
+
     }
 
 
@@ -36,6 +40,8 @@ public class MultipleObjectsMake : _ObjectsMakeBase
                 for (int i = 0; i < m_makeObjs.Length; i++)
                 {
                     GameObject m_obj = Instantiate(m_makeObjs[i], m_pos, m_rot);
+                    if (warrior != null)
+                        warrior.s4HitReady = true;
                     Vector3 m_scale = (m_makeObjs[i].transform.localScale + GetRandomVector2(m_randomScale));
                     m_obj.transform.parent = this.transform;
                     m_obj.transform.localScale = m_scale;
