@@ -54,6 +54,8 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
         skill = false;
+        barrior = 0;
+        barriorT = false;
     }
 
     [PunRPC]
