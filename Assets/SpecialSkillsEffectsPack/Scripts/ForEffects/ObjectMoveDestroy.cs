@@ -23,10 +23,14 @@ public class ObjectMoveDestroy : MonoBehaviour
     bool ishit;
     float m_scalefactor;
 
+    //ArcherVX archer;
+
     private void Start()
     {
         m_scalefactor = VariousEffectsScene.m_gaph_scenesizefactor;//transform.parent.localScale.x;
         time = Time.time;
+        //if (tag == "ArcherSkill3Arrow")
+            //archer = GameObject.FindGameObjectWithTag("ArcherSkill3").GetComponent<ArcherVX>();
     }
 
     void LateUpdate()
@@ -58,6 +62,8 @@ public class ObjectMoveDestroy : MonoBehaviour
 
     void MakeHitObject(Transform point)
     {
+        //if (archer != null)
+        //    archer.s3HitReady = true; 
         m_makedObject = Instantiate(m_hitObject, point.transform.position, point.rotation).gameObject;
         m_makedObject.transform.parent = transform.parent;
         m_makedObject.transform.localScale = new Vector3(1, 1, 1);
@@ -65,10 +71,12 @@ public class ObjectMoveDestroy : MonoBehaviour
 
     void HitObj(RaycastHit hit)
     {
-        if (isCheckHitLayer)
-            if (hit.transform.gameObject.layer != 9)
-                return;
-            //if (hit.transform.tag != mtag)
+        if (hit.transform.gameObject.layer == 12)
+            return;
+        //if (isCheckHitLayer)
+        //    if (hit.transform.gameObject.layer == 12)
+        //        return;
+        //if (hit.transform.tag != mtag)
         ishit = true;
         if(m_gameObjectTail)
             m_gameObjectTail.transform.parent = null;

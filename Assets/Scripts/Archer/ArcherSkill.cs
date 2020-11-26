@@ -102,7 +102,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (attackOff)
             {
                 attack_Timer += Time.deltaTime;
-                if (attack_Timer >= 1.0f)
+                if (attack_Timer >= 0.6f)
                     player.isAttacking = false;
                 if (attack_Timer >= attack_Cooltime)
                 {
@@ -259,7 +259,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             archerAnim.SetTrigger("Skill2");
             SetLookAtMousePos();
             if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VFX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
 
 
             //Photnet_AnimationSync = 2;
@@ -291,8 +291,20 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             archerAnim.SetTrigger("Skill3");
-            Photnet_AnimationSync = 3;
-            StartCoroutine("Archer_Skill3_Delay");
+
+            Vector3 dir = player.transform.forward;
+            Vector3 pos;
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+
+                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill3VX", new Vector3(transform.position.x, transform.position.y + 15, transform.position.z) + pos, Quaternion.LookRotation(dir)), 5.0f);
+            }
+            
         }
 
     }
@@ -327,20 +339,10 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-    IEnumerator Archer_Skill3_Delay()
-    {
-        SoundManager.Instance.ArcherSoundPlay(3);
-        yield return new WaitForSeconds(1.0f);
-        Vector3 dir = transform.forward;
-        //transform.rotation = Quaternion.LookRotation(dir);
-
-        if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/BigArrow", new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z + 0.8f), Quaternion.LookRotation(dir) * BigArrow.transform.rotation);
-
-        SoundManager.Instance.ArcherSoundPlay(6);
-
-        SoundManager.Instance.ArcherSoundPlay(2);
-    }
+    //IEnumerator Archer_Skill3_Delay()
+    //{
+        
+    //}
 
 
     void SkillHitOn()

@@ -278,6 +278,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
                 transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
             }
+            else
+            {
+                isRunning = false;
+                myAnim.SetBool("Run", false);
+                myAnim.SetBool("Move", true);
+            }
         }
         else
         {
@@ -627,20 +633,29 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
                     }
                     //hpBar.SetHealth(hp);
+                    
+                    break;
+
+                case "ArcherSkill3":
+                    myAnim.SetTrigger("Damage");
+                    if (def <= damage)
+                    {
+                        hp -= (damage - def);
+                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                    }
+                    break;
+
+                case "DragoonSkill4":
+
+                    break;
+
+                default:
                     hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
                     if (hp <= 0)
                     {
                         isDead = true;
                         Debug.Log(gameObject.name + "(이)가 사망");
                     }
-                    break;
-
-                case "ArcherSkill3":
-
-                    break;
-
-                case "DragoonSkill4":
-
                     break;
             }
         }
