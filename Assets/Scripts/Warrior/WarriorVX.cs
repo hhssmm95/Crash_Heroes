@@ -91,7 +91,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerStay(Collider other)
     {
-        if(s4HitReady /*&& !other.CompareTag("Warrior")*/ && other.gameObject.layer == 9)
+        if(s4HitReady && !other.CompareTag("Warrior") && other.gameObject.layer == 9)
         {
             s4HitReady = false;
             //skill4Timer = 0.0f;
