@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor.SceneManagement;
 
 
 public class GameManager : MonoBehaviour
@@ -39,7 +38,7 @@ public class GameManager : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.R))
             {
                 //SampleScene 씬을 로드
-                EditorSceneManager.LoadScene("SampleScene");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
             }
         }
 

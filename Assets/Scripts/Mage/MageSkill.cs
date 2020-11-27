@@ -22,6 +22,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject AttackPos1, AttackPos2, AttackPos3;
     public GameObject skillPos;
     public GameObject BuffEff;
+    public GameObject ShiledEff;
 
     public ParticleSystem MageVX0_1;
     public ParticleSystem MageVX0_2;
@@ -297,6 +298,13 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
+    [PunRPC]
+    void BarriorDestroy()
+    {
+        Destroy(GameObject.FindWithTag("Shiled"));
+        barriorT = false;
+    }
+
 
     IEnumerator Mage_Skill4_Effect()
     {
@@ -313,13 +321,14 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator Mage_Skill5_Effect()
     {
-        float originDef = player.def;
-        //SoundManager.Instance.MageSoundPlay(6);
-        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.5f);
-        player.def *= 0.8f;
-        yield return new WaitForSeconds(20.0f);
-        player.def = originDef;
+        GameObject shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
 
+        shld.transform.parent = gameObject.transform;
+        barriorT = true;
+        yield return new WaitForSeconds(30.0f);
+        Destroy(shld);
+        ShiledEff.SetActive(false);
+        barriorT = false;
     }
 
     IEnumerator Skill_Hit()
