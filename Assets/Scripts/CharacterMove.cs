@@ -24,6 +24,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public float def;
     public float maxST = 100.0f; //최대 스테미나통
     public float st; //현재 스테미나
+    public float br; //Mage를 위한 배리어 수치
 
     public float hpRegen; //체력,마나,스테 자연회복량
     public float mpRegen;
@@ -605,8 +606,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
             if (def <= damage)
             {
-                hp -= (damage - def);
-                Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                if (br > damage)
+                {
+                    br -= damage;
+                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                    return;
+                }
+
+                hp -= ((damage-br) - def);
+                br -= damage;
+                gameObject.SendMessage("BarriorDestroy");
+                Debug.Log(gameObject.name + "(이)가 배리어가 적용된 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
             }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
@@ -761,6 +771,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (photonView.IsMine && !isDead)
         {
             hp += amount;
+            if (hp > maxHP)
+                hp = maxHP;
+        }
+    }
+
+    [PunRPC]
+    public void BarriorFill(float amount)
+    {
+        if (photonView.IsMine && !isDead)
+        {
+            br += amount;
             if (hp > maxHP)
                 hp = maxHP;
         }

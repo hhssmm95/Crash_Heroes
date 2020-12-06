@@ -16,7 +16,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public float attack_Timer;
     public bool comboContinue;
     public float comboTimer;
-    public bool barriorT;
     
 
     public GameObject AttackPos1, AttackPos2, AttackPos3;
@@ -32,8 +31,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem MageVX2;
 
     Ray rayn;
-
-    private float barrior;
+    
     private bool isMine;
     private bool skill;
     int combo = 1;
@@ -55,8 +53,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
         skill = false;
-        barrior = 0;
-        barriorT = false;
     }
 
     [PunRPC]
@@ -281,6 +277,14 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill4");
             player.mp -= player.skill_4_Cost;
             StartCoroutine("Mage_Skill4_Effect");
+            player.skill_1_Timer = 0;
+            player.skill_2_Timer = 0;
+            player.skill_3_Timer = 0;
+
+            player.skill_1_Off = false;
+            player.skill_2_Off = false;
+            player.skill_3_Off = false;
+
         }
 
     }
@@ -302,33 +306,29 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     void BarriorDestroy()
     {
         Destroy(GameObject.FindWithTag("Shiled"));
-        barriorT = false;
     }
 
 
     IEnumerator Mage_Skill4_Effect()
     {
         BuffEff.SetActive(true);
-        player.skill_1_Cooltime *= 0.1f;
-        player.skill_2_Cooltime *= 0.1f;
-        player.skill_3_Cooltime *= 0.1f;
-        yield return new WaitForSeconds(8.0f);
-        player.skill_1_Cooltime *= 10.0f;
-        player.skill_2_Cooltime *= 10.0f;
-        player.skill_3_Cooltime *= 10.0f;
+        //player.skill_1_Cooltime *= 0.1f;
+        //player.skill_2_Cooltime *= 0.1f;
+        //player.skill_3_Cooltime *= 0.1f;
+        yield return new WaitForSeconds(1.0f);
+        //player.skill_1_Cooltime *= 10.0f;
+        //player.skill_2_Cooltime *= 10.0f;
+        //player.skill_3_Cooltime *= 10.0f;
         BuffEff.SetActive(false);
     }
 
     IEnumerator Mage_Skill5_Effect()
     {
         GameObject shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
-
         shld.transform.parent = gameObject.transform;
-        barriorT = true;
+        player.BarriorFill(player.maxHP * 0.4f);
         yield return new WaitForSeconds(30.0f);
         Destroy(shld);
-        ShiledEff.SetActive(false);
-        barriorT = false;
     }
 
     IEnumerator Skill_Hit()

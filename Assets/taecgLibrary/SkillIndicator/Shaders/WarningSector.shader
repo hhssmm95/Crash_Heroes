@@ -41,7 +41,7 @@ Shader "taecg/SkillIndicator/Circle"
             #pragma fragment frag  
             #pragma target 2.5
             #pragma multi_compile __ _INDICATOR_ON
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+            //#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
