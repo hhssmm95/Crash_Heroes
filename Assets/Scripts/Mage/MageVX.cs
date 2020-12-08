@@ -67,25 +67,41 @@ public class MageVX : MonoBehaviour
             //}
             if (damageStart < timer && timer < damageStart + 0.2f) //1,3스킬의 타격판정은 0.2초
             {
-                if (gameObject.name == "MageSkill1VX")
+                if (gameObject.name == "MageSkill1VX(Clone)")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward);
-                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.96f + "감소 전 피해를 입힘.");
                 }
                 
-                if (gameObject.name == "MageSkill3VX")
+                if (gameObject.name == "MageSkill3VX(Clone)")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.2f, Mage.transform.forward);
-                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.5f + "감소 전 피해를 입힘.");
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 2.2f + "감소 전 피해를 입힘.");
+                }
+
+                if (gameObject.name == "MageAttack1VX(Clone)")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.8f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.8f + "감소 전 피해를 입힘.");
+                }
+                if (gameObject.name == "MageAttack2VX(Clone)")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.9f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.9f + "감소 전 피해를 입힘.");
+                }
+                if (gameObject.name == "MageAttack3VX(Clone)")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward);
+                    Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
                 }
                 //SoundManager.Instance.HitSoundPlay(0);
 
                 //hit = true;
             }
-            if (gameObject.name == "MageSkill2VX"&& damageStart < timer && timer < damageStart + 0.35f)
+            if (gameObject.name == "MageSkill2VX(Clone)"&& damageStart < timer && timer < damageStart + 0.35f)
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.45f, Mage.transform.forward);
-                Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.2f + "감소 전 피해를 입힘.");
+                Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 2.45f + "감소 전 피해를 입힘.");
             }// 2스킬의 타격판정은 0.35초이다
         }
     }

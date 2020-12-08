@@ -8,7 +8,9 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
 
     Transform Atk2Pos;
     Transform Skill1Pos;
-
+    bool checkReady;
+    float checkTimer = 0.3f;
+    public bool s3HitReady;
     bool hit;
 
     private void Awake()
@@ -21,13 +23,24 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     }
     void Start()
     {
-        Destroy(gameObject, 1.0f);
+        //if()
+        //Destroy(gameObject, 1.0f);
+        if (tag == "ArcherSkill3")
+            StartCoroutine("StayCheck");
     }
 
     // Update is called once per frame
     void Update()
     {
         Locate();
+        if(checkReady)
+        {
+            if (checkTimer >= 0.3f)
+                s3HitReady = true;
+            else
+                checkTimer += Time.deltaTime;
+            
+        }
     }
 
     //[PunRPC]
@@ -36,38 +49,38 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log(gameObject.name + "파티클충돌 with" + other.gameObject.layer.ToString());
-        if (!other.CompareTag("Archer") && other.gameObject.layer == 9 && Archer.isAttacking && !hit)
+        if (!other.CompareTag("Archer") && other.gameObject.layer == 9 && Archer.isAttacking)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            //enemy.OnDamage(10);
 
-            //if (tag == "ArcherAttack1" || tag == "ArcherAttack2")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f);
-            //}
-            //if (tag == "ArcherVX1")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk, Archer.transform.forward);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk + "감소 전 피해를 입힘.");
-            //    //enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
-            //    //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
-            ////}
-            //if(gameObject.tag == "ArcherSkill1")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk, Archer.transform.forward);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk + "감소 전 피해를 입힘.");
-            //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
-            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
-            //}
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
+            if (tag == "ArcherSkill2VX")
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 2.6f, Archer.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 2.6f + "감소 전 피해를 입힘.");
+            }
+            else
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
 
-            SoundManager.Instance.HitSoundPlay(0);
-
-            hit = true;
+                SoundManager.Instance.HitSoundPlay(0);
+            }
+            
         }
     }
-    
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (s3HitReady && !other.CompareTag("Archer") && other.gameObject.layer == 9)
+        {
+            checkTimer = 0.0f;
+            s3HitReady = false;
+            var enemy = other.GetComponent<CharacterMove>();
+            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.6f, transform.tag);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.8f + "감소 전 피해를 입힘.");
+        }
+    }
+
     void Locate()
     {
         if (gameObject.CompareTag("ArcherAttack1"))
@@ -85,6 +98,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
         //}
     }
 
+    IEnumerator StayCheck()
+    {
+        yield return new WaitForSeconds(0.7f);
+        checkReady = true;
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

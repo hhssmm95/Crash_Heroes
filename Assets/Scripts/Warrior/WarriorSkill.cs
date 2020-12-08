@@ -30,8 +30,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public ParticleSystem WarriorVX3;
     public GameObject WarriorSkill3Pos;
-    
 
+    public GameObject WMesh;
+    public GameObject WRoot;
+    Vector3 originPos;
     public bool isMine;
     public int combo = 1;
     void Awake()
@@ -298,8 +300,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill3_1");
-            warriorAnim.SetBool("Skill3_2", true);
+            warriorAnim.SetTrigger("Skill3");
             StartCoroutine("Warrior_Skill3_VFX");
         }
 
@@ -315,7 +316,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_4_Cost;
 
            
-            StartCoroutine("Warrior_Skill4_VFX");
+            StartCoroutine("Warrior_Skill4_1_VFX");
         }
 
     }
@@ -398,21 +399,41 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         SetLookAtMousePos();
         Vector3 dir = player.transform.forward;
-        yield return new WaitForSeconds(0.45f);
+        yield return new WaitForSeconds(0.2f);
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
         SoundManager.Instance.KnightSoundPlay(5);
     }
 
-    IEnumerator Warrior_Skill4_VFX()
+    IEnumerator Warrior_Skill4_1_VFX()
     {
-        player.isAttacking = true;
+        originPos = transform.position;
+        Quaternion.LookRotation(transform.right);
         warriorAnim.SetTrigger("Skill4");
+        player.isAttacking = true;
+        player.ControlOff();
         if (photonView.IsMine)
             Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation), 10.0f);
-
-       yield return new WaitForSeconds(3.5f);
+        yield return null;
+       //yield return new WaitForSeconds(3.5f);
+       // player.isAttacking = false;
+    }
+    IEnumerator Warrior_Skill4_2_VFX()
+    {
+        yield return new WaitForSeconds(3.0f);
         player.isAttacking = false;
+        var myRig = GetComponent<Rigidbody>().useGravity = true;
+        WMesh.SetActive(true);
+        WRoot.SetActive(true);
+        player.ControlOn();
+    }
+    void Invisible()
+    {
+        WMesh.SetActive(false);
+        WRoot.SetActive(false);
+        transform.position = new Vector3(originPos.x, originPos.y + 1.5f, originPos.z);
+        var myRig = GetComponent<Rigidbody>().useGravity = false;
+        StartCoroutine("Warrior_Skill4_2_VFX");
     }
 
     IEnumerator Warrior_Skill5_Effect()

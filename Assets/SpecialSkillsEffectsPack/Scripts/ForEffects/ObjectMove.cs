@@ -32,6 +32,7 @@ public class ObjectMove : MonoBehaviour
         if(AbleHit)
         { 
             RaycastHit hit;
+            Debug.DrawRay(transform.position, transform.forward, Color.green, MaxLength);
             if (Physics.Raycast(transform.position, transform.forward, out hit, MaxLength))
             {
                 if (Time.time > m_time2 + HitDelay)

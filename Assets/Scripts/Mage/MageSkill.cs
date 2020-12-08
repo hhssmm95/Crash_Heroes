@@ -16,10 +16,12 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public float attack_Timer;
     public bool comboContinue;
     public float comboTimer;
+    
 
-
-    public GameObject SkillPos;
-    public GameObject Attack2Pos;
+    public GameObject AttackPos1, AttackPos2, AttackPos3;
+    public GameObject skillPos;
+    public GameObject BuffEff;
+    public GameObject ShiledEff;
 
     public ParticleSystem MageVX0_1;
     public ParticleSystem MageVX0_2;
@@ -29,10 +31,15 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem MageVX2;
 
     Ray rayn;
-
+    
     private bool isMine;
     private bool skill;
     int combo = 1;
+
+    void ComboCounter(int count)
+    {
+        combo = count;
+    }
 
     void Awake()
     {
@@ -107,7 +114,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (!(player.hp <= 0) /* && !skill*/)
+            if (!(player.hp <= 0) && gameObject.GetComponent<CharacterMove>().stopWhileAttack==false)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -118,11 +125,13 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                     if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
                         > 9.0f)
                     {
-                        Attack2Pos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x,0,transform.position.z);
+                        skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x,0,transform.position.z);
+                        skillPos.transform.rotation = Quaternion.Euler(0,0,0);
                     }
                     else
                     {
-                        Attack2Pos.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                        skillPos.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                        skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
                     //transform.rotation = Quaternion.LookRotation(dir);
                 }
@@ -162,21 +171,22 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 1:
                 mageAnim.SetTrigger("FirstAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", new Vector3(transform.position.x + 0.081f, transform.position.y + 0.557f, transform.position.z + 0.283f), Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
+
                 StartCoroutine("Skill_Hit");
                 break;
 
             case 2:
                 mageAnim.SetTrigger("SecondAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
                 StartCoroutine("Skill_Hit");
                 break;
 
             case 3:
                 mageAnim.SetTrigger("ThirdAttack");
                 if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
                 StartCoroutine("Skill_Hit");
                 SoundManager.Instance.DragoonSoundPlay(2);
                 break;
@@ -201,13 +211,13 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_1_Cost;
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
-            mageAnim.SetTrigger("Skill1");
+            mageAnim.SetTrigger("ThirdAttack");
             Vector3 dir = player.transform.forward;
 
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill1VX", SkillPos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill1VX", transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             StartCoroutine("Skill_Hit");
             //SoundManager.Instance.MageSoundPlay(3);
         }
@@ -230,7 +240,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //Instantiate(MageVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
             if (photonView.IsMine)
             {
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill2VX", skillPos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
 
             }
             StartCoroutine("Spell");
@@ -251,7 +261,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             if (photonView.IsMine)
             {
-                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill3VX", Attack2Pos.transform.position, Quaternion.Euler(0, 0, 0));//Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
+                PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill3VX", skillPos.transform.position, Quaternion.Euler(0, 0, 0));//Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
 
             }
         }
@@ -264,8 +274,17 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (player.mp >= player.skill_4_Cost)
         {
             player.skill_4_Off = true;
+            mageAnim.SetTrigger("Skill4");
             player.mp -= player.skill_4_Cost;
             StartCoroutine("Mage_Skill4_Effect");
+            player.skill_1_Timer = 0;
+            player.skill_2_Timer = 0;
+            player.skill_3_Timer = 0;
+
+            player.skill_1_Off = false;
+            player.skill_2_Off = false;
+            player.skill_3_Off = false;
+
         }
 
     }
@@ -283,31 +302,33 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
+    [PunRPC]
+    void BarriorDestroy()
+    {
+        Destroy(GameObject.FindWithTag("Shiled"));
+    }
+
 
     IEnumerator Mage_Skill4_Effect()
     {
-        float originMaxHP = player.maxHP;
-        mageAnim.SetTrigger("Skill4");
-
-        player.maxHP += originMaxHP * 1.3f;
-        player.hp += originMaxHP * 1.3f;
-        //SoundManager.Instance.MageSoundPlay(5);
-        yield return new WaitForSeconds(20.0f);
-        player.hp = originMaxHP * (player.hp / player.maxHP);
-        player.maxHP = originMaxHP;
-
-
+        BuffEff.SetActive(true);
+        //player.skill_1_Cooltime *= 0.1f;
+        //player.skill_2_Cooltime *= 0.1f;
+        //player.skill_3_Cooltime *= 0.1f;
+        yield return new WaitForSeconds(1.0f);
+        //player.skill_1_Cooltime *= 10.0f;
+        //player.skill_2_Cooltime *= 10.0f;
+        //player.skill_3_Cooltime *= 10.0f;
+        BuffEff.SetActive(false);
     }
 
     IEnumerator Mage_Skill5_Effect()
     {
-        float originDef = player.def;
-        //SoundManager.Instance.MageSoundPlay(6);
-        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.5f);
-        player.def *= 0.8f;
-        yield return new WaitForSeconds(20.0f);
-        player.def = originDef;
-
+        GameObject shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
+        shld.transform.parent = gameObject.transform;
+        player.BarriorFill(player.maxHP * 0.4f);
+        yield return new WaitForSeconds(30.0f);
+        Destroy(shld);
     }
 
     IEnumerator Skill_Hit()
