@@ -300,8 +300,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill3_1");
-            warriorAnim.SetBool("Skill3_2", true);
+            warriorAnim.SetTrigger("Skill3");
             StartCoroutine("Warrior_Skill3_VFX");
         }
 
@@ -400,7 +399,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         SetLookAtMousePos();
         Vector3 dir = player.transform.forward;
-        yield return new WaitForSeconds(0.45f);
+        yield return new WaitForSeconds(0.2f);
         if (photonView.IsMine)
             PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
         SoundManager.Instance.KnightSoundPlay(5);
