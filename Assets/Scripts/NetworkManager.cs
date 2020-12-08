@@ -8,7 +8,6 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    private NickNameList nickNameList;
     public int playerCount = 0;
     public AudioClip[] musicList;
     AudioSource audioSource;
@@ -29,7 +28,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [Header("RoomPanel")]
     public GameObject RoomPanel;
     public Text ListText;
-    public Text[] NickNameList;
+    public Text[] PlayerSlot;
     public Text RoomInfoText;
     public Text[] ChatText;
     public InputField ChatInput;
@@ -38,13 +37,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text StatusText;
     public PhotonView PV;
 
-    List<RoomInfo> myList = new List<RoomInfo>();
+    List<RoomInfo> RoomList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        nickNameList = GameObject.Find("NickNameList").GetComponent<NickNameList>();
         if(PhotonNetwork.InRoom)
         {
             //방으로 돌아가기
@@ -57,18 +55,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     #region 방리스트 갱신
     // ◀버튼 -2 , ▶버튼 -1 , 셀 숫자
-    public void MyListClick(int num)
+    public void RoomListClick(int num)
     {
         if (num == -2) --currentPage;
         else if (num == -1) ++currentPage;
-        else PhotonNetwork.JoinRoom(myList[multiple + num].Name);
-        MyListRenewal();
+        else PhotonNetwork.JoinRoom(RoomList[multiple + num].Name);
+        RoomListRenewal();
     }
 
-    private void MyListRenewal()
+    private void RoomListRenewal()
     {
         // 최대페이지
-        maxPage = (myList.Count % CellBtn.Length == 0) ? myList.Count / CellBtn.Length : myList.Count / CellBtn.Length + 1;
+        maxPage = (RoomList.Count % CellBtn.Length == 0) ? RoomList.Count / CellBtn.Length : RoomList.Count / CellBtn.Length + 1;
 
         // 이전, 다음버튼
         PreviousBtn.interactable = (currentPage <= 1) ? false : true;
@@ -78,9 +76,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         multiple = (currentPage - 1) * CellBtn.Length;
         for (int i = 0; i < CellBtn.Length; i++)
         {
-            CellBtn[i].interactable = (multiple + i < myList.Count) ? true : false;
-            CellBtn[i].transform.GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
-            CellBtn[i].transform.GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
+            CellBtn[i].interactable = (multiple + i < RoomList.Count) ? true : false;
+            CellBtn[i].transform.GetChild(0).GetComponent<Text>().text = (multiple + i < RoomList.Count) ? RoomList[multiple + i].Name : "";
+            CellBtn[i].transform.GetChild(1).GetComponent<Text>().text = (multiple + i < RoomList.Count) ? RoomList[multiple + i].PlayerCount + "/" + RoomList[multiple + i].MaxPlayers : "";
         }
     }
 
@@ -91,12 +89,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             if (!roomList[i].RemovedFromList)
             {
-                if (!myList.Contains(roomList[i])) myList.Add(roomList[i]);
-                else myList[myList.IndexOf(roomList[i])] = roomList[i];
+                if (!RoomList.Contains(roomList[i])) RoomList.Add(roomList[i]);
+                else RoomList[RoomList.IndexOf(roomList[i])] = roomList[i];
             }
-            else if (myList.IndexOf(roomList[i]) != -1) myList.RemoveAt(myList.IndexOf(roomList[i]));
+            else if (RoomList.IndexOf(roomList[i]) != -1) RoomList.RemoveAt(RoomList.IndexOf(roomList[i]));
         }
-        MyListRenewal();
+        RoomListRenewal();
     }
     #endregion
 
@@ -138,7 +136,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ShowPanel(LobbyPanel);
         StartCoroutine("PlayMusicList", 1);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        myList.Clear();
+        if(RoomList != null)
+            RoomList.Clear();
     }
 
     public void Disconnect()
@@ -250,8 +249,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.2f);
             if (!PhotonNetwork.InRoom) yield break;
 
+            //print(GetRoomTag(0) + "," + GetRoomTag(1) + "," + GetRoomTag(2) + "," + GetRoomTag(3));
+            
             for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
             {
+                //슬롯의 플레이어는 없고 사람번호가 있으면 방장이 0 대입
                 if (PhotonNetwork.LocalPlayer.IsMasterClient)
                 {
                     if (GetPlayer(i) == null && GetRoomTag(i) > 0)
@@ -260,10 +262,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                     }
                 }
 
+                string nickName = "";
+
                 if (GetRoomTag(i) > 0)
                 {
-                    NickNameList[i].text = GetPlayer(i).NickName;
+                    if(GetPlayer(i) != null)
+                        nickName = GetPlayer(i).NickName;
                 }
+
+                PlayerSlot[i].text = nickName;
+
             }
         }
     }
