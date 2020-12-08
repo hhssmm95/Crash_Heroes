@@ -659,6 +659,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                     break;
 
+                case "ArcherSkill4":
+                    myAnim.SetTrigger("Damage");
+                    if (def <= damage)
+                    {
+                        hp -= (damage - def);
+                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                    }
+                    break;
                 default:
                     hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
                     if (hp <= 0)

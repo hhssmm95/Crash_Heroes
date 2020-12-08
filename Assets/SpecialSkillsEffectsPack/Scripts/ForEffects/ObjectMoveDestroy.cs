@@ -71,7 +71,7 @@ public class ObjectMoveDestroy : MonoBehaviour
 
     void HitObj(RaycastHit hit)
     {
-        if (hit.transform.gameObject.layer == 12)
+        if (hit.transform.gameObject.layer == 11)
             return;
         //if (isCheckHitLayer)
         //    if (hit.transform.gameObject.layer == 12)

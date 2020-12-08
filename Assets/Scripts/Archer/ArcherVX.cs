@@ -9,8 +9,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     Transform Atk2Pos;
     Transform Skill1Pos;
     bool checkReady;
+    public bool snipeReady;
     float checkTimer = 0.3f;
+    float snipeTimer = 0.3f;
     public bool s3HitReady;
+    public bool s4HitReady;
     bool hit;
 
     private void Awake()
@@ -27,6 +30,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
         //Destroy(gameObject, 1.0f);
         if (tag == "ArcherSkill3")
             StartCoroutine("StayCheck");
+        if (tag == "ArcherSkill4")
+            StartCoroutine("SnipeCheck");
     }
 
     // Update is called once per frame
@@ -40,6 +45,14 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             else
                 checkTimer += Time.deltaTime;
             
+        }
+        if (snipeReady)
+        {
+            if (snipeTimer >= 0.3f)
+                s4HitReady = true;
+            else
+                snipeTimer += Time.deltaTime;
+
         }
     }
 
@@ -77,7 +90,15 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             s3HitReady = false;
             var enemy = other.GetComponent<CharacterMove>();
             enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.6f, transform.tag);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.8f + "감소 전 피해를 입힘.");
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.6f + "감소 전 피해를 입힘.");
+        }
+        if (s4HitReady && !other.CompareTag("Archer") && other.gameObject.layer == 9)
+        {
+            snipeTimer = 0.0f;
+            s4HitReady = false;
+            var enemy = other.GetComponent<CharacterMove>();
+            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.2f, transform.tag);
+            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.2f + "감소 전 피해를 입힘.");
         }
     }
 
@@ -102,6 +123,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(0.7f);
         checkReady = true;
+    }
+    IEnumerator SnipeCheck()
+    {
+        yield return new WaitForSeconds(2.1f);
+        snipeReady = true;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
