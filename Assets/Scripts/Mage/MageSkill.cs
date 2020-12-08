@@ -207,6 +207,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (player.mp >= player.skill_1_Cost)
         {
+            SetLookAtMousePos();
             player.skill_1_Off = true;
             player.mp -= player.skill_1_Cost;
             //player.isAttacking = true;
@@ -241,9 +242,9 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
             {
                 PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill2VX", skillPos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
-
+                SetLookAtMousePos();
             }
-            StartCoroutine("Spell");
+            //StartCoroutine("Spell");
             //SoundManager.Instance.MageSoundPlay(1);
         }
 
@@ -262,7 +263,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             if (photonView.IsMine)
             {
                 PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill3VX", skillPos.transform.position, Quaternion.Euler(0, 0, 0));//Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
-
+                SetLookAtMousePos();
             }
         }
 
@@ -341,15 +342,17 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    IEnumerator Spell()
+    void SetLookAtMousePos()
     {
-        skill = true;
-        yield return new WaitForSeconds(0.2f);
-        StartCoroutine("Skill_Hit");
-        yield return new WaitForSeconds(1.6f);
-        skill = false;
-    }
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            transform.rotation = Quaternion.LookRotation(dir);
+        }
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
