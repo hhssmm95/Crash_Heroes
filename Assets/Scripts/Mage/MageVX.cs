@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
+public struct damageList
+{
+    public string targetname;
+    public bool damaged;
+}
+
 public class MageVX : MonoBehaviour
 {
     CharacterMove Mage;
@@ -24,6 +30,7 @@ public class MageVX : MonoBehaviour
         //particle = GetComponent<ParticleSystem>();
         //collisionEvents = new List<ParticleCollisionEvent>();
         //Destroy(gameObject, 1.0f);
+        List<damageList> dm = new List<damageList>();
         timer = 0.0f;
     }
 

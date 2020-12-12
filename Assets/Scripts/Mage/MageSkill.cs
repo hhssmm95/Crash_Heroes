@@ -52,6 +52,10 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
+        if (!photonView.IsMine)
+        {
+            skillPos.SetActive(false);
+        }
         skill = false;
     }
 
@@ -188,7 +192,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
                 StartCoroutine("Skill_Hit");
-                SoundManager.Instance.DragoonSoundPlay(2);
                 break;
 
         }
@@ -237,6 +240,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
             SoundManager.Instance.MageSoundPlay(1);
+            StartCoroutine("Skill_Hit", 0.35f);
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
             if (photonView.IsMine)
@@ -260,6 +264,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
             SoundManager.Instance.MageSoundPlay(2);
+            StartCoroutine("Skill_Hit",0.2f);
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             if (photonView.IsMine)
             {
@@ -334,9 +339,9 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         Destroy(shld);
     }
 
-    IEnumerator Skill_Hit()
+    IEnumerator Skill_Hit(float delay = 0.0f)
     {
-        //yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(delay);
         player.isAttacking = true;
         yield return new WaitForSeconds(0.4f);
         player.isAttacking = false;
