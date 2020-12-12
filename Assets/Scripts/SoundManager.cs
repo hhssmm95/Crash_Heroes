@@ -11,6 +11,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] archerSoundList;
     public AudioClip[] dragoonSoundList;
     public AudioClip[] dragonSoundList;
+    public AudioClip[] mageSoundList;
     public AudioClip[] hitSoundList;
     public static SoundManager Instance
     {
@@ -88,6 +89,11 @@ public class SoundManager : MonoBehaviour
         audioSource.clip = dragonSoundList[num];
         audioSource.Play();
     }
+    public void MageSoundPlay(int num)
+    {
+        audioSource.clip = mageSoundList[num];
+        audioSource.Play();
+    }
     public void HitSoundPlay(int num)
     {
         audioSource.clip = hitSoundList[num];
@@ -98,4 +104,5 @@ public class SoundManager : MonoBehaviour
         audioSource.clip = footStepsSoundList[num];
         audioSource.Play();
     }
+   
 }

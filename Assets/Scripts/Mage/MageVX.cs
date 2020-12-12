@@ -42,7 +42,7 @@ public class MageVX : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log(gameObject.name + "파티클충돌 with" + other.gameObject.layer.ToString());
-        if (!other.CompareTag("Mage") && other.gameObject.layer == 9 && Mage.isAttacking && !hit)
+        if (!other.CompareTag("Mage") && other.gameObject.layer == 9 && Mage.isAttacking)
         {
             var enemy = other.GetComponent<CharacterMove>();
             //enemy.OnDamage(10);
@@ -65,7 +65,7 @@ public class MageVX : MonoBehaviour
             //    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 1.0f);
             //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "1초 기절 상태이상을 적용시킴.");
             //}
-            if (damageStart < timer && timer < damageStart + 0.2f) //1,3스킬의 타격판정은 0.2초
+            if (/*damageStart < timer &&*/ timer < damageStart + 0.2f) //1,3스킬의 타격판정은 0.2초
             {
                 if (gameObject.name == "MageSkill1VX(Clone)")
                 {
