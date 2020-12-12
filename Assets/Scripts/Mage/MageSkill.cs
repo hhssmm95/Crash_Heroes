@@ -22,6 +22,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject skillPos;
     public GameObject BuffEff;
     public GameObject ShiledEff;
+    GameObject shld;
 
     public ParticleSystem MageVX0_1;
     public ParticleSystem MageVX0_2;
@@ -144,9 +145,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 if (Input.GetKeyDown(KeyCode.Mouse0) && mageAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                
 
             }
 
@@ -176,22 +174,18 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 mageAnim.SetTrigger("FirstAttack");
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
-
-                StartCoroutine("Skill_Hit");
                 break;
 
             case 2:
                 mageAnim.SetTrigger("SecondAttack");
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
-                StartCoroutine("Skill_Hit");
                 break;
 
             case 3:
                 mageAnim.SetTrigger("ThirdAttack");
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-                StartCoroutine("Skill_Hit");
                 break;
 
         }
@@ -222,7 +216,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //Instantiate(MageVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill1VX", transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
-            StartCoroutine("Skill_Hit");
             //SoundManager.Instance.MageSoundPlay(3);
         }
 
@@ -240,7 +233,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
             SoundManager.Instance.MageSoundPlay(1);
-            StartCoroutine("Skill_Hit", 0.35f);
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
             if (photonView.IsMine)
@@ -264,7 +256,6 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
             SoundManager.Instance.MageSoundPlay(2);
-            StartCoroutine("Skill_Hit",0.2f);
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             if (photonView.IsMine)
             {
@@ -305,6 +296,12 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_5_Cost;
             StartCoroutine("Mage_Skill5_Effect");
             SoundManager.Instance.MageSoundPlay(4);
+            //shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
+            PhotonNetwork.Instantiate("Prefebs/VFX/MageShield", gameObject.transform.position + ShiledEff.transform.position, Quaternion.Euler(0, 0, 0));
+            
+            shld = GameObject.FindWithTag("Shield");
+            shld.transform.parent = gameObject.transform;
+            player.BarriorFill(player.maxHP * 0.4f);
         }
 
     }
@@ -313,10 +310,10 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void BarriorDestroy()
     {
-        Destroy(GameObject.FindWithTag("Shiled"));
+        Destroy(GameObject.FindWithTag("Shield"));
     }
 
-
+    [PunRPC]
     IEnumerator Mage_Skill4_Effect()
     {
         BuffEff.SetActive(true);
@@ -330,24 +327,13 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         BuffEff.SetActive(false);
     }
 
+    [PunRPC]
     IEnumerator Mage_Skill5_Effect()
     {
-        GameObject shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
-        shld.transform.parent = gameObject.transform;
-        player.BarriorFill(player.maxHP * 0.4f);
         yield return new WaitForSeconds(30.0f);
         Destroy(shld);
     }
-
-    IEnumerator Skill_Hit(float delay = 0.0f)
-    {
-        yield return new WaitForSeconds(delay);
-        player.isAttacking = true;
-        yield return new WaitForSeconds(0.4f);
-        player.isAttacking = false;
-
-
-    }
+    
 
     void SetLookAtMousePos()
     {
