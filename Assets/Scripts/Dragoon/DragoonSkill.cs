@@ -229,16 +229,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_1_Cost;
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
-            SetLookAtMousePos();
-            dragoonAnim.SetTrigger("Skill1");
-            Vector3 dir = player.transform.forward;
 
-            //transform.rotation = Quaternion.LookRotation(dir);
-            //Instantiate(DragoonVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-            if (photonView.IsMine)
-                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX_v2", new Vector3(transform.position.x, transform.position.y + 0.4f, transform.position.z), Quaternion.LookRotation(dir)), 1.5f);
-            
-            SoundManager.Instance.DragoonSoundPlay(3);
+            StartCoroutine("Dragoon_Skill1_Effect");
         }
 
     }
@@ -250,23 +242,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            SetLookAtMousePos();
-            //player.isAttacking = true;
-            //playerAnim.SetBool("Skill2", true);
-            dragoonAnim.SetTrigger("Skill2");
-            Vector3 dir = player.transform.forward;
 
-
-
-            //transform.rotation = Quaternion.LookRotation(dir);
-            //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
-            if (photonView.IsMine)
-            {
-                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX_v2", new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.LookRotation(dir) * Quaternion.Euler(0, 0, 180.0f)), 1.5f);
-
-            }
-            //StartCoroutine("Skill_Hit");
-            SoundManager.Instance.DragoonSoundPlay(1);
+            StartCoroutine("Dragoon_Skill2_Effect");
         }
 
     }
@@ -278,15 +255,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
-            SetLookAtMousePos();
-            dragoonAnim.SetTrigger("Skill3");
-            Vector3 dir = player.transform.forward;
-            if (photonView.IsMine)
-            {
-                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position, Quaternion.LookRotation(dir)), 3.0f);
-
-            }
-            //StartCoroutine("Skill_Hit");
+           
+            StartCoroutine("Dragoon_Skill3_Effect");
         }
 
     }
@@ -316,7 +286,55 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-    
+    IEnumerator Dragoon_Skill1_Effect()
+    {
+        SetLookAtMousePos();
+        dragoonAnim.SetTrigger("Skill1");
+        Vector3 dir = player.transform.forward;
+
+        //transform.rotation = Quaternion.LookRotation(dir);
+        //Instantiate(DragoonVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX_v2", new Vector3(transform.position.x, transform.position.y + 0.4f, transform.position.z), Quaternion.LookRotation(dir));
+
+        SoundManager.Instance.DragoonSoundPlay(3);
+        yield return new WaitForSeconds(1.5f);
+        PhotonNetwork.Destroy(effect);
+    }
+
+    IEnumerator Dragoon_Skill2_Effect()
+    {
+        SetLookAtMousePos();
+        //player.isAttacking = true;
+        //playerAnim.SetBool("Skill2", true);
+        dragoonAnim.SetTrigger("Skill2");
+        Vector3 dir = player.transform.forward;
+
+
+
+        //transform.rotation = Quaternion.LookRotation(dir);
+        //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX_v2", new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.LookRotation(dir) * Quaternion.Euler(0, 0, 180.0f));
+        yield return new WaitForSeconds(1.5f);
+        PhotonNetwork.Destroy(effect);
+
+        //StartCoroutine("Skill_Hit");
+        SoundManager.Instance.DragoonSoundPlay(1);
+    }
+
+    IEnumerator Dragoon_Skill3_Effect()
+    {
+        SetLookAtMousePos();
+        dragoonAnim.SetTrigger("Skill3");
+        Vector3 dir = player.transform.forward;
+        
+            var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position, Quaternion.LookRotation(dir));
+        yield return new WaitForSeconds(3.0f);
+        PhotonNetwork.Destroy(effect);
+
+        
+    }
 
     IEnumerator Dragoon_Skill4_Effect()
     {
@@ -325,15 +343,14 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
+        GameObject circle;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-            if (photonView.IsMine)
-            {
-                Destroy(PhotonNetwork.Instantiate("Prefebs/SkillArea", transform.position + pos, Quaternion.LookRotation(dir) * area.transform.rotation), 5.0f);
-            }
-            
+
+            circle = PhotonNetwork.Instantiate("Prefebs/SkillArea", transform.position + pos, Quaternion.LookRotation(dir) * area.transform.rotation);
+
+
 
 
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
@@ -345,7 +362,11 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             yield return new WaitForSeconds(2.0f);
-            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill4VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0)), 8.0f);
+            var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill4VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0));
+            yield return new WaitForSeconds(3.0f);
+            PhotonNetwork.Destroy(circle);
+            yield return new WaitForSeconds(4.0f);
+            PhotonNetwork.Destroy(effect);
         }
         //float originMaxHP = player.maxHP;
 
@@ -374,7 +395,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.5f);
         player.def *= 0.8f;
         yield return new WaitForSeconds(1.2f);
-        Destroy(buffEffect);
+        PhotonNetwork.Destroy(buffEffect);
         yield return new WaitForSeconds(18.8f);
         player.def = originDef;
 

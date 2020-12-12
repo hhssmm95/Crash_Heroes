@@ -257,12 +257,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             archerAnim.SetTrigger("Skill1");
-            SetLookAtMousePos();
-            //Vector3 dir = transform.forward;
-            if (photonView.IsMine)
-                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z + 0.4f), transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/), 4.0f);
-            SoundManager.Instance.ArcherSoundPlay(4);
-            SoundManager.Instance.ArcherSoundPlay(0);
+            StartCoroutine("Archer_Skill1_Effect");
             //Photnet_AnimationSync = 1;
             //Vector3 dir = player.transform.forward;
 
@@ -320,18 +315,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_3_Cost;
             archerAnim.SetTrigger("Skill3");
 
-            Vector3 dir = player.transform.forward;
-            Vector3 pos;
-
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-            {
-                pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-
-                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill3VX", new Vector3(transform.position.x, transform.position.y + 15, transform.position.z) + pos, Quaternion.LookRotation(dir)), 5.0f);
-            }
+            StartCoroutine("Archer_Skill3_Effect");
 
         }
 
@@ -417,7 +401,34 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     //    player.isAttacking = false;
 
     //}
+    IEnumerator Archer_Skill1_Effect()
+    {
+        SetLookAtMousePos();
+        //Vector3 dir = transform.forward;
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z + 0.4f), transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/);
+        SoundManager.Instance.ArcherSoundPlay(4);
+        SoundManager.Instance.ArcherSoundPlay(0);
+        yield return new WaitForSeconds(3.0f);
+        PhotonNetwork.Destroy(effect);
+    }
 
+    IEnumerator Archer_Skill3_Effect()
+    {
+        Vector3 dir = player.transform.forward;
+        Vector3 pos;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+
+            var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill3VX", new Vector3(transform.position.x, transform.position.y + 15, transform.position.z) + pos, Quaternion.LookRotation(dir));
+            yield return new WaitForSeconds(3.0f);
+            PhotonNetwork.Destroy(effect);
+        }
+    }
 
 
     IEnumerator Archer_Skill5_Effect()
