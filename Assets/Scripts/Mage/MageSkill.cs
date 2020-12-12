@@ -214,7 +214,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //playerAnim.SetBool("Skill2", true);
             mageAnim.SetTrigger("ThirdAttack");
             Vector3 dir = player.transform.forward;
-
+            SoundManager.Instance.MageSoundPlay(0);
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             if (photonView.IsMine)
@@ -236,7 +236,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //playerAnim.SetBool("Skill2", true);
             mageAnim.SetTrigger("Skill2");
             Vector3 dir = player.transform.forward;
-
+            SoundManager.Instance.MageSoundPlay(1);
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
             if (photonView.IsMine)
@@ -259,6 +259,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_3_Cost;
             mageAnim.SetTrigger("Skill3");
             Vector3 dir = player.transform.forward;
+            SoundManager.Instance.MageSoundPlay(2);
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             if (photonView.IsMine)
             {
@@ -277,11 +278,11 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_4_Off = true;
             mageAnim.SetTrigger("Skill4");
             player.mp -= player.skill_4_Cost;
+            SoundManager.Instance.MageSoundPlay(3);
             StartCoroutine("Mage_Skill4_Effect");
             player.skill_1_Timer = 0;
             player.skill_2_Timer = 0;
             player.skill_3_Timer = 0;
-
             player.skill_1_Off = false;
             player.skill_2_Off = false;
             player.skill_3_Off = false;
@@ -298,6 +299,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_5_Off = true;
             player.mp -= player.skill_5_Cost;
             StartCoroutine("Mage_Skill5_Effect");
+            SoundManager.Instance.MageSoundPlay(4);
         }
 
     }

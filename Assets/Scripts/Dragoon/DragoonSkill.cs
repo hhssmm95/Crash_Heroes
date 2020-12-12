@@ -116,17 +116,17 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+            //if (Input.GetKeyDown(KeyCode.Mouse0) && dragoonAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
+            //{
+            //    Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
-                    transform.rotation = Quaternion.LookRotation(dir);
-                }
-            }
+            //    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            //    {
+            //        Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            //        transform.rotation = Quaternion.LookRotation(dir);
+            //    }
+            //}
         }
     }
 
@@ -142,6 +142,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
+
+        SetLookAtMousePos();
 
         if (comboTimer > 3.0f)
         {
@@ -227,14 +229,15 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_1_Cost;
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
+            SetLookAtMousePos();
             dragoonAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
 
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(DragoonVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
             if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-            StartCoroutine("Skill_Hit");
+                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX_v2", new Vector3(transform.position.x, transform.position.y + 0.4f, transform.position.z), Quaternion.LookRotation(dir)), 1.5f);
+            
             SoundManager.Instance.DragoonSoundPlay(3);
         }
 
@@ -247,6 +250,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
+            SetLookAtMousePos();
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             dragoonAnim.SetTrigger("Skill2");
@@ -258,10 +262,10 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
             if (photonView.IsMine)
             {
-                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
+                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX_v2", new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.LookRotation(dir) * Quaternion.Euler(0, 0, 180.0f)), 1.5f);
 
             }
-            StartCoroutine("Skill_Hit");
+            //StartCoroutine("Skill_Hit");
             SoundManager.Instance.DragoonSoundPlay(1);
         }
 
@@ -274,8 +278,14 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
+            SetLookAtMousePos();
             dragoonAnim.SetTrigger("Skill3");
-            StartCoroutine("Dragoon_Skill3_Effect");
+            Vector3 dir = player.transform.forward;
+            if (photonView.IsMine)
+            {
+                Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position, Quaternion.LookRotation(dir)), 3.0f);
+
+            }
             //StartCoroutine("Skill_Hit");
         }
 
@@ -288,6 +298,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;
+            SetLookAtMousePos();
+            dragoonAnim.SetTrigger("Skill4");
             StartCoroutine("Dragoon_Skill4_Effect");
         }
 
@@ -304,8 +316,9 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
+    
 
-    IEnumerator Dragoon_Skill3_Effect()
+    IEnumerator Dragoon_Skill4_Effect()
     {
         Vector3 dir = player.transform.forward;
         Vector3 pos;
@@ -320,6 +333,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             {
                 Destroy(PhotonNetwork.Instantiate("Prefebs/SkillArea", transform.position + pos, Quaternion.LookRotation(dir) * area.transform.rotation), 5.0f);
             }
+            
 
 
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
@@ -331,26 +345,22 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             yield return new WaitForSeconds(2.0f);
-            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0)), 8.0f);
+            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill4VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0)), 8.0f);
         }
-    }
+        //float originMaxHP = player.maxHP;
 
-    IEnumerator Dragoon_Skill4_Effect()
-    {
-        float originMaxHP = player.maxHP;
-
-        dragoonAnim.SetTrigger("Skill4");
-        GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
-        buffEffect.transform.parent = gameObject.transform;
+        //dragoonAnim.SetTrigger("Skill4");
+        //GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonBuffEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        //buffEffect.transform.parent = gameObject.transform;
 
 
-        player.maxHP += originMaxHP * 1.3f;
-        player.hp += originMaxHP * 1.3f;
-        SoundManager.Instance.DragoonSoundPlay(5);
-        yield return new WaitForSeconds(20.0f);
-        player.hp = originMaxHP * (player.hp / player.maxHP);
-        player.maxHP = originMaxHP;
-        Destroy(buffEffect);
+        //player.maxHP += originMaxHP * 1.3f;
+        //player.hp += originMaxHP * 1.3f;
+        //SoundManager.Instance.DragoonSoundPlay(5);
+        //yield return new WaitForSeconds(20.0f);
+        //player.hp = originMaxHP * (player.hp / player.maxHP);
+        //player.maxHP = originMaxHP;
+        //Destroy(buffEffect);
     }
 
     IEnumerator Dragoon_Skill5_Effect()
@@ -370,14 +380,34 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    IEnumerator Skill_Hit()
+    //IEnumerator Skill_Hit()
+    //{
+    //    //yield return new WaitForSeconds(0.01f);
+    //    player.isAttacking = true;
+    //    yield return new WaitForSeconds(0.4f);
+    //    player.isAttacking = false;
+    //}
+    void SkillHitOn()
     {
-        //yield return new WaitForSeconds(0.01f);
         player.isAttacking = true;
-        yield return new WaitForSeconds(0.4f);
+    }
+
+    void SkillHitOff()
+    {
         player.isAttacking = false;
     }
-    
+
+    void SetLookAtMousePos()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
+            transform.rotation = Quaternion.LookRotation(dir);
+        }
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
