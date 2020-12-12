@@ -15,8 +15,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public AudioClip[] musicList;
     AudioSource audioSource;
 
-    public bool[] deadList;
-
     public GameObject player;
 
     public GameObject characterPanel;
@@ -42,8 +40,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isSpawn = false;
 
     public int playerNum = 0;
-    public bool isPick;
     public bool isTimeOver = false;
+    public bool isGameOver;
     private void Start()
     {
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
@@ -51,10 +49,11 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         
         StartCoroutine("PlayMusicList", 0);
 
-        //픽 선택, 죽음판정 초기화
-        SetLocalTag("isPick", false);
+        //픽 선택, 죽음 판정 초기화
+        //SetLocalTag("isPick", false);
         SetLocalTag("isDie", false);
 
+        //자신의 번호찾기(스폰 위치 정할때 사용)
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             if (PhotonNetwork.PlayerList[i].NickName == PhotonNetwork.LocalPlayer.NickName)
@@ -67,6 +66,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         //방장이 캐릭터 선택창 RPC로 실행
         if (!PhotonNetwork.IsMasterClient) return;
         PV.RPC("ShowCharacterPanelRPC", RpcTarget.All);
+        StartCoroutine("LeaveGame");
     }
 
     private void Update()
@@ -79,6 +79,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             //캐릭터 선택창 숨기기
             PV.RPC("HideCharacterPanelRPC", RpcTarget.All);
 
+            //캐릭터 스폰
             if (!isSpawn)
             {
                 PV.RPC("SpawnRPC", RpcTarget.All);
@@ -90,6 +91,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 Timer();
             }
 
+            //죽어있는 플레이어의 수를 센다.
             int count = 0;
 
             for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
@@ -104,12 +106,13 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
             {
                 PV.RPC("WinOrLose", RpcTarget.All);
-                StartCoroutine("GameOut");
-                //exitButton.SetActive(true);
+                isGameOver = true;
             }
         }
 
         //각자 실행하는 것이며 죽었을때 실행
+        if (player == null) return;
+
         if (player.GetComponent<CharacterMove>().isDead == true)
         {
             SetLocalTag("isDie", true);
@@ -129,18 +132,24 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         characterPanel.SetActive(false);
     }
 
+    //방장만 모든 플레이어의 캐릭터 선택 여부를 확인
     public bool AllPickCheak()
     {
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        if (characterPanel.activeSelf)
         {
-            if (!(bool)PhotonNetwork.PlayerList[i].CustomProperties["isPick"])
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
             {
-                return false;
+                if (!(bool)PhotonNetwork.PlayerList[i].CustomProperties["isPick"])
+                {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
+    //캐릭터 픽
     public void Pick(int num)
     {
         if (!(bool)PhotonNetwork.LocalPlayer.CustomProperties["isPick"])
@@ -150,50 +159,42 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    // 캐릭터 이름확인
     public void PickName(string name)
     {
         pickName = name;
     }
 
+    //캐릭터를 픽하면 선택창의 캐릭터 비활성
     [PunRPC]
     public void CharacterPick(int pickNum)
     {
         if (pickNum == 1)
         {
-            //pickName = "Prefebs/Knight";
-            //knightPick = true;
             knightImage.transform.GetChild(0).gameObject.SetActive(false);
             knightImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 2)
         {
-            //pickName = "Prefebs/Archer";
-            //archerPick = true;
             archerImage.transform.GetChild(0).gameObject.SetActive(false);
             archerImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 3)
         {
-            //pickName = "Prefebs/Dragoon";
-            //dragoonPick = true;
             dragoonImage.transform.GetChild(0).gameObject.SetActive(false);
             dragoonImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 4)
         {
-            //pickName = "Prefebs/Mage";
-            //magePick = true;
             mageImage.transform.GetChild(0).gameObject.SetActive(false);
             mageImage.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         if (pickNum == 5)
         {
-            //pickName = "Prefebs/Lena";
-            //lenaPick = true;
             lenaImage.transform.GetChild(0).gameObject.SetActive(false);
             lenaImage.transform.GetChild(2).gameObject.SetActive(true);
         }
@@ -239,28 +240,38 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void WinOrLose()
     {
-        //살아있으면 승리
-        if (player.GetComponent<CharacterMove>().isDead == false)
+        if (player != null)
         {
-            victoryPanel.SetActive(true);
-        }
-        //죽어있으면 패배
-        if(player.GetComponent<CharacterMove>().isDead == true)
-        { 
-            DefeatPanel.SetActive(true);
+            //살아있으면 승리
+            if (player.GetComponent<CharacterMove>().isDead == false)
+            {
+                victoryPanel.SetActive(true);
+            }
+            //죽어있으면 패배
+            else if (player.GetComponent<CharacterMove>().isDead == true)
+            {
+                DefeatPanel.SetActive(true);
+            }
+
+            SetLocalTag("isPick", false);
+            SetLocalTag("isDie", false);
+            Destroy(player);
         }
     }
 
-    IEnumerator GameOut()
+    IEnumerator LeaveGame()
     {
+        yield return new WaitUntil(()=>isGameOver);
+        print("게임 끝....");
         //시간이 다 되면
-        uiManager.SetActive(false);
         yield return new WaitForSeconds(4);
-        PhotonNetwork.CurrentRoom.IsOpen = true;
-        PhotonNetwork.CurrentRoom.IsVisible = true;
-        PhotonNetwork.LoadLevel(0);
+        if(PhotonNetwork.IsMasterClient)
+        {
+            print("게임 종료 중... 방으로 돌아간다");
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+            PhotonNetwork.LoadLevel(0);
+        }
     }
-
 
     #region 음악
     IEnumerator PlayMusicList(int num)
@@ -284,22 +295,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        //{
-        //    if (stream.IsWriting)
-        //    {
-        //        stream.SendNext(pickList[i]);
-        //        stream.SendNext(deadList[i]);
-        //        stream.SendNext(player.GetComponent<CharacterMove>().isDead);
-        //    }
-        //    else
-        //    {
-        //        pickList[i] = (bool)stream.ReceiveNext();
-        //        deadList[i] = (bool)stream.ReceiveNext();
-        //        player.GetComponent<CharacterMove>().isDead = (bool)stream.ReceiveNext();
-        //    }
-        //}
-
+        //방장이 타이머를 재고 시간을 동기화
         if (stream.IsWriting) stream.SendNext(text_Time.text);
         else text_Time.text = (string)stream.ReceiveNext();
     }

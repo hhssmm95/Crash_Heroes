@@ -45,10 +45,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         audioSource = GetComponent<AudioSource>();
         if(PhotonNetwork.InRoom)
         {
+            print("시작");
             //방으로 돌아가기
             ShowPanel(RoomPanel);
             StartCoroutine("PlayMusicList", 0);
-            RoomUpdate();
+            StartCoroutine("RoomUpdate");
         }
 
         StartCoroutine("PlayMusicList", 0);
@@ -107,20 +108,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (!PhotonNetwork.InRoom) return;
+
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
         LobbyInfoText.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + "로비 / " + PhotonNetwork.CountOfPlayers + "접속";
-
+        
+        //엔터키를 통한 채팅 입력
         if (ChatInput.text != "" && Input.GetKeyDown(KeyCode.Return))
         {
             Send();
             //Debug.Log("send via return key");
         }
-        //엔터키를 통한 채팅 입력
+        
     }
 
     public void Connect()
     {
         if (NickNameInput.text == "" || NickNameInput.text.Length > 6) return;
+        PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         PhotonNetwork.GameVersion = "0.0.0";
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -133,9 +138,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        print("로비다");
         ShowPanel(LobbyPanel);
         StartCoroutine("PlayMusicList", 1);
-        PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         if(RoomList != null)
             RoomList.Clear();
     }
@@ -165,6 +170,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        print("방이다");
         ShowPanel(RoomPanel);
         StartCoroutine("PlayMusicList", 2);
         ChatInput.text = "";
@@ -189,6 +195,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
             }
         }
+        SetLocalTag("isPick", false);
         StartCoroutine("RoomUpdate");
     }
 
@@ -218,38 +225,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ChatRPC("<color=yellow>" + otherPlayer.NickName + "님이 퇴장하셨습니다</color>");
     }
 
-    //private void RoomRenewal()
-    //{
-    //    if(PhotonNetwork.LocalPlayer.IsMasterClient)
-    //    {
-    //        for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
-    //        {
-    //            NickNameList[i].text = "";
-    //            Debug.Log(i + NickNameList[i].text);
-    //        }
-    //    }
-        
-    //    for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
-    //    {
-    //        if (NickNameList[i].text == "")
-    //        {
-    //            NickNameList[i].text = PhotonNetwork.PlayerList[i].NickName;
-    //            break;
-    //        }
-    //    }
-    //    RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
-    //    playerCount = PhotonNetwork.PlayerList.Length;
-    //}
-
     IEnumerator RoomUpdate()
     {
-
+        print("룸업데이트 실행");
         while (PhotonNetwork.InRoom)
         {
             yield return new WaitForSeconds(0.2f);
             if (!PhotonNetwork.InRoom) yield break;
-
-            //print(GetRoomTag(0) + "," + GetRoomTag(1) + "," + GetRoomTag(2) + "," + GetRoomTag(3));
             
             for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
             {
@@ -311,7 +293,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         { 
             PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
             PhotonNetwork.LoadLevel(1);
         }
     }
@@ -356,6 +337,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 return PhotonNetwork.PlayerList[i];
         }
         return null;
+    }
+
+    void SetLocalTag(string key, bool cheak)
+    {
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { key, cheak } });
     }
     #endregion
 }
