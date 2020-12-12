@@ -28,9 +28,9 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
-        if(tag != "DragoonSkill3")
-            Destroy(gameObject, 1.3f);
-        else
+        //if(tag != "DragoonSkill3")
+        //    Destroy(gameObject, 1.3f);
+        if(tag == "DragoonSkill4")
         {
             StartCoroutine("Meteor");
         }
@@ -63,22 +63,26 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
             if (tag == "DragoonSkill1")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.2f, Dragoon.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.2f + "감소 전 피해를 입힘.");
-                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.5f + "감소 전 피해를 입힘.");
+                //enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                 //enemy.OnSlow(0.5f, 3.0f);
                 return;
             }
             else if (tag == "DragoonSkill2")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.5f, Dragoon.transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.6f, Dragoon.transform.forward);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.6f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.1f, 2.0f);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 10%의 슬로우를 2초동안 적용함");
             }
             else if (tag == "DragoonAttack3")
             {
-                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.3f, Dragoon.transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.3f, Dragoon.transform.forward);
             }
             
+
             else
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
@@ -109,15 +113,16 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
     void Locate()
     {
-        if (gameObject.CompareTag("DragoonAttack1"))
-        {
-            transform.position = new Vector3(Dragoon.transform.position.x, Dragoon.transform.position.y + 0.5f, Dragoon.transform.position.z + 0.1f);
-        }
-        else if (gameObject.CompareTag("DragoonAttack2"))
-        {
-            transform.position = new Vector3(Atk2Pos.position.x, Atk2Pos.position.y, Atk2Pos.position.z);
-        }
-        else if (gameObject.CompareTag("DragoonAttack3"))
+        
+        //if (gameObject.CompareTag("DragoonAttack1"))
+        //{
+        //    transform.position = new Vector3(Dragoon.transform.position.x, Dragoon.transform.position.y + 0.5f, Dragoon.transform.position.z + 0.1f);
+        //}
+        //if (gameObject.CompareTag("DragoonAttack2"))
+        //{
+        //    transform.position = new Vector3(Atk2Pos.position.x, Atk2Pos.position.y, Atk2Pos.position.z);
+        //}
+        if (gameObject.CompareTag("DragoonAttack3"))
         {
             transform.position = new Vector3(Dragoon.transform.position.x + 0.2f, Dragoon.transform.position.y + 0.15f, Dragoon.transform.position.z - 0.1f);
         }
