@@ -103,7 +103,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //photonView.RPC("Archer_Skill5", RpcTarget.All);
                 Archer_Skill5();
             if (Input.GetKeyDown(KeyCode.Mouse0) && isSniping)
-                SnipeShot();
+                StartCoroutine("Archer_Skill4_Effect");
                 //photonView.RPC("SnipeShot", RpcTarget.All);
 
 
@@ -260,7 +260,9 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             archerAnim.SetTrigger("Skill1");
+
             Photnet_AnimationSync = 3;
+
             StartCoroutine("Archer_Skill1_Effect");
             //Vector3 dir = player.transform.forward;
 
@@ -345,18 +347,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
     //[PunRPC]
-    void SnipeShot()
-    {
-        isSniping = false;
-        player.ControlOn();
-        Target.SetActive(false);
-        archerAnim.SetTrigger("Skill4");
-        Photnet_AnimationSync = 6;
-        Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation), 4.1f);
-
-        SetLookAtMousePos();
-    }
-
+    
     //[PunRPC]
     void Archer_Skill5()
     {
@@ -433,7 +424,20 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             PhotonNetwork.Destroy(effect);
         }
     }
+    IEnumerator Archer_Skill4_Effect()
+    {
+        isSniping = false;
+        player.ControlOn();
+        Target.SetActive(false);
+        archerAnim.SetTrigger("Skill4");
+        Photnet_AnimationSync = 6;
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation);
 
+        SetLookAtMousePos();
+
+        yield return new WaitForSeconds(4.1f);
+        PhotonNetwork.Destroy(effect);
+    }
 
     IEnumerator Archer_Skill5_Effect()
     {

@@ -34,6 +34,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject WMesh;
     public GameObject WRoot;
     Vector3 originPos;
+    public int Photnet_AnimationSync = 0;
     public bool isMine;
     public int combo = 1;
     void Awake()
@@ -192,6 +193,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             case 1:
                 warriorAnim.SetTrigger("FirstAttack");
+                Photnet_AnimationSync = 1;
                 if (photonView.IsMine)
                     Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation),1.0f);
                 //StartCoroutine("Skill_Hit");
@@ -200,6 +202,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             case 2:
                 warriorAnim.SetTrigger("SecondAttack");
+                Photnet_AnimationSync = 2;
                 if (photonView.IsMine)
                     Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation),1.0f);
                 //StartCoroutine("Skill_Hit");
@@ -208,6 +211,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             case 3:
                 warriorAnim.SetTrigger("ThirdAttack");
+                Photnet_AnimationSync = 3;
                 if (photonView.IsMine)
                     Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation),1.0f);
                 //StartCoroutine("Skill_Hit");
@@ -300,7 +304,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             //playerAnim.SetBool("Skill2", true);
-            warriorAnim.SetTrigger("Skill3");
+            
             StartCoroutine("Warrior_Skill3_VFX");
         }
 
@@ -359,6 +363,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             SetLookAtMousePos();
             warriorAnim.SetTrigger("Skill1");
+            Photnet_AnimationSync = 4;
             GameObject effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill1VX", new Vector3(transform.position.x, transform.position.y + 0.53f, transform.position.z), transform.rotation);
             effect.transform.parent = gameObject.transform;
             Destroy(effect, 5.0f);
@@ -374,6 +379,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         buffEffect.transform.parent = gameObject.transform;
 
         warriorAnim.SetTrigger("Skill2");
+        Photnet_AnimationSync = 5;
         SoundManager.Instance.KnightSoundPlay(4);
         player.atk *= 2.0f;
         //player.def *= 1.3f;
@@ -398,6 +404,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator Warrior_Skill3_VFX()
     {
         SetLookAtMousePos();
+        warriorAnim.SetTrigger("Skill3");
+        Photnet_AnimationSync = 6;
         Vector3 dir = player.transform.forward;
         yield return new WaitForSeconds(0.2f);
         if (photonView.IsMine)
@@ -410,6 +418,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         originPos = transform.position;
         Quaternion.LookRotation(transform.right);
         warriorAnim.SetTrigger("Skill4");
+        Photnet_AnimationSync = 7;
         player.isAttacking = true;
         player.ControlOff();
         if (photonView.IsMine)
@@ -460,6 +469,55 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(Photnet_AnimationSync);
+            Photnet_AnimationSync = 0;
 
+
+        }
+        else
+        {
+            Photnet_AnimationSync = (int)stream.ReceiveNext();
+
+            switch (Photnet_AnimationSync)
+            {
+                case 1:
+                    warriorAnim.SetTrigger("FirstAttack");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 2:
+                    warriorAnim.SetTrigger("SecondAttack");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 3:
+                    warriorAnim.SetTrigger("ThirdAttack");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 4:
+                    warriorAnim.SetTrigger("Skill1");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 5:
+                    warriorAnim.SetTrigger("Skill2");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 6:
+                    warriorAnim.SetTrigger("Skill3");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 7:
+                    warriorAnim.SetTrigger("Skill4");
+                    Photnet_AnimationSync = 0;
+                    break;
+            }
+
+        }
     }
 }

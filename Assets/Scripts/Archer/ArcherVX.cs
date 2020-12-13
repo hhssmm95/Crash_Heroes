@@ -89,7 +89,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             checkTimer = 0.0f;
             s3HitReady = false;
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.6f, transform.tag);
+            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.7f, transform.tag);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.6f + "감소 전 피해를 입힘.");
         }
         if (s4HitReady && !other.CompareTag("Archer") && other.gameObject.layer == 9)
@@ -97,7 +97,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             snipeTimer = 0.0f;
             s4HitReady = false;
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.2f, transform.tag);
+            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.0f, transform.tag);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.2f + "감소 전 피해를 입힘.");
         }
     }
