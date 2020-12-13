@@ -117,7 +117,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     float stopTimer;
 
     public string user;
-    public int Sync;
+    public int Photnet_AnimationSync;
     //MageSkill mSkill;
     void Start()
     {
@@ -575,7 +575,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //print("점프 가능 !");
                 isGround = false;
                 myAnim.SetTrigger("Jump");
-                Sync = 1;
+                Photnet_AnimationSync = 1;
                 myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             }
             else
@@ -592,6 +592,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         st -= 20;
         //isDashing = true;
         myAnim.SetTrigger("Dash");
+        Photnet_AnimationSync = 2;
 
     }
 
@@ -602,7 +603,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            Sync = 2;
+            Photnet_AnimationSync = 3;
             myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
             if (def <= damage)
             {
@@ -612,12 +613,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
                     return;
                 }
-
-                hp -= ((damage-br) - def);
-                br -= damage;
                 gameObject.SendMessage("BarriorDestroy");
                 Debug.Log(gameObject.name + "(이)가 배리어가 적용된 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                hp -= ((damage - br) - def);
+                br -= damage;
             }
+            if (br < 0)
+                br = 0;
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
             if(hp<=0)
@@ -637,6 +639,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 case "WarriorSkill4" :
                     myAnim.SetTrigger("Damage");
+                    Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
                         hp -= (damage - def);
@@ -648,6 +651,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 case "ArcherSkill3":
                     myAnim.SetTrigger("Damage");
+                    Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
                         hp -= (damage - def);
@@ -661,6 +665,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 case "ArcherSkill4":
                     myAnim.SetTrigger("Damage");
+                    Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
                         hp -= (damage - def);
@@ -686,12 +691,30 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("HeavyDamage");
-            Sync = 3;
+            Photnet_AnimationSync = 4;
             myRig.AddForce(normal * jumpPower/2, ForceMode.Impulse);
+
             if (def <= damage)
             {
-                hp -= (damage - def);
-                Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 중상을 입음");
+                
+            }
+
+            if (def <= damage)
+            {
+                if (br > damage)
+                {
+                    br -= damage;
+                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                    return;
+                }
+
+               
+                gameObject.SendMessage("BarriorDestroy");
+                Debug.Log(gameObject.name + "(이)가 배리어 수치 "+br+" 가 차감된 " + (damage - br) + "데미지를 방어력 " + def + " 만큼 경감하여 " + ((damage - br) - def) + " 중상을 입음");
+                hp -= ((damage - br) - def);
+                br -= damage;
+                if (br < 0)
+                    br = 0;
             }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
@@ -711,7 +734,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            Sync = 2;
+            Photnet_AnimationSync = 3;
             myRig.AddForce(normal * (jumpPower / 3), ForceMode.Impulse);
 
             hp -= damage;
@@ -804,6 +827,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             //myAnim.Play("Die2");
             //myAnim.SetBool("isDead", true);
             myAnim.SetTrigger("isDead");
+            Photnet_AnimationSync = 5;
         }
 
     }
@@ -861,64 +885,44 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     {
 
         if (stream.IsWriting)
-        { 
-        //{
-            stream.SendNext(Sync);
-        //    stream.SendNext(skill_1_Off);
-        //    stream.SendNext(skill_2_Off);
-        //    stream.SendNext(skill_3_Off);
-        //    stream.SendNext(skill_4_Off);
-        //    stream.SendNext(skill_5_Off);
-        //    stream.SendNext(skill_1_Cooltime);
-        //    stream.SendNext(skill_2_Cooltime);
-        //    stream.SendNext(skill_3_Cooltime);
-        //    stream.SendNext(skill_4_Cooltime);
-        //    stream.SendNext(skill_5_Cooltime);
-        //    stream.SendNext(skill_1_Timer);
-        //    stream.SendNext(skill_2_Timer);
-        //    stream.SendNext(skill_3_Timer);
-        //    stream.SendNext(skill_4_Timer);
-        //    stream.SendNext(skill_5_Timer);
-            Sync = 0;
+        {
+            stream.SendNext(Photnet_AnimationSync);
+            Photnet_AnimationSync = 0;
 
 
         }
         else
         {
-            Sync = (int)stream.ReceiveNext();
-            //skill_1_Off = (bool)stream.ReceiveNext();
-            //skill_2_Off = (bool)stream.ReceiveNext();
-            //skill_3_Off = (bool)stream.ReceiveNext();
-            //skill_4_Off = (bool)stream.ReceiveNext();
-            //skill_5_Off = (bool)stream.ReceiveNext();
-            //skill_1_Cooltime = (float)stream.ReceiveNext();
-            //skill_2_Cooltime = (float)stream.ReceiveNext();
-            //skill_3_Cooltime = (float)stream.ReceiveNext();
-            //skill_4_Cooltime = (float)stream.ReceiveNext();
-            //skill_5_Cooltime = (float)stream.ReceiveNext();
-            //skill_1_Timer = (float)stream.ReceiveNext();
-            //skill_2_Timer = (float)stream.ReceiveNext();
-            //skill_3_Timer = (float)stream.ReceiveNext();
-            //skill_4_Timer = (float)stream.ReceiveNext();
-            //skill_5_Timer = (float)stream.ReceiveNext();
+            Photnet_AnimationSync = (int)stream.ReceiveNext();
 
-            switch (Sync)
+            switch (Photnet_AnimationSync)
             {
                 case 1:
                     myAnim.SetTrigger("Jump");
-                    Sync = 0;
+                    Photnet_AnimationSync = 0;
                     break;
 
                 case 2:
-                    myAnim.SetTrigger("Damage");
-                    Sync = 0;
+                    myAnim.SetTrigger("Dash");
+                    Photnet_AnimationSync = 0;
                     break;
 
                 case 3:
+                    myAnim.SetTrigger("Damage");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 4:
                     myAnim.SetTrigger("HeavyDamage");
-                    Sync = 0;
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 5:
+                    myAnim.SetTrigger("isDead");
+                    Photnet_AnimationSync = 0;
                     break;
             }
+
         }
     }
 }

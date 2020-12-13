@@ -103,7 +103,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //photonView.RPC("Archer_Skill5", RpcTarget.All);
                 Archer_Skill5();
             if (Input.GetKeyDown(KeyCode.Mouse0) && isSniping)
-                SnipeShot();
+                StartCoroutine("Archer_Skill4_Effect");
+                //photonView.RPC("SnipeShot", RpcTarget.All);
 
 
             if (attackOff)
@@ -192,6 +193,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             case 1:
                 archerAnim.SetTrigger("FirstAttack");
+                Photnet_AnimationSync = 1;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
                 //StartCoroutine("Skill_Hit");
@@ -200,6 +202,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             case 2:
                 archerAnim.SetTrigger("SecondAttack");
+                Photnet_AnimationSync = 2;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
                 //StartCoroutine("Skill_Hit");
@@ -257,8 +260,10 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             //player.isAttacking = true;
             //playerAnim.SetBool("Skill2", true);
             archerAnim.SetTrigger("Skill1");
+
+            Photnet_AnimationSync = 3;
+
             StartCoroutine("Archer_Skill1_Effect");
-            //Photnet_AnimationSync = 1;
             //Vector3 dir = player.transform.forward;
 
             //if (photonView.IsMine)
@@ -280,12 +285,12 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
             archerAnim.SetTrigger("Skill2");
+            Photnet_AnimationSync = 4;
             SetLookAtMousePos();
             if (photonView.IsMine)
                 PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
 
 
-            //Photnet_AnimationSync = 2;
             //Vector3 dir = transform.forward;
 
             ////transform.rotation = Quaternion.LookRotation(dir);
@@ -314,6 +319,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
             archerAnim.SetTrigger("Skill3");
+            Photnet_AnimationSync = 5;
 
             StartCoroutine("Archer_Skill3_Effect");
 
@@ -335,24 +341,13 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             archerAnim.SetBool("Move", false);
             archerAnim.SetBool("Run", false);
             isSniping = true;
-            Photnet_AnimationSync = 4;
             //StartCoroutine("Archer_Skill4_Effect");
 
         }
 
     }
-
-    void SnipeShot()
-    {
-        isSniping = false;
-        player.ControlOn();
-        Target.SetActive(false);
-        archerAnim.SetTrigger("Skill4");
-        Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation), 4.1f);
-
-        SetLookAtMousePos();
-    }
-
+    //[PunRPC]
+    
     //[PunRPC]
     void Archer_Skill5()
     {
@@ -429,7 +424,20 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             PhotonNetwork.Destroy(effect);
         }
     }
+    IEnumerator Archer_Skill4_Effect()
+    {
+        isSniping = false;
+        player.ControlOn();
+        Target.SetActive(false);
+        archerAnim.SetTrigger("Skill4");
+        Photnet_AnimationSync = 6;
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation);
 
+        SetLookAtMousePos();
+
+        yield return new WaitForSeconds(4.1f);
+        PhotonNetwork.Destroy(effect);
+    }
 
     IEnumerator Archer_Skill5_Effect()
     {
@@ -465,41 +473,52 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //if (stream.IsWriting)
-        //{
-        //    stream.SendNext(Photnet_AnimationSync);
-        //    Photnet_AnimationSync = 0;
+        //if(!Photon.isMine)
+        if (stream.IsWriting)
+        {
+            stream.SendNext(Photnet_AnimationSync);
+            Photnet_AnimationSync = 0;
 
 
-        //}
-        //else
-        //{
-        //    Photnet_AnimationSync = (int)stream.ReceiveNext();
+        }
+        else
+        {
+            Photnet_AnimationSync = (int)stream.ReceiveNext();
 
-        //    switch (Photnet_AnimationSync)
-        //    {
-        //        case 1:
-        //            archerAnim.SetTrigger("Skill1");
-        //            Photnet_AnimationSync = 0;
-        //            break;
+            switch (Photnet_AnimationSync)
+            {
+                case 1:
+                    archerAnim.SetTrigger("FirstAttack");
+                    Photnet_AnimationSync = 0;
+                    break;
 
-        //        case 2:
-        //            archerAnim.SetTrigger("Skill2");
-        //            Photnet_AnimationSync = 0;
-        //            break;
+                case 2:
+                    archerAnim.SetTrigger("SecondAttack");
+                    Photnet_AnimationSync = 0;
+                    break;
 
-        //        case 3:
-        //            archerAnim.SetTrigger("Skill3");
-        //            Photnet_AnimationSync = 0;
-        //            break;
+                case 3:
+                    archerAnim.SetTrigger("Skill1");
+                    Photnet_AnimationSync = 0;
+                    break;
 
-        //        case 4:
-        //            archerAnim.SetTrigger("Skill4");
-        //            Photnet_AnimationSync = 0;
-        //            break;
-        //    }
+                case 4:
+                    archerAnim.SetTrigger("Skill2");
+                    Photnet_AnimationSync = 0;
+                    break;
 
-        //}
+                case 5:
+                    archerAnim.SetTrigger("Skill3");
+                    Photnet_AnimationSync = 0;
+                    break;
+
+                case 6:
+                    archerAnim.SetTrigger("Skill4");
+                    Photnet_AnimationSync = 0;
+                    break;
+            }
+
+        }
     }
 
 }
