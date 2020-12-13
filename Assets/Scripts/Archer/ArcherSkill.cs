@@ -85,25 +85,26 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff && !isSniping)
-                //photonView.RPC("Archer_Attack", RpcTarget.All);
-                Archer_Attack();
+                photonView.RPC("Archer_Attack", RpcTarget.All);
+                //Archer_Attack();
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                //photonView.RPC("Archer_Skill1", RpcTarget.All);
-                Archer_Skill1();
+                photonView.RPC("Archer_Skill1", RpcTarget.All);
+                //Archer_Skill1();
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
-                //photonView.RPC("Archer_Skill2", RpcTarget.All);
-                Archer_Skill2();
+                photonView.RPC("Archer_Skill2", RpcTarget.All);
+                //Archer_Skill2();
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
-                //photonView.RPC("Archer_Skill3", RpcTarget.All);
-                Archer_Skill3();
+                photonView.RPC("Archer_Skill3", RpcTarget.All);
+                //Archer_Skill3();
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
-                //photonView.RPC("Archer_Skill4", RpcTarget.All);
-                Archer_Skill4();
+                photonView.RPC("Archer_Skill4", RpcTarget.All);
+                //Archer_Skill4();
             if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
-                //photonView.RPC("Archer_Skill5", RpcTarget.All);
-                Archer_Skill5();
+                photonView.RPC("Archer_Skill5", RpcTarget.All);
+                //Archer_Skill5();
             if (Input.GetKeyDown(KeyCode.Mouse0) && isSniping)
-                SnipeShot();
+                //SnipeShot();
+                photonView.RPC("SnipeShot", RpcTarget.All);
 
 
             if (attackOff)
@@ -164,7 +165,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         combo = count;
     }
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Attack()
     {
         //player.isAttacking = true;
@@ -247,7 +248,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Skill1()
     {
         if (player.mp >= player.skill_1_Cost && !player.isDead)
@@ -272,7 +273,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Skill2()
     {
         if (player.mp >= player.skill_2_Cost && !player.isDead)
@@ -306,7 +307,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Skill3()
     {
         if (player.mp >= player.skill_3_Cost && !player.isDead)
@@ -322,7 +323,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Skill4()
     {
         if (player.mp >= player.skill_4_Cost && !player.isDead)
@@ -341,7 +342,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-
+    [PunRPC]
     void SnipeShot()
     {
         isSniping = false;
@@ -353,7 +354,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         SetLookAtMousePos();
     }
 
-    //[PunRPC]
+    [PunRPC]
     void Archer_Skill5()
     {
         if (player.mp >= player.skill_5_Cost && !player.isDead)

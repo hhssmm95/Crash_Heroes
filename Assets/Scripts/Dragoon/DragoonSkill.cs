@@ -80,23 +80,23 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         if(photonView.IsMine && !player.isDead && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
-                //photonView.RPC("Dragoon_Attack", RpcTarget.All);
-                Dragoon_Attack();
+                photonView.RPC("Dragoon_Attack", RpcTarget.All);
+                //Dragoon_Attack();
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                //photonView.RPC("DragoonSkill1", RpcTarget.All);
-                DragoonSkill1();
+                photonView.RPC("DragoonSkill1", RpcTarget.All);
+                //DragoonSkill1();
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
-                //photonView.RPC("DragoonSkill2", RpcTarget.All);
-                DragoonSkill2();
+                photonView.RPC("DragoonSkill2", RpcTarget.All);
+                //DragoonSkill2();
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
-                //photonView.RPC("DragoonSkill3", RpcTarget.All);
-                DragoonSkill3();
+                photonView.RPC("DragoonSkill3", RpcTarget.All);
+                //DragoonSkill3();
             if (Input.GetKeyDown(KeyCode.Alpha4) && !player.skill_4_Off)
-                //photonView.RPC("DragoonSkill4", RpcTarget.All);
-                DragoonSkill4();
+                photonView.RPC("DragoonSkill4", RpcTarget.All);
+                //DragoonSkill4();
             if (Input.GetKeyDown(KeyCode.Q) && !player.skill_5_Off)
-                //photonView.RPC("DragoonSkill5", RpcTarget.All);
-                DragoonSkill5();
+                photonView.RPC("DragoonSkill5", RpcTarget.All);
+                //DragoonSkill5();
 
             if (attackOff)
             {
@@ -220,7 +220,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
 
-    //[PunRPC]
+    [PunRPC]
     void DragoonSkill1()
     {
         if (player.mp >= player.skill_1_Cost)
@@ -235,7 +235,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void DragoonSkill2()
     {
         if (player.mp >= player.skill_2_Cost)
@@ -248,7 +248,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void DragoonSkill3()
     {
         if (player.mp >= player.skill_3_Cost)
@@ -261,7 +261,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void DragoonSkill4()
     {
         if (player.mp >= player.skill_4_Cost)
@@ -275,7 +275,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    //[PunRPC]
+    [PunRPC]
     void DragoonSkill5()
     {
         if (player.mp >= player.skill_5_Cost)
