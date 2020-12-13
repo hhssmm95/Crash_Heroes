@@ -125,45 +125,45 @@ public class UImanager : MonoBehaviour
             switch (player.job)
             {
                 case Global.Classes.Warrior:
-                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_02", typeof(Sprite)) as Sprite;
-                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_21", typeof(Sprite)) as Sprite;
-                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_19", typeof(Sprite)) as Sprite;
-                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_44", typeof(Sprite)) as Sprite;
-                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_15", typeof(Sprite)) as Sprite;
+                    slot1.sprite = Resources.Load("Images/Skill_Icon/Warriorskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("Images/Skill_Icon/Warriorskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("Images/Skill_Icon/Warriorskill_03", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("Images/Skill_Icon/Warriorskill_04", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("Images/Skill_Icon/Warriorskill_05", typeof(Sprite)) as Sprite;
                     break;
 
                 case Global.Classes.Archer:
 
                     //aSkill = player.gameObject.GetComponent<ArcherSkill>();
-                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_33", typeof(Sprite)) as Sprite;
-                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_02", typeof(Sprite)) as Sprite;
-                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_05", typeof(Sprite)) as Sprite;
-                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_03", typeof(Sprite)) as Sprite;
-                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Archerskill_19", typeof(Sprite)) as Sprite;
+                    slot1.sprite = Resources.Load("Images/Skill_Icon/Archerskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("Images/Skill_Icon/Archerskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("Images/Skill_Icon/Archerskill_03", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("Images/Skill_Icon/Archerskill_04", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("Images/Skill_Icon/Archerskill_05", typeof(Sprite)) as Sprite;
                     break;
 
                 case Global.Classes.Dragoon:
-                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_44", typeof(Sprite)) as Sprite;
-                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_23", typeof(Sprite)) as Sprite;
-                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Druideskill_50", typeof(Sprite)) as Sprite;
-                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warriorskill_42", typeof(Sprite)) as Sprite;
-                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_28", typeof(Sprite)) as Sprite;
+                    slot1.sprite = Resources.Load("Images/Skill_Icon/Dragoonskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("Images/Skill_Icon/Dragoonskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("Images/Skill_Icon/Dragoonskill_03", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("Images/Skill_Icon/Dragoonskill_04", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("Images/Skill_Icon/Dragoonskill_05", typeof(Sprite)) as Sprite;
                     break;
 
                 case Global.Classes.Mage:
-                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_01", typeof(Sprite)) as Sprite;
-                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_08", typeof(Sprite)) as Sprite;
-                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_28", typeof(Sprite)) as Sprite;
-                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Warlock_46", typeof(Sprite)) as Sprite;
-                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Mageskill_46", typeof(Sprite)) as Sprite;
+                    slot1.sprite = Resources.Load("Images/Skill_Icon/Mageskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("Images/Skill_Icon/Mageskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("Images/Skill_Icon/Mageskill_03", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("Images/Skill_Icon/Mageskill_04", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("Images/Skill_Icon/Mageskill_05", typeof(Sprite)) as Sprite;
                     break;
 
                 case Global.Classes.Lena:
-                    slot1.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_23", typeof(Sprite)) as Sprite;
-                    slot2.sprite = Resources.Load("500_skill_icons/Skill_standart/Paladinskill_39", typeof(Sprite)) as Sprite;
-                    slot3.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_24", typeof(Sprite)) as Sprite;
-                    slot4.sprite = Resources.Load("500_skill_icons/Skill_standart/Shamanskill_50", typeof(Sprite)) as Sprite;
-                    slot5.sprite = Resources.Load("500_skill_icons/Skill_standart/Priestskill_06", typeof(Sprite)) as Sprite;
+                    slot1.sprite = Resources.Load("Images/Skill_Icon/Lenaskill_01", typeof(Sprite)) as Sprite;
+                    slot2.sprite = Resources.Load("Images/Skill_Icon/Lenaskill_02", typeof(Sprite)) as Sprite;
+                    slot3.sprite = Resources.Load("Images/Skill_Icon/Lenaskill_03", typeof(Sprite)) as Sprite;
+                    slot4.sprite = Resources.Load("Images/Skill_Icon/Lenaskill_04", typeof(Sprite)) as Sprite;
+                    slot5.sprite = Resources.Load("Images/Skill_Icon/Lenaskill_05", typeof(Sprite)) as Sprite;
                     break;
             }
         }
