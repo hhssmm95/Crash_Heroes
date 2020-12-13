@@ -258,6 +258,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             print("게임 종료 중... 방으로 돌아간다");
             PhotonNetwork.CurrentRoom.IsOpen = true;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
             PhotonNetwork.LoadLevel(0);
         }
     }

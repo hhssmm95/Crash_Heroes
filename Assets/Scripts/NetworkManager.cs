@@ -225,6 +225,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ChatRPC("<color=yellow>" + otherPlayer.NickName + "님이 퇴장하셨습니다</color>");
     }
 
+    private void RoomRenewal()
+    {
+        ListText.text = "";
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            ListText.text += PhotonNetwork.PlayerList[i].NickName + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
+        RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + "최대 : " + PhotonNetwork.CurrentRoom.MaxPlayers;
+    }
+
     IEnumerator RoomUpdate()
     {
         print("룸업데이트 실행");
@@ -232,7 +240,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             yield return new WaitForSeconds(0.2f);
             if (!PhotonNetwork.InRoom) yield break;
-            
+
+            RoomRenewal();
             for (int i = 0; i < PhotonNetwork.CurrentRoom.MaxPlayers; i++)
             {
                 //슬롯의 플레이어는 없고 사람번호가 있으면 방장이 0 대입
@@ -293,6 +302,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         { 
             PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = true;
             PhotonNetwork.LoadLevel(1);
         }
     }
