@@ -14,7 +14,6 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
     {
         atk = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>().atk;
         normal = GameObject.FindGameObjectWithTag("Archer").transform.forward;
-        Destroy(gameObject, 5.0f);
     }
 
     // Update is called once per frame
@@ -25,14 +24,23 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!photonView.IsMine && !other.CompareTag("Archer") && other.gameObject.layer == 9 && other.GetComponent<PhotonView>().IsMine && !hit)
+        if (!other.CompareTag("Archer") && other.gameObject.layer == 9)
         {
             var enemy = other.GetComponent<CharacterMove>();
 
-            enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
-            SoundManager.Instance.HitSoundPlay(1);
-            hit = true;
+            if (tag == "ArcherSkill1" && !hit)
+            {
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
+                SoundManager.Instance.HitSoundPlay(1);
+                hit = true;
+            }
+            //else if(tag == "ArcherSkill2")
+            //{
+            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 2.6f, normal);
+            //    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 2.6f + "감소 전 피해를 입힘.");
+            //}
+            
         }
 
         Destroy(gameObject);

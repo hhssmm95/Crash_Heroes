@@ -22,15 +22,18 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
         if(tag == "DragoonAttack2" || tag == "DragoonSkill2")
             Atk2Pos = GameObject.FindGameObjectWithTag("DragoonAtack2Pos").GetComponent<Transform>();
-        if(tag == "DragoonSkill1")
-            Skill1Pos = GameObject.FindGameObjectWithTag("DragoonSkill1Pos").GetComponent<Transform>();
+        
     }
 
     void Start()
     {
         //if(tag != "DragoonSkill3")
         //    Destroy(gameObject, 1.3f);
-        if(tag == "DragoonSkill4")
+        if (tag == "DragoonAttack1" || tag == "DragoonAttack2" || tag == "DragoonAttack3")
+        {
+            StartCoroutine("destroyEffect");
+        }
+        else if (tag == "DragoonSkill4")
         {
             StartCoroutine("Meteor");
         }
@@ -83,7 +86,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             }
             
 
-            else
+            else if(tag == "DragoonAttack1" || tag == "DragoonAttack2")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
             }
@@ -126,14 +129,6 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         {
             transform.position = new Vector3(Dragoon.transform.position.x + 0.2f, Dragoon.transform.position.y + 0.15f, Dragoon.transform.position.z - 0.1f);
         }
-        else if (gameObject.CompareTag("DragoonSkill1"))
-        {
-            transform.position = new Vector3(Skill1Pos.position.x, Skill1Pos.position.y, Skill1Pos.position.z);
-        }
-        else if (gameObject.CompareTag("DragoonSkill2"))
-        {
-            transform.position = new Vector3(Atk2Pos.position.x, Atk2Pos.position.y, Atk2Pos.position.z);
-        }
     
     }
 
@@ -144,6 +139,11 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(4.0f);
         var coll = gameObject.GetComponent<CapsuleCollider>();
         coll.enabled = false;
+    }
+    IEnumerator destroyEffect()
+    {
+        yield return new WaitForSeconds(1.5f);
+        PhotonNetwork.Destroy(gameObject);
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

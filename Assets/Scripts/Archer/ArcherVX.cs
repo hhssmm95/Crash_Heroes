@@ -28,10 +28,15 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         //if()
         //Destroy(gameObject, 1.0f);
-        if (tag == "ArcherSkill3")
+        if (tag == "ArcherAttack1" || tag == "ArcherAttack2")
+        {
+            StartCoroutine("destroyEffect");
+        }
+        else if (tag == "ArcherSkill3")
             StartCoroutine("StayCheck");
-        if (tag == "ArcherSkill4")
+        else if (tag == "ArcherSkill4")
             StartCoroutine("SnipeCheck");
+        
     }
 
     // Update is called once per frame
@@ -66,12 +71,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
         {
             var enemy = other.GetComponent<CharacterMove>();
 
-            if (tag == "ArcherSkill2VX")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 2.6f, Archer.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 2.6f + "감소 전 피해를 입힘.");
-            }
-            else
+            
+            if(tag == "ArcherAttack1" || tag == "ArcherAttack2")
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
@@ -128,6 +129,12 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(2.1f);
         snipeReady = true;
+    }
+
+    IEnumerator destroyEffect()
+    {
+        yield return new WaitForSeconds(1.5f);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
