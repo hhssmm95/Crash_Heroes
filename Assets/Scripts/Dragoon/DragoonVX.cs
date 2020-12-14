@@ -172,9 +172,9 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(0.7f);
         meteorReady = true;
-        yield return new WaitForSeconds(2.1f);
-        var coll = gameObject.GetComponent<CapsuleCollider>();
-        coll.enabled = false;
+        //yield return new WaitForSeconds(2.1f);
+        //var coll = gameObject.GetComponent<CapsuleCollider>();
+        //coll.enabled = false;
     }
     IEnumerator destroyEffect()
     {

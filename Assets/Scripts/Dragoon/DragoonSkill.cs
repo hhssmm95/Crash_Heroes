@@ -416,7 +416,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
 
-            circle = PhotonNetwork.Instantiate("Prefebs/SkillArea", transform.position + pos, Quaternion.LookRotation(dir) * area.transform.rotation);
+            circle = PhotonNetwork.Instantiate("Prefebs/DragoonIndicator", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z) + pos, Quaternion.LookRotation(dir) * area.transform.rotation);
 
             dragoonAnim.SetTrigger("Skill4");
             Photnet_AnimationSync = 7;
@@ -433,7 +433,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill4VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0));
             yield return new WaitForSeconds(1.5f);
             PhotonNetwork.Destroy(circle);
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(0.5f);
             PhotonNetwork.Destroy(effect);
         }
         //float originMaxHP = player.maxHP;
