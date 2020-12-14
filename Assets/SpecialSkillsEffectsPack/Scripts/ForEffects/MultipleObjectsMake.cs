@@ -15,12 +15,10 @@ public class MultipleObjectsMake : _ObjectsMakeBase
     float m_delayTime;
     float m_count;
     float m_scalefactor;
-    //public WarriorVX warrior;
     void Start()
     {
         m_Time = m_Time2 = Time.time;
-        m_scalefactor = VariousEffectsScene.m_gaph_scenesizefactor; //transform.parent.localScale.x; 
-
+        m_scalefactor = VariousEffectsScene.m_gaph_scenesizefactor; //transform.parent.localScale.x;
         //if (tag == "WarriorSkill4")
         //    warrior = transform.parent.parent.GetComponent<WarriorVX>();
 

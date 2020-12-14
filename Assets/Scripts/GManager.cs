@@ -71,7 +71,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
         if (GameMode == 2)
         {
-            SetLocalTag("KillCount", 0);
             if (PhotonNetwork.PlayerList.Length == 2)
             {
                 killCount = 5;
@@ -184,7 +183,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
                 for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
                 {
-                    if((int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] == 5)
+                    if((int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] == killCount)
                     {
                         DeathMatchEnd();
                     }
@@ -197,7 +196,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
             if(player.GetComponent<CharacterMove>().isDead)
             {
-                PhotonNetwork.Destroy(player);
                 StartCoroutine("ReSpawn");
             }
         }
@@ -297,7 +295,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator ReSpawn()
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
+        PhotonNetwork.Destroy(player);
+        yield return new WaitForSeconds(1.0f);
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
         characterMove = player.GetComponent<CharacterMove>();
     }
@@ -336,7 +336,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void DeathMatchEnd()
     {
-        if((int)PhotonNetwork.LocalPlayer.CustomProperties["KillCount"] == 5)
+        if((int)PhotonNetwork.LocalPlayer.CustomProperties["KillCount"] == killCount)
         {
             victoryPanel.SetActive(true);
         }

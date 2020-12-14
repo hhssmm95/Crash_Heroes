@@ -31,7 +31,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem LenaVX2_2;
 
     public ParticleSystem LenaVX3;
-    public GameObject Skill_01_Pos;
+    public Transform Skill_01_Pos;
     public GameObject LenaSkill3Pos;
 
 
@@ -52,6 +52,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
             isMine = true;
 
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            Skill_01_Pos = GameObject.Find("SkillPos").GetComponent<Transform>();
         }
 
     }
@@ -92,7 +93,8 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //photonView.RPC("Lena_Attack", RpcTarget.All);
                 Lena_Attack();
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
-                photonView.RPC("Lena_Skill1", RpcTarget.All);
+                //photonView.RPC("Lena_Skill1", RpcTarget.All);
+                Lena_Skill1();
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
                 photonView.RPC("Lena_Skill2", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha3) && !player.skill_3_Off)
@@ -219,7 +221,6 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    [PunRPC]
     public void Lena_Skill1()
     {
         if (player.mp >= player.skill_1_Cost)
@@ -229,14 +230,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             lenaAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
-
-            StartCoroutine("Lena_skill_01", dir);
-            //if (photonView.IsMine)
-            // PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-            //StartCoroutine("Skill_Hit");
-            //SoundManager.Instance.DragoonSoundPlay(3);
-
-            //StartCoroutine("Warrior_Skill1_Play");
+            PhotonNetwork.Instantiate("Prefebs/VFX/LenaSkill_01", Skill_01_Pos.position, Skill_01_Pos.rotation);
         }
     }
 
