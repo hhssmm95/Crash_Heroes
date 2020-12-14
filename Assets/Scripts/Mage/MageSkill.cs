@@ -24,6 +24,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject BuffEff;
     public GameObject ShiledEff;
     GameObject shld;
+    public bool shld2;
 
     public ParticleSystem MageVX0_1;
     public ParticleSystem MageVX0_2;
@@ -95,7 +96,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             //photonView.RPC("Mage_Attack", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 MageSkill1();
-                //photonView.RPC("MageSkill1", RpcTarget.All);
+            //photonView.RPC("MageSkill1", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha2) && !player.skill_2_Off)
                 MageSkill2();
             //photonView.RPC("MageSkill2", RpcTarget.All);
@@ -137,8 +138,8 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                     if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
                         > 9.0f)
                     {
-                        skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x,0,transform.position.z);
-                        skillPos.transform.rotation = Quaternion.Euler(0,0,0);
+                        skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, 0, transform.position.z);
+                        skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
                     else
                     {
@@ -149,13 +150,19 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
 
-                if (Input.GetKeyDown(KeyCode.Mouse0) && mageAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && mageAnim.GetInteger("Combo") == 0 && !player.isDead && !player.isStun)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
             }
 
-            
+            if (player.br <= 0 && shld2 == true)
+            {
+                player.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All);
+                shld2 = false;
+            }
+
+
         }
     }
 
@@ -344,6 +351,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(30.0f);
         player.BarriorFill(0);
+        shld2 = false;
         Destroy(shld);
     }
     
