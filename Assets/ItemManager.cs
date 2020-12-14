@@ -25,22 +25,22 @@ public class ItemManager : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if(count < (int)(timer/60.0f))
+        if (count < (int)(timer / 60.0f))
         {
-            count++;
-            randomcall();
-            itemPosition = new Vector3(x, z, y);
-            PhotonNetwork.Instantiate("Prefebs/Bottle_Mana", itemPosition, Quaternion.Euler(0, 0, 0));
+            GetComponent<PhotonView>().RPC("randomcall()", RpcTarget.All);
         }
     }
 
+    [PunRPC]
     void randomcall()
     {
+        count++;
+        int i = Random.Range(0, 2);
+        int j = Random.Range(0, 2);
+        int k = Random.Range(0, 2);
         if (map == 1)
         {
-            int i = Random.Range(0, 2);
-            int j = Random.Range(0, 2);
-            int k = Random.Range(0, 2);
+
             z = 8.0f;
             if ((int)i != 0)
             {
@@ -66,5 +66,8 @@ public class ItemManager : MonoBehaviour
             if ((int)k != 0 && y<5.0f)
                 y *= -1;
         }
+        itemPosition = new Vector3(x, z, y);
+        PhotonNetwork.Instantiate("Prefebs/Bottle_Mana", itemPosition, Quaternion.Euler(0, 0, 0));
+
     }
 }
