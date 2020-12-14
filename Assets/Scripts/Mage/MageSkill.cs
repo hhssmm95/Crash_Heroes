@@ -158,7 +158,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
             if (player.br <= 0 && shld2 == true)
             {
-                player.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All);
+                player.GetComponent<PhotonView>().RPC("BarriorDestroy", RpcTarget.All);
                 shld2 = false;
             }
 
