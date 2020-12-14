@@ -15,9 +15,11 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     bool hit;
     bool checkReady;
     public int count;
+    List<string> dm;
     void Start()
     {
         Warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
+        dm = new List<string>();
         //particle = GetComponent<ParticleSystem>();
         //collisionEvents = new List<ParticleCollisionEvent>();
         if (tag == "WarriorAttack2")
@@ -44,63 +46,56 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(gameObject.name + "파티클충돌 ");
-        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9 && Warrior.isAttacking && !hit)
-        {
-            
-            var enemy = other.GetComponent<CharacterMove>();
-            //enemy.OnDamage(10);
-
-            //if (tag == "WarriorAttack1" || tag == "WarriorAttack2")
-            //{
-            //    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk);
-            //}
-
-
-
-            if (tag == "WarriorAttack3")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
-            }
-            else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 0.9f, Warrior.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.9f + "감소 전 피해를 입힘.");
-            }
-            else if(tag == "WarriorSkill1")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 2.2f, Warrior.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 2.2f + "감소 전 피해를 입힘.");
-            }
-            else if(tag == "WarriorSkill4")
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
-            }
-            else
-            {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
-            }
-            SoundManager.Instance.HitSoundPlay(0);
-            hit = true;
-        }
+        
 
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(s4HitReady && !other.CompareTag("Warrior") && other.gameObject.layer == 9)
+        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9)
         {
-            s4HitReady = false;
-            //skill4Timer = 0.0f;
-            count++;
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 0.8f, transform.tag);
-            Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk* 0.8f + "감소 전 피해를 입힘.");
-            //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
-            //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
+            if (s4HitReady)
+            {
+                s4HitReady = false;
+                //skill4Timer = 0.0f;
+                count++;
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 0.8f, transform.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.8f + "감소 전 피해를 입힘.");
+                //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
+                //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
+                return;
+            }
+            if (!dm.Exists(x => x == other.name) && Warrior.isAttacking)
+            {
+                dm.Add(other.name);
+                if (tag == "WarriorAttack3")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
+                }
+                else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 0.9f, Warrior.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.9f + "감소 전 피해를 입힘.");
+                }
+                else if (tag == "WarriorSkill1")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 2.2f, Warrior.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 2.2f + "감소 전 피해를 입힘.");
+                }
+                else if (tag == "WarriorSkill4")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
+                }
+                else
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
+                }
+                SoundManager.Instance.HitSoundPlay(0);
+            }
         }
     }
 
@@ -132,6 +127,11 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         checkReady = true;
     }
 
+    IEnumerator destroyEffect()
+    {
+        yield return new WaitForSeconds(1.5f);
+        PhotonNetwork.Destroy(gameObject);
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     }
