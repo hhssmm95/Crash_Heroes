@@ -81,7 +81,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 checkTimer = 0.0f;
                 s3HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.575f, transform.tag);
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.575f, transform.tag, Archer.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.575f + "감소 전 피해를 입힘.");
                 if (enemy.isDead == true)
                     Archer.CountKill();
@@ -91,10 +91,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 snipeTimer = 0.0f;
                 s4HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.9f, transform.tag);
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.9f, transform.tag, Archer.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.9f + "감소 전 피해를 입힘.");
-                if (enemy.isDead == true)
-                    Archer.CountKill();
                 return;
             }
 
@@ -104,7 +102,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
                 if (tag == "ArcherAttack1")
                 {
                     dm.Add(other.name);
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward, Archer.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
 
                     SoundManager.Instance.HitSoundPlay(0);
@@ -112,13 +110,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
                 else if (tag == "ArcherAttack2")
                 {
                     dm.Add(other.name);
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 1.0f, Archer.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 1.0f, Archer.transform.forward, Archer.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.0f + "감소 전 피해를 입힘.");
 
                     SoundManager.Instance.HitSoundPlay(0);
                 }
-                if (enemy.isDead == true)
-                    Archer.CountKill();
             }
         }
 

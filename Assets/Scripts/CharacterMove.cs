@@ -589,7 +589,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     
 
     [PunRPC]
-    public void OnDamage(float damage , Vector3 normal)
+    public void OnDamage(float damage , Vector3 normal , string job)
     {
         if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
@@ -629,12 +629,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
+                var enemy = GameObject.FindGameObjectWithTag(job);
+                enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
         }
     }
 
     [PunRPC]
-    public void OnSpecialDamage(float damage, string tag)
+    public void OnSpecialDamage(float damage, string tag, string job)
     {
         if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
@@ -765,12 +767,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
+                var enemy = GameObject.FindGameObjectWithTag(job);
+                enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
         }
     }
 
     [PunRPC]
-    public void OnHeavyDamage(float damage, Vector3 normal)
+    public void OnHeavyDamage(float damage, Vector3 normal, string job)
     {
         if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
@@ -812,13 +816,15 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
+                var enemy = GameObject.FindGameObjectWithTag(job);
+                enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
         }
     }
 
 
     [PunRPC]
-    public void OnTrueDamage(float damage, Vector3 normal)
+    public void OnTrueDamage(float damage, Vector3 normal, string job)
     {
         if (photonView.IsMine && !isDamaging && !isDead)
         {
@@ -837,6 +843,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
+                var enemy = GameObject.FindGameObjectWithTag(job);
+                enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
         }
     }
@@ -1048,7 +1056,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         isExhausting = false;
     }
 
-
+    [PunRPC]
     public void CountKill()
     {
         killCount++;
@@ -1061,6 +1069,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (stream.IsWriting)
         {
             stream.SendNext(Photnet_AnimationSync);
+            stream.SendNext(isDead);
             Photnet_AnimationSync = 0;
 
 
@@ -1068,6 +1077,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
+            isDead = (bool)stream.ReceiveNext();
             if (!photonView.IsMine)
             {
                 switch (Photnet_AnimationSync)

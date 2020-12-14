@@ -30,10 +30,8 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
         if (!other.CompareTag("Warrior") && other.gameObject.layer == 9)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, warrior.atk*2.65f, -transform.right);
+            enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, warrior.atk*2.65f, -transform.right, warrior.gameObject.tag);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + warrior.atk * 2.65f + "감소 전 피해를 입힘.");
-            if (enemy.isDead == true)
-                warrior.CountKill();
             SoundManager.Instance.HitSoundPlay(0);
             
         }
