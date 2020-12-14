@@ -182,6 +182,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 1;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
+                SoundManager.Instance.MageSoundPlay(1);
                 break;
 
             case 2:
@@ -189,6 +190,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 2;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
+                SoundManager.Instance.MageSoundPlay(7);
                 break;
 
             case 3:
@@ -196,11 +198,10 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 3;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-                PN_AnimationSync = 3;
+                SoundManager.Instance.MageSoundPlay(8);
                 break;
         }
 
-        SoundManager.Instance.MageSoundPlay(1);
 
 
         //transform.rotation = Quaternion.LookRotation(dir);
