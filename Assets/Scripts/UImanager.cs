@@ -82,7 +82,7 @@ public class UImanager : MonoBehaviour
         slot3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
         slot4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         slot5 = GameObject.FindWithTag("CoolTime_Slot_5").GetComponent<Image>();
-        dashImage = GameObject.FindWithTag("DashImage").GetComponent<Image>();
+        //dashImage = GameObject.FindWithTag("DashImage").GetComponent<Image>();
         hpOrb = GameObject.FindWithTag("hpOrb");
         mpOrb = GameObject.FindWithTag("mpOrb");
         stBar = GameObject.FindWithTag("stOrb");
