@@ -300,10 +300,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
-        { 
+        {
+            int Num = Random.Range(1, 3);
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = true;
-            PhotonNetwork.LoadLevel(1);
+            PhotonNetwork.LoadLevel(Num);
         }
     }
 

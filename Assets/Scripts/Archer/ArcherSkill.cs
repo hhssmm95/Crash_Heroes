@@ -284,12 +284,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_2_Off = true;
             player.mp -= player.skill_2_Cost;
-            archerAnim.SetTrigger("Skill2");
-            Photnet_AnimationSync = 4;
-            SetLookAtMousePos();
-            if (photonView.IsMine)
-                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
-
+            StartCoroutine("Archer_Skill2_Effect");
 
             //Vector3 dir = transform.forward;
 
@@ -318,8 +313,6 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             player.skill_3_Off = true;
             player.mp -= player.skill_3_Cost;
-            archerAnim.SetTrigger("Skill3");
-            Photnet_AnimationSync = 5;
 
             StartCoroutine("Archer_Skill3_Effect");
 
@@ -407,8 +400,22 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.Destroy(effect);
     }
 
+    IEnumerator Archer_Skill2_Effect()
+    {
+        archerAnim.SetTrigger("Skill2");
+        Photnet_AnimationSync = 4;
+        SetLookAtMousePos();
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
+        yield return new WaitForSeconds(4.0f);
+        PhotonNetwork.Destroy(effect);
+    }
+
     IEnumerator Archer_Skill3_Effect()
     {
+        SetLookAtMousePos();
+        archerAnim.SetTrigger("Skill3");
+        Photnet_AnimationSync = 5;
+
         Vector3 dir = player.transform.forward;
         Vector3 pos;
 
