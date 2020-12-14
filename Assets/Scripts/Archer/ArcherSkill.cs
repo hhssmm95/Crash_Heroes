@@ -82,7 +82,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         //ownerObject = player.gameObject.name;
         //animName = archerAnim.name;
 
-        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun)
+        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun && !player.isExhausting)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff && !isSniping)
                 //photonView.RPC("Archer_Attack", RpcTarget.All);

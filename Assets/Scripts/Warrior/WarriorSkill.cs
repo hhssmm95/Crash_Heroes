@@ -85,7 +85,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         //ownerObject = player.gameObject.name;
         //animName = warriorAnim.name;
 
-        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun)
+        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun && !player.isExhausting)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 //photonView.RPC("Warrior_Attack", RpcTarget.All);
@@ -480,11 +480,12 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         Photnet_AnimationSync = 7;
         player.isAttacking = true;
         player.ControlOff();
-        if (photonView.IsMine)
-            Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation), 10.0f);
-        yield return null;
-       //yield return new WaitForSeconds(3.5f);
-       // player.isAttacking = false;
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        yield return new WaitForSeconds(5.0f);
+        PhotonNetwork.Destroy(effect);
+
+        //yield return new WaitForSeconds(3.5f);
+        // player.isAttacking = false;
     }
     IEnumerator Warrior_Skill4_2_VFX()
     {
