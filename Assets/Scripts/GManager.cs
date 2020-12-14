@@ -42,11 +42,16 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public int playerNum = 0;
     public bool isTimeOver = false;
     public bool isGameOver;
+    public int GameMode;
+    public int killCount = 0;
     private void Start()
     {
+        //GameMode가 1이면 배틀로얄, 2라면 데스 매치
+        GameMode = (int)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
+
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         audioSource = GetComponent<AudioSource>();
-        
+
         StartCoroutine("PlayMusicList", 0);
 
         //픽 선택, 죽음 판정 초기화
@@ -62,7 +67,20 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 break;
             }
         }
-        
+
+        if (GameMode == 2)
+        {
+            SetLocalTag("KillCount", 0);
+            if (PhotonNetwork.PlayerList.Length == 2)
+            {
+                killCount = 5;
+            }
+            if (PhotonNetwork.PlayerList.Length > 2)
+            {
+                killCount = 10;
+            }
+        }
+
         //방장이 캐릭터 선택창 RPC로 실행
         if (!PhotonNetwork.IsMasterClient) return;
         PV.RPC("ShowCharacterPanelRPC", RpcTarget.All);
@@ -71,61 +89,115 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
+        #region 배틀로얄
+        if (GameMode == 1)
         {
-            //플레이어들의 캐릭터 선택 확인
-            if(characterPanel.activeSelf)
+            if (PhotonNetwork.IsMasterClient)
             {
-                if (!AllPickCheak())
-                    return;
-            }
-
-            
-            //캐릭터 선택창 숨기기
-            PV.RPC("HideCharacterPanelRPC", RpcTarget.All);
-
-            //캐릭터 스폰
-            if (!isSpawn)
-            {
-                PV.RPC("SpawnRPC", RpcTarget.All);
-            }
-
-            LimitTime -= Time.deltaTime;
-            text_Time.text = Mathf.Round(LimitTime).ToString();
-            if (LimitTime < 0)
-            {
-                LimitTime = 0;
-                text_Time.text = "0";
-                isTimeOver = true;
-            }
-
-            //죽어있는 플레이어의 수를 센다.
-            int count = 0;
-
-            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-            {
-                if ((bool)PhotonNetwork.PlayerList[i].CustomProperties["isDie"])
+                //플레이어들의 캐릭터 선택 확인
+                if (characterPanel.activeSelf)
                 {
-                    count++;
+                    if (!AllPickCheak())
+                        return;
+                    else if (AllPickCheak())
+                    {
+                        //캐릭터 선택창 숨기기
+                        PV.RPC("HideCharacterPanelRPC", RpcTarget.All);
+                    }
+                }
+
+                //캐릭터 스폰
+                if (!isSpawn)
+                {
+                    PV.RPC("SpawnRPC", RpcTarget.All);
+                }
+
+                LimitTime -= Time.deltaTime;
+                text_Time.text = Mathf.Round(LimitTime).ToString();
+                if (LimitTime < 0)
+                {
+                    LimitTime = 0;
+                    text_Time.text = "0";
+                    isTimeOver = true;
+                }
+
+                //죽어있는 플레이어의 수를 센다.
+                int count = 0;
+
+                for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+                {
+                    if ((bool)PhotonNetwork.PlayerList[i].CustomProperties["isDie"])
+                    {
+                        count++;
+                    }
+                }
+
+                print(count + "Count");
+                //한명이 살아남았거나 남은 시간이 없을때
+                if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
+                {
+                    PV.RPC("WinOrLose", RpcTarget.All);
+                    isGameOver = true;
                 }
             }
 
-            print(count + "Count");
-            //한명이 살아남았거나 남은 시간이 없을때
-            //if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
-            //{
-            //    PV.RPC("WinOrLose", RpcTarget.All);
-            //    isGameOver = true;
-            //}
+            //각자 실행하는 것이며 죽었을때 실행
+            if (player == null) return;
+
+            if (player.GetComponent<CharacterMove>().isDead == true)
+            {
+                SetLocalTag("isDie", true);
+            }
         }
-
-        //각자 실행하는 것이며 죽었을때 실행
-        if (player == null) return;
-
-        if (player.GetComponent<CharacterMove>().isDead == true)
+        #endregion
+        #region 데스매치
+        else if (GameMode == 2)
         {
-            SetLocalTag("isDie", true);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //플레이어들의 캐릭터 선택 확인
+                if (characterPanel.activeSelf)
+                {
+                    if (!AllPickCheak())
+                        return;
+                    else if (AllPickCheak())
+                    {
+                        //캐릭터 선택창 숨기기
+                        PV.RPC("HideCharacterPanelRPC", RpcTarget.All);
+                    }
+                }
+
+                //캐릭터 스폰
+                if (!isSpawn)
+                {
+                    PV.RPC("SpawnRPC", RpcTarget.All);
+                }
+
+                LimitTime -= Time.deltaTime;
+                text_Time.text = Mathf.Round(LimitTime).ToString();
+                if (LimitTime < 0)
+                {
+                    LimitTime = 0;
+                    text_Time.text = "0";
+                    isTimeOver = true;
+                }
+
+                for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+                {
+                    if((int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] == 5)
+                    {
+                        DeathMatchEnd();
+                    }
+                }
+            }
+
+            if(player.GetComponent<CharacterMove>().isDead)
+            {
+                Destroy(player);
+                StartCoroutine("ReSpawn");
+            }
         }
+        #endregion
     }
 
     #region 캐릭터 선택
@@ -219,16 +291,22 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         characterMove = player.GetComponent<CharacterMove>();
     }
 
-
+    IEnumerator ReSpawn()
+    {
+        yield return new WaitForSeconds(3.0f);
+        player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
+        characterMove = player.GetComponent<CharacterMove>();
+    }
     #endregion
 
     #region 타이머
     public void Timer()
     {
-        
+
     }
     #endregion
 
+    #region 게임끝
     [PunRPC]
     private void WinOrLose()
     {
@@ -251,13 +329,26 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    [PunRPC]
+    private void DeathMatchEnd()
+    {
+        if((int)PhotonNetwork.LocalPlayer.CustomProperties["KillCount"] == 5)
+        {
+            victoryPanel.SetActive(true);
+        }
+        else
+        {
+            DefeatPanel.SetActive(true);
+        }
+    }
+
     IEnumerator LeaveGame()
     {
-        yield return new WaitUntil(()=>isGameOver);
+        yield return new WaitUntil(() => isGameOver);
         print("게임 끝....");
         //시간이 다 되면
         yield return new WaitForSeconds(4);
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
             print("게임 종료 중... 방으로 돌아간다");
             PhotonNetwork.CurrentRoom.IsOpen = true;
@@ -265,6 +356,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             PhotonNetwork.LoadLevel(0);
         }
     }
+    #endregion
 
     #region 음악
     IEnumerator PlayMusicList(int num)
@@ -279,6 +371,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     void SetLocalTag(string key, bool cheak)
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { key, cheak } });
+    }
+    void SetLocalTag(string key, int Count)
+    {
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { key, Count } });
     }
 
     bool GetLocalTag(string key)
