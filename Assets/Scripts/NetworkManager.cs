@@ -140,7 +140,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         print("로비다");
         ShowPanel(LobbyPanel);
-        StartCoroutine("PlayMusicList", 1);
+        //StartCoroutine("PlayMusicList", 1);
         if(RoomList != null)
             RoomList.Clear();
     }
@@ -172,7 +172,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         print("방이다");
         ShowPanel(RoomPanel);
-        StartCoroutine("PlayMusicList", 2);
+        //StartCoroutine("PlayMusicList", 2);
         ChatInput.text = "";
         for (int i = 0; i < ChatText.Length; i++)
             ChatText[i].text = "";
