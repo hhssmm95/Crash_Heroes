@@ -96,11 +96,19 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             if (!dm.Exists(x => x == other.name) && Archer.isAttacking)
             {
 
-                if (tag == "ArcherAttack1" || tag == "ArcherAttack2")
+                if (tag == "ArcherAttack1")
                 {
                     dm.Add(other.name);
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
+
+                    SoundManager.Instance.HitSoundPlay(0);
+                }
+                else if (tag == "ArcherAttack2")
+                {
+                    dm.Add(other.name);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 1.0f, Archer.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.0f + "감소 전 피해를 입힘.");
 
                     SoundManager.Instance.HitSoundPlay(0);
                 }

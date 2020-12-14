@@ -69,7 +69,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             if (!dm.Exists(x => x == other.name) && Warrior.isAttacking)
             {
                 dm.Add(other.name);
-                if (tag == "WarriorAttack3")
+                if (tag == "WarriorAttck3")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
@@ -81,7 +81,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 else if (tag == "WarriorSkill1")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 2.2f, Warrior.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 2.2f, Warrior.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 2.2f + "감소 전 피해를 입힘.");
                 }
                 else if (tag == "WarriorSkill4")
@@ -89,10 +89,15 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     enemy.GetComponent<PhotonView>().RPC("OnStun", RpcTarget.All, 2.0f);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + "2초 기절 상태이상을 적용시킴.");
                 }
-                else
+                else if(tag == "WarriorAttack1")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
+                }
+                else if (tag == "WarriorAttack2")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk*1.1f, Warrior.transform.forward);
+                    Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk*1.1f + "감소 전 피해를 입힘.");
                 }
                 SoundManager.Instance.HitSoundPlay(0);
             }

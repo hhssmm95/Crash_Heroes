@@ -86,7 +86,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
                 if (tag == "DragoonSkill1")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.5f + "감소 전 피해를 입힘.");
                     //enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                     //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
@@ -102,11 +102,15 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 else if (tag == "DragoonAttack3")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.3f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.4f, Dragoon.transform.forward);
                 }
 
 
-                else if (tag == "DragoonAttack1" || tag == "DragoonAttack2")
+                else if (tag == "DragoonAttack1")
+                {
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk , Dragoon.transform.forward);
+                }
+                else if (tag == "DragoonAttack2")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
                 }

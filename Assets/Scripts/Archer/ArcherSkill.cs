@@ -63,16 +63,16 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.hpRegen = 6;
         player.mpRegen = 6;
         player.stRegen = 8;
-        attack_Cooltime = 1.0f;
-        player.skill_1_Cooltime = 7.0f;
-        player.skill_1_Cost = 20;
-        player.skill_2_Cooltime = 14.0f;
+        attack_Cooltime = 0.4f;
+        player.skill_1_Cooltime = 4.0f;
+        player.skill_1_Cost = 25;
+        player.skill_2_Cooltime = 17.0f;
         player.skill_2_Cost = 35;
-        player.skill_3_Cooltime = 20.0f;
-        player.skill_3_Cost = 50;
-        player.skill_4_Cooltime = 30.0f;
-        player.skill_4_Cost = 40;
-        player.skill_5_Cooltime = 60.0f;
+        player.skill_3_Cooltime = 23.0f;
+        player.skill_3_Cost = 40;
+        player.skill_4_Cooltime = 106.0f;
+        player.skill_4_Cost = 130;
+        player.skill_5_Cooltime = 30.0f;
         player.skill_5_Cost = 100;
     }
 
@@ -86,7 +86,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff && !isSniping)
                 //photonView.RPC("Archer_Attack", RpcTarget.All);
-                Archer_Attack();
+                //Archer_Attack();
+                StartCoroutine("Archer_Attack_Effect");
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 //photonView.RPC("Archer_Skill1", RpcTarget.All);
                 Archer_Skill1();
@@ -107,17 +108,17 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //photonView.RPC("SnipeShot", RpcTarget.All);
 
 
-            if (attackOff)
-            {
-                attack_Timer += Time.deltaTime;
-                if (attack_Timer >= 0.6f)
-                    player.isAttacking = false;
-                if (attack_Timer >= attack_Cooltime)
-                {
-                    attackOff = false;
-                    attack_Timer = 0;
-                }
-            }
+            //if (attackOff)
+            //{
+            //    attack_Timer += Time.deltaTime;
+            //    if (attack_Timer >= 0.6f)
+            //        player.isAttacking = false;
+            //    if (attack_Timer >= attack_Cooltime)
+            //    {
+            //        attackOff = false;
+            //        attack_Timer = 0;
+            //    }
+            //}
             if (comboContinue)
             {
 
@@ -166,9 +167,92 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     //[PunRPC]
-    void Archer_Attack()
+    //void Archer_Attack()
+    //{
+    //    //player.isAttacking = true;
+    //    attackOff = true;
+    //    comboContinue = true;
+
+    //    if (combo == 1)
+    //    {
+    //        SetLookAtMousePos();
+    //    }
+
+
+    //    if (comboTimer > 3.0f)
+    //    {
+    //        //archerAnim.SetInteger("Combo", 0);
+    //        combo = 1;
+    //        comboContinue = false;
+    //    }
+    //    comboTimer = 0;
+
+    //    Vector3 dir = transform.forward;
+
+
+    //    switch (combo)
+    //    {
+    //        case 1:
+    //            archerAnim.SetTrigger("FirstAttack");
+    //            Photnet_AnimationSync = 1;
+    //            if (photonView.IsMine)
+    //                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
+    //            //StartCoroutine("Skill_Hit");
+    //            SoundManager.Instance.ArcherSoundPlay(7);
+    //            break;
+
+    //        case 2:
+    //            archerAnim.SetTrigger("SecondAttack");
+    //            Photnet_AnimationSync = 2;
+    //            if (photonView.IsMine)
+    //                PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
+    //            //StartCoroutine("Skill_Hit");
+    //            SoundManager.Instance.ArcherSoundPlay(7);
+    //            break;
+
+    //            //case 3:
+    //            //    archerAnim.SetTrigger("ThirdAttack");
+    //            //    if (photonView.IsMine)
+    //            //        PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+    //            //    SoundManager.Instance.ArcherSoundPlay(4);
+    //            //    SoundManager.Instance.ArcherSoundPlay(0);
+    //            //    break;
+
+    //    }
+
+    //    //if (archerAnim.GetInteger("Combo") == 0)
+    //    //{
+    //    //    archerAnim.SetTrigger("FirstAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
+    //    //    StartCoroutine("Skill_Hit");
+    //    //    SoundManager.Instance.ArcherSoundPlay(7);
+    //    //}
+    //    //else if (archerAnim.GetInteger("Combo") == 1)
+    //    //{
+    //    //    archerAnim.SetTrigger("SecondAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
+    //    //    StartCoroutine("Skill_Hit");
+    //    //    SoundManager.Instance.ArcherSoundPlay(7);
+    //    //}
+    //    //else if (archerAnim.GetInteger("Combo") == 2)
+    //    //{
+    //    //    archerAnim.SetTrigger("ThirdAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
+    //    //    SoundManager.Instance.ArcherSoundPlay(4);
+    //    //    SoundManager.Instance.ArcherSoundPlay(0);
+
+    //    //}
+
+
+
+
+    //}
+
+    IEnumerator Archer_Attack_Effect()
     {
-        //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
 
@@ -198,6 +282,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.ArcherSoundPlay(7);
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
                 break;
 
             case 2:
@@ -207,6 +293,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.ArcherSoundPlay(7);
+                yield return new WaitForSeconds(attack_Cooltime + 0.5f);
+                attackOff = false;
                 break;
 
                 //case 3:
@@ -218,36 +306,6 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //    break;
 
         }
-
-        //if (archerAnim.GetInteger("Combo") == 0)
-        //{
-        //    archerAnim.SetTrigger("FirstAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    SoundManager.Instance.ArcherSoundPlay(7);
-        //}
-        //else if (archerAnim.GetInteger("Combo") == 1)
-        //{
-        //    archerAnim.SetTrigger("SecondAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    SoundManager.Instance.ArcherSoundPlay(7);
-        //}
-        //else if (archerAnim.GetInteger("Combo") == 2)
-        //{
-        //    archerAnim.SetTrigger("ThirdAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/NomralArrow", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation);
-        //    SoundManager.Instance.ArcherSoundPlay(4);
-        //    SoundManager.Instance.ArcherSoundPlay(0);
-
-        //}
-
-
-
-
     }
 
     //[PunRPC]
@@ -448,19 +506,19 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator Archer_Skill5_Effect()
     {
-        float originSpeed = player.speed;
+        //float originSpeed = player.speed;
 
         SoundManager.Instance.ArcherSoundPlay(10);
-        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
+        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.15f);
 
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
-
-        player.speed *= 1.2f;
-        yield return new WaitForSeconds(1.2f);
-        Destroy(buffEffect);
-        yield return new WaitForSeconds(3.8f);
-        player.speed = originSpeed;
+        yield return null;
+        //player.speed *= 1.2f;
+        //yield return new WaitForSeconds(1.2f);
+        //Destroy(buffEffect);
+        //yield return new WaitForSeconds(3.8f);
+        //player.speed = originSpeed;
 
 
     }

@@ -63,15 +63,15 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.mpRegen = 6;
         player.stRegen = 6;
 
-        attack_Cooltime = 1.0f;
+        attack_Cooltime = 0.4f;
         player.skill_1_Cooltime = 9.0f;
-        player.skill_1_Cost = 25;
-        player.skill_2_Cooltime = 15.0f;
+        player.skill_1_Cost = 30;
+        player.skill_2_Cooltime = 12.0f;
         player.skill_2_Cost = 35;
-        player.skill_3_Cooltime = 60.0f;
-        player.skill_3_Cost = 70;
-        player.skill_4_Cooltime = 30.0f;
-        player.skill_4_Cost = 40;
+        player.skill_3_Cooltime = 18.0f;
+        player.skill_3_Cost = 45;
+        player.skill_4_Cooltime = 132.0f;
+        player.skill_4_Cost = 150;
         player.skill_5_Cooltime = 60.0f;
         player.skill_5_Cost = 100;
     }
@@ -82,7 +82,8 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 //photonView.RPC("Dragoon_Attack", RpcTarget.All);
-                Dragoon_Attack();
+                //Dragoon_Attack();
+                StartCoroutine("Dragoon_Attack_Effect");
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 //photonView.RPC("DragoonSkill1", RpcTarget.All);
                 DragoonSkill1();
@@ -99,17 +100,17 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 //photonView.RPC("DragoonSkill5", RpcTarget.All);
                 DragoonSkill5();
 
-            if (attackOff)
-            {
-                attack_Timer += Time.deltaTime;
-                //if (attack_Timer >= 1.0f)
-                //    player.isAttacking = false;
-                if (attack_Timer >= attack_Cooltime)
-                {
-                    attackOff = false;
-                    attack_Timer = 0;
-                }
-            }
+            //if (attackOff)
+            //{
+            //    attack_Timer += Time.deltaTime;
+            //    //if (attack_Timer >= 1.0f)
+            //    //    player.isAttacking = false;
+            //    if (attack_Timer >= attack_Cooltime)
+            //    {
+            //        attackOff = false;
+            //        attack_Timer = 0;
+            //    }
+            //}
             if (comboContinue)
             {
 
@@ -138,24 +139,110 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     //[PunRPC]
-    void Dragoon_Attack()
+    //void Dragoon_Attack()
+    //{
+    //    //player.isAttacking = true;
+    //    attackOff = true;
+    //    comboContinue = true;
+
+    //    SetLookAtMousePos();
+
+    //    if (comboTimer > 3.0f)
+    //    {
+    //        //dragoonAnim.SetInteger("Combo", 0);
+    //        combo = 1;
+    //        comboContinue = false;
+    //    }
+    //    comboTimer = 0;
+
+    //    Vector3 dir = player.transform.forward;
+
+
+    //    switch (combo)
+    //    {
+    //        case 1:
+    //            dragoonAnim.SetTrigger("FirstAttack");
+    //            Photnet_AnimationSync = 1;
+    //            if (photonView.IsMine)
+    //                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
+
+    //            SoundManager.Instance.DragoonSoundPlay(0);
+    //            break;
+
+    //        case 2:
+    //            dragoonAnim.SetTrigger("SecondAttack");
+    //            Photnet_AnimationSync = 2;
+    //            if (photonView.IsMine)
+    //                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
+    //           SoundManager.Instance.DragoonSoundPlay(1);
+    //            break;
+
+    //        case 3:
+    //            dragoonAnim.SetTrigger("ThirdAttack");
+    //            Photnet_AnimationSync = 3;
+    //            if (photonView.IsMine)
+    //                PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
+    //            StartCoroutine("Skill_Hit");
+    //            SoundManager.Instance.DragoonSoundPlay(2);
+    //            break;
+
+    //    }
+
+    //    //if (dragoonAnim.GetInteger("Combo") == 0)
+    //    //{
+    //    //    dragoonAnim.SetTrigger("FirstAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
+    //    //    StartCoroutine("Skill_Hit");
+
+    //    //    SoundManager.Instance.DragoonSoundPlay(0);
+    //    //}
+    //    //else if (dragoonAnim.GetInteger("Combo") == 1)
+    //    //{
+    //    //    dragoonAnim.SetTrigger("SecondAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
+    //    //    StartCoroutine("Skill_Hit");
+    //    //    //Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
+    //    //    SoundManager.Instance.DragoonSoundPlay(1);
+    //    //}
+    //    //else if (dragoonAnim.GetInteger("Combo") == 2)
+    //    //{
+    //    //    dragoonAnim.SetTrigger("ThirdAttack");
+    //    //    if (photonView.IsMine)
+    //    //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
+    //    //    StartCoroutine("Skill_Hit");
+    //    //    //Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
+    //    //    SoundManager.Instance.DragoonSoundPlay(2);
+    //    //}
+
+
+    //    //transform.rotation = Quaternion.LookRotation(dir);
+
+
+
+
+    //    //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
+    //}
+    IEnumerator Dragoon_Attack_Effect()
     {
-        //player.isAttacking = true;
         attackOff = true;
         comboContinue = true;
 
-        SetLookAtMousePos();
+        if (combo == 1)
+        {
+            SetLookAtMousePos();
+        }
 
         if (comboTimer > 3.0f)
         {
-            //dragoonAnim.SetInteger("Combo", 0);
+            //warriorAnim.SetInteger("Combo", 0);
             combo = 1;
             comboContinue = false;
         }
         comboTimer = 0;
 
         Vector3 dir = player.transform.forward;
-
 
         switch (combo)
         {
@@ -166,6 +253,9 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                     PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
 
                 SoundManager.Instance.DragoonSoundPlay(0);
+
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
                 break;
 
             case 2:
@@ -173,7 +263,10 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Photnet_AnimationSync = 2;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-               SoundManager.Instance.DragoonSoundPlay(1);
+                SoundManager.Instance.DragoonSoundPlay(1);
+
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
                 break;
 
             case 3:
@@ -183,47 +276,13 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
                     PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
                 StartCoroutine("Skill_Hit");
                 SoundManager.Instance.DragoonSoundPlay(2);
+
+                yield return new WaitForSeconds(attack_Cooltime + 0.5f);
+                attackOff = false;
                 break;
 
         }
-
-        //if (dragoonAnim.GetInteger("Combo") == 0)
-        //{
-        //    dragoonAnim.SetTrigger("FirstAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * DragoonVX0_1.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-
-        //    SoundManager.Instance.DragoonSoundPlay(0);
-        //}
-        //else if (dragoonAnim.GetInteger("Combo") == 1)
-        //{
-        //    dragoonAnim.SetTrigger("SecondAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack2VX", Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    //Instantiate(DragoonVX0_2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX0_2.transform.rotation);
-        //    SoundManager.Instance.DragoonSoundPlay(1);
-        //}
-        //else if (dragoonAnim.GetInteger("Combo") == 2)
-        //{
-        //    dragoonAnim.SetTrigger("ThirdAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/DragoonAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    //Instantiate(DragoonVX0_3, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * DragoonVX0_3.transform.rotation);
-        //    SoundManager.Instance.DragoonSoundPlay(2);
-        //}
-
-
-        //transform.rotation = Quaternion.LookRotation(dir);
-
-
-
-
-        //else if(playerAnim.GetCurrentAnimatorClipInfo(0))
     }
-
     //[PunRPC]
     void DragoonSkill1()
     {

@@ -66,7 +66,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.hpRegen = 9.0f;
         player.mpRegen = 7;
         player.stRegen = 7;
-        attack_Cooltime = 1.0f;
+        attack_Cooltime = 0.4f;
         player.skill_1_Cooltime = 12.0f;
         player.skill_1_Cost = 25.0f;
         player.skill_2_Cooltime = 28.0f;

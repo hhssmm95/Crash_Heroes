@@ -34,7 +34,7 @@ public class DragoonSkill3Slash : MonoBehaviourPunCallbacks, IPunObservable
                 var enemy = other.GetComponent<CharacterMove>();
                 dm.Add(enemy.name);
 
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.8f, Dragoon.transform.forward);
+                enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.8f, Dragoon.transform.forward);
             }
             
 
