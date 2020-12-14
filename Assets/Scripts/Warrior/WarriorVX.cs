@@ -75,6 +75,8 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.375f + "감소 전 피해를 입힘.");
                 //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
+                if (enemy.isDead == true)
+                    Warrior.CountKill();
                 return;
             }
             if (!dm.Exists(x => x == other.name) && Warrior.isAttacking)
@@ -110,6 +112,8 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk*1.1f, Warrior.transform.forward);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk*1.1f + "감소 전 피해를 입힘.");
                 }
+                if (enemy.isDead == true)
+                    Warrior.CountKill();
                 SoundManager.Instance.HitSoundPlay(0);
             }
         }

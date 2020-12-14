@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
 {
     public HealthBar hpBar; 
@@ -51,7 +53,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     float moveTimer; //걷는 사운드 세부조절 타이머
 
-
+    public int killCount;
 
     public float speed = 2.0f; // 캐릭터 이동속도
 
@@ -368,10 +370,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         //    }
         //}
         user = photonView.Owner.NickName;
-        if (isDead)
-        {
-            OnDead();
-        }
+        //if (isDead)
+        //{
+        //    OnDead();
+        //}
 
         if (photonView.IsMine)
         {
@@ -592,8 +594,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
             isDamaging = true;
-            myAnim.SetTrigger("Damage");
-            Photnet_AnimationSync = 2;
+            if (!isStun)
+            {
+                myAnim.SetTrigger("Damage");
+                Photnet_AnimationSync = 2;
+            }
             myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
             if (def <= damage)
             {
@@ -622,6 +627,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 isDead = true;
                 Debug.Log(gameObject.name + "(이)가 사망");
+                myAnim.SetTrigger("isDead");
+                Photnet_AnimationSync = 4;
             }
         }
     }
@@ -631,9 +638,9 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     {
         if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
-            switch(tag)
+            switch (tag)
             {
-                case "WarriorSkill4" :
+                case "WarriorSkill4":
                     if (!isStun)
                     {
                         myAnim.SetTrigger("Damage");
@@ -665,8 +672,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     break;
 
                 case "ArcherSkill3":
-                    myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 2;
+                    if (!isStun)
+                    {
+                        myAnim.SetTrigger("Damage");
+                        Photnet_AnimationSync = 2;
+                    }
                     if (def <= damage)
                     {
                         if (br > damage)
@@ -695,7 +705,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     break;
 
                 case "ArcherSkill4":
-                    myAnim.SetTrigger("Damage");
+                    if (!isStun)
+                    {
+                        myAnim.SetTrigger("HeavyDamage");
+                    }
                     Photnet_AnimationSync = 2;
                     if (def <= damage)
                     {
@@ -725,6 +738,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 isDead = true;
                 Debug.Log(gameObject.name + "(이)가 사망");
+                myAnim.SetTrigger("isDead");
+                Photnet_AnimationSync = 4;
             }
         }
     }
@@ -770,6 +785,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 isDead = true;
                 Debug.Log(gameObject.name + "(이)가 사망");
+                myAnim.SetTrigger("isDead");
+                Photnet_AnimationSync = 4;
             }
         }
     }
@@ -793,6 +810,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 isDead = true;
                 Debug.Log(gameObject.name + "(이)가 사망");
+                myAnim.SetTrigger("isDead");
+                Photnet_AnimationSync = 4;
             }
         }
     }
@@ -913,19 +932,19 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
         aud.Play();
     }
-    //[PunRPC]
-    public void OnDead()
-    {
-        if (!dying)
-        {
-            dying = true;
-            //myAnim.Play("Die2");
-            //myAnim.SetBool("isDead", true);
-            myAnim.SetTrigger("isDead");
-            Photnet_AnimationSync = 4;
-        }
+    ////[PunRPC]
+    //public void OnDead()
+    //{
+    //    if (!dying)
+    //    {
+    //        dying = true;
+    //        //myAnim.Play("Die2");
+    //        //myAnim.SetBool("isDead", true);
+            //myAnim.SetTrigger("isDead");
+            //Photnet_AnimationSync = 4;
+    //    }
 
-    }
+    //}
 
     void SetLookAtMousePos()
     {
@@ -1003,8 +1022,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         yield return new WaitForSeconds(1.0f);
         isExhausting = false;
     }
-    
 
+
+    public void CountKill()
+    {
+        killCount++;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { "KillCount", killCount } });
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -1053,4 +1077,5 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         }
     }
+
 }

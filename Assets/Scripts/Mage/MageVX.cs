@@ -64,6 +64,11 @@ public class MageVX : MonoBehaviour
                         enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
                         break;
+                    default:
+                        if (enemy.GetComponent<CharacterMove>().isDead)
+                            Mage.CountKill();
+                        break;
+
                 }
                 enemy.GetComponent<PhotonView>().RPC("PlaySE", RpcTarget.All, 4, 0);
             }

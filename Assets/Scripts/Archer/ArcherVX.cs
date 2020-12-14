@@ -83,6 +83,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
                 s3HitReady = false;
                 enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.7f, transform.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.6f + "감소 전 피해를 입힘.");
+                if (enemy.isDead == true)
+                    Archer.CountKill();
                 return;
             }
             else if(s4HitReady)
@@ -91,8 +93,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
                 s4HitReady = false;
                 enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.0f, transform.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.2f + "감소 전 피해를 입힘.");
+                if (enemy.isDead == true)
+                    Archer.CountKill();
                 return;
             }
+
             if (!dm.Exists(x => x == other.name) && Archer.isAttacking)
             {
 
@@ -112,6 +117,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
 
                     SoundManager.Instance.HitSoundPlay(0);
                 }
+                if (enemy.isDead == true)
+                    Archer.CountKill();
             }
         }
 

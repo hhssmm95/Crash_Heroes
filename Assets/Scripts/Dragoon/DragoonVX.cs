@@ -76,6 +76,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log("브레스타격");
                 //enemy.OnDamage(10);
                 enemy.GetComponent<PhotonView>().RPC("OnBurn", RpcTarget.All, 10.0f, Dragoon.atk * 0.25f);
+                if (enemy.isDead == true)
+                    Dragoon.CountKill();
                 return;
             }
             if (!dm.Exists(x => x == other.name) && Dragoon.isAttacking)
@@ -114,6 +116,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
                 }
+                if (enemy.isDead == true)
+                    Dragoon.CountKill();
                 SoundManager.Instance.HitSoundPlay(0);
                 //enemy.OnDamage(10);
                 //hit = true;

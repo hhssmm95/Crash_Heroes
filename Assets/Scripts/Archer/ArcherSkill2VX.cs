@@ -5,10 +5,12 @@ using Photon.Pun;
 
 public class ArcherSkill2VX : MonoBehaviourPunCallbacks, IPunObservable
 {
+    CharacterMove Archer;
     float atk;
     void Start()
     {
-        atk = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>().atk;
+        Archer = GameObject.FindGameObjectWithTag("Archer").GetComponent<CharacterMove>();
+        atk = Archer.GetComponent<CharacterMove>().atk;
     }
 
     // Update is called once per frame
@@ -24,7 +26,8 @@ public class ArcherSkill2VX : MonoBehaviourPunCallbacks, IPunObservable
 
             enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 2.6f, transform.forward);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 2.6f + "감소 전 피해를 입힘.");
-
+            if (enemy.isDead == true)
+                Archer.CountKill();
             //SoundManager.Instance.HitSoundPlay(0);
             //hit = true;
         }

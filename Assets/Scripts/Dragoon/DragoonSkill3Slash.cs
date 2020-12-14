@@ -35,6 +35,8 @@ public class DragoonSkill3Slash : MonoBehaviourPunCallbacks, IPunObservable
                 dm.Add(enemy.name);
 
                 enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.8f, Dragoon.transform.forward);
+                if (enemy.isDead == true)
+                    Dragoon.CountKill();
             }
             
 

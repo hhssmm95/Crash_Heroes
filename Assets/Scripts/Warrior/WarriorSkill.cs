@@ -33,6 +33,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     public GameObject WMesh;
     public GameObject WRoot;
+    public BoxCollider WColl;
     Vector3 originPos;
     public int Photnet_AnimationSync = 0;
     public bool isMine;
@@ -494,12 +495,15 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         var myRig = GetComponent<Rigidbody>().useGravity = true;
         WMesh.SetActive(true);
         WRoot.SetActive(true);
+        WColl.enabled = true;
         player.ControlOn();
     }
     void Invisible()
     {
         WMesh.SetActive(false);
         WRoot.SetActive(false);
+        WColl.enabled = false;
+        
         transform.position = new Vector3(originPos.x, originPos.y + 1.5f, originPos.z);
         var myRig = GetComponent<Rigidbody>().useGravity = false;
         StartCoroutine("Warrior_Skill4_2_VFX");
@@ -526,6 +530,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             transform.rotation = Quaternion.LookRotation(dir);
         }
     }
+    
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
