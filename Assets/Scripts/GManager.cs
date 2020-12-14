@@ -296,10 +296,16 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator ReSpawn()
     {
         yield return new WaitForSeconds(2.0f);
-        PhotonNetwork.Destroy(player);
+        PV.RPC("DestroyRPC", RpcTarget.All);
         yield return new WaitForSeconds(1.0f);
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
         characterMove = player.GetComponent<CharacterMove>();
+    }
+
+    [PunRPC]
+    void DestroyRPC()
+    {
+        Destroy(gameObject);
     }
     #endregion
 
