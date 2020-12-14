@@ -31,6 +31,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     public ParticleSystem LenaVX2_2;
 
     public ParticleSystem LenaVX3;
+    public GameObject Skill_01_Pos;
     public GameObject LenaSkill3Pos;
 
 
@@ -221,7 +222,6 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Lena_Skill1()
     {
-
         if (player.mp >= player.skill_1_Cost)
         {
             player.skill_1_Off = true;
@@ -230,16 +230,14 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
             lenaAnim.SetTrigger("Skill1");
             Vector3 dir = player.transform.forward;
 
+            StartCoroutine("Lena_skill_01", dir);
             //if (photonView.IsMine)
-               // PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
-            StartCoroutine("Skill_Hit");
+            // PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill1VX", Skill1Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX1.transform.rotation);
+            //StartCoroutine("Skill_Hit");
             //SoundManager.Instance.DragoonSoundPlay(3);
 
             //StartCoroutine("Warrior_Skill1_Play");
         }
-
-
-
     }
 
     [PunRPC]
