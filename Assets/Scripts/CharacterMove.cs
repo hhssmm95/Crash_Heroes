@@ -866,6 +866,24 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     }
 
     [PunRPC]
+    public void GetItem(int itemnum, int amount)
+    {
+        if (photonView.IsMine && !isDead)
+        {
+            switch(itemnum)
+            {
+                case 1:
+                    hp += amount;
+                    break;
+                case 2:
+                    mp += amount;
+                    break;
+            }
+        }
+    }
+
+
+    [PunRPC]
     public void PlaySE(int m, int n)
     {
         switch(m)
