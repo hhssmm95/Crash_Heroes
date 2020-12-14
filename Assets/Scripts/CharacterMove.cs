@@ -220,6 +220,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             mp = maxMP;
             st = maxST;
         }
+        this.aud = this.gameObject.AddComponent<AudioSource>();
     }
     void Move()
     {

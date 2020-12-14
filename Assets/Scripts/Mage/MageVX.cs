@@ -41,6 +41,7 @@ public class MageVX : MonoBehaviour
                 {
                     case "MageSkill1VX(Clone)":
                         enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("PlaySE", RpcTarget.All, 4, 0);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.96f + "감소 전 피해를 입힘.");
                         break;
                     case "MageSkill2VX(Clone)":
