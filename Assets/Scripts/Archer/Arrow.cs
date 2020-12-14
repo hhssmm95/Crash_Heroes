@@ -31,11 +31,9 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
             if (tag == "ArcherSkill1" && !hit)
             {
-                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal);
+                enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal, Archer.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
                 SoundManager.Instance.HitSoundPlay(1);
-                if (enemy.isDead == true)
-                    Archer.CountKill();
                 hit = true;
             }
             //else if(tag == "ArcherSkill2")

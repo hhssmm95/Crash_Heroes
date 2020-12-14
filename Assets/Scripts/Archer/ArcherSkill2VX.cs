@@ -24,10 +24,8 @@ public class ArcherSkill2VX : MonoBehaviourPunCallbacks, IPunObservable
         {
             CharacterMove enemy = other.GetComponent<CharacterMove>();
 
-            enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 2.6f, transform.forward);
+            enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, atk * 2.6f, transform.forward, Archer.gameObject.tag);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 2.6f + "감소 전 피해를 입힘.");
-            if (enemy.isDead == true)
-                Archer.CountKill();
             //SoundManager.Instance.HitSoundPlay(0);
             //hit = true;
         }

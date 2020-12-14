@@ -40,33 +40,29 @@ public class MageVX : MonoBehaviour
                 switch (gameObject.name)
                 {
                     case "MageSkill1VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.96f + "감소 전 피해를 입힘.");
                         break;
                     case "MageSkill2VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.45f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 2.45f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 2.45f + "감소 전 피해를 입힘.");
                         break;
                     case "MageSkill3VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Mage.atk * 2.2f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Mage.atk * 2.2f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 2.2f + "감소 전 피해를 입힘.");
                         break;
 
                     case "MageAttack1VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.8f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.8f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.8f + "감소 전 피해를 입힘.");
                         break;
                     case "MageAttack2VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.9f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.9f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.9f + "감소 전 피해를 입힘.");
                         break;
                     case "MageAttack3VX(Clone)":
-                        enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward);
+                        enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
-                        break;
-                    default:
-                        if (enemy.GetComponent<CharacterMove>().isDead)
-                            Mage.CountKill();
                         break;
 
                 }

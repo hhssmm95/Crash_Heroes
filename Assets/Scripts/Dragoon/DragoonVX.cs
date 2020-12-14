@@ -83,10 +83,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 meteorTimer = 0.0f;
                 s4HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.5f, transform.tag);
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.5f, transform.tag, Dragoon.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.5f + "감소 전 피해를 입힘.");
-                if (enemy.isDead == true)
-                    Dragoon.CountKill();
                 return;
             }
             if (!dm.Exists(x => x == other.name) && Dragoon.isAttacking)
@@ -97,36 +95,34 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
                 if (tag == "DragoonSkill1")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.5f + "감소 전 피해를 입힘.");
                     //enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                     //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                     //enemy.OnSlow(0.5f, 3.0f);
-                    return;
                 }
                 else if (tag == "DragoonSkill2")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.6f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 2.6f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.6f + "감소 전 피해를 입힘.");
                     enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.1f, 2.0f);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 10%의 슬로우를 2초동안 적용함");
                 }
                 else if (tag == "DragoonAttack3")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.4f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.4f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                 }
 
 
                 else if (tag == "DragoonAttack1")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk , Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk , Dragoon.transform.forward, Dragoon.gameObject.tag);
                 }
                 else if (tag == "DragoonAttack2")
                 {
-                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward);
+                    enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                 }
-                if (enemy.isDead == true)
-                    Dragoon.CountKill();
+
                 SoundManager.Instance.HitSoundPlay(0);
                 //enemy.OnDamage(10);
                 //hit = true;
