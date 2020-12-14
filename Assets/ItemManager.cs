@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ItemManager : MonoBehaviour
 {
+    public PhotonView PV;
     public Vector3 itemPosition;
     public float x, y, z;
     public float timer;
@@ -27,7 +28,7 @@ public class ItemManager : MonoBehaviour
         timer += Time.deltaTime;
         if (count < (int)(timer / 60.0f))
         {
-            GetComponent<PhotonView>().RPC("randomcall()", RpcTarget.All);
+            PV.RPC("randomcall()", RpcTarget.All);
         }
     }
 

@@ -189,6 +189,10 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                     {
                         DeathMatchEnd();
                     }
+                    else
+                    {
+                        print(i + "번째 " + PhotonNetwork.PlayerList[i].NickName + "은/는 " +(int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] + "명 잡았습니다.");
+                    }
                 }
             }
 

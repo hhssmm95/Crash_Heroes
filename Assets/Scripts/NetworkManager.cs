@@ -199,6 +199,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
         }
         SetLocalTag("isPick", false);
+        SetLocalTag("KillCount", 0);
         StartCoroutine("RoomUpdate");
     }
 
@@ -379,9 +380,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { slotIndex.ToString(), value } });
     }
 
-    void SetLocalTag(string mode, int value)
+    void SetLocalTag(string key, int value)
     {
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { mode, value } });
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { key, value } });
     }
 
     int GetRoomTag(int slotIndex)
