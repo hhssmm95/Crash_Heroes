@@ -138,15 +138,20 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                     if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
                         > 9.0f)
                     {
-                        skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, 0, transform.position.z);
+                        skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, transform.position.y, transform.position.z);
                         skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
                     else
                     {
-                        skillPos.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                        skillPos.transform.position = new Vector3(hit.point.x, gameObject.transform.position.y, hit.point.z);
                         skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
                     //transform.rotation = Quaternion.LookRotation(dir);
+                }
+                else
+                {
+                    skillPos.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                    skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
             }
 
