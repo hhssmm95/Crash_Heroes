@@ -30,11 +30,6 @@ public class MageVX : MonoBehaviour
         timer += Time.deltaTime;
     }
     
-
-    private void OnTriggerEnter(Collider other)
-    {
-    }
-
     private void OnTriggerStay(Collider enemy)
     {
         if (damageStart < timer && timer < (damageStart + damageTime) && enemy.gameObject.layer == 9 && enemy.gameObject.tag !="Mage")

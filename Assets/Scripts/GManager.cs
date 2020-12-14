@@ -38,7 +38,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool magePick = false;
     public bool lenaPick = false;
     public bool isSpawn = false;
-
+    public bool isAllPick = false;
     public int playerNum = 0;
     public bool isTimeOver = false;
     public bool isGameOver;
@@ -74,7 +74,11 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         if (PhotonNetwork.IsMasterClient)
         {
             //플레이어들의 캐릭터 선택 확인
-            if (!AllPickCheak()) return;
+            if(characterPanel.activeSelf)
+            {
+                if (!AllPickCheak())
+                    return;
+            }
 
             //캐릭터 선택창 숨기기
             PV.RPC("HideCharacterPanelRPC", RpcTarget.All);
@@ -85,10 +89,13 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 PV.RPC("SpawnRPC", RpcTarget.All);
             }
 
-            //타이머가 끝나면 멈춤
-            if (isTimeOver == false)
+            LimitTime -= Time.deltaTime;
+            text_Time.text = Mathf.Round(LimitTime).ToString();
+            if (LimitTime < 0)
             {
-                Timer();
+                LimitTime = 0;
+                text_Time.text = "0";
+                isTimeOver = true;
             }
 
             //죽어있는 플레이어의 수를 센다.
@@ -207,25 +214,16 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
         isSpawn = true;
+        characterMove = player.GetComponent<CharacterMove>();
     }
 
-    
+
     #endregion
 
     #region 타이머
     public void Timer()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            LimitTime -= Time.deltaTime;
-            text_Time.text = Mathf.Round(LimitTime).ToString();
-            if (LimitTime < 0)
-            {
-                isTimeOver = true;
-                LimitTime = 0;
-                text_Time.text = "0";
-            }
-        }
+        
     }
     #endregion
 
@@ -261,6 +259,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             print("게임 종료 중... 방으로 돌아간다");
             PhotonNetwork.CurrentRoom.IsOpen = true;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
             PhotonNetwork.LoadLevel(0);
         }
     }
