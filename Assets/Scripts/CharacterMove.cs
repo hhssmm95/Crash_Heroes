@@ -248,10 +248,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
         if (Input.GetKey(KeyCode.LeftShift)) //달리기
         {
-            if (!isRunning && st>=20.0f)
+            if (!isRunning && st>=30.0f)
             {
                 stTimer = 0;
-                st -= 20.0f;
+                //st -= 20.0f;
                 isRunning = true;
 
                 myAnim.SetBool("Run", true);
@@ -281,7 +281,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     runTimer = 0;
                     st -= 10.0f;
                 }*/
-                st -= 10.0f * Time.deltaTime;
+                st -= 30.0f * Time.deltaTime;
                 transform.position += moveDirection * (speed * 2.5f) * Time.deltaTime;
             }
             else
