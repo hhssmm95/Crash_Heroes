@@ -8,6 +8,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     CharacterMove player;
     public Animator lenaAnim;
     Camera mainCamera;
+    public TrailRenderer trailRenderer;
 
     public float attack_Cooltime;
     public float attack_Cost;
@@ -22,10 +23,10 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
     float healDurationTimer;
     bool healing;
 
-    public ParticleSystem LenaVX1_1;
-    public ParticleSystem LenaVX1_2;
+    public ParticleSystem LenaAttack1VX;
+    public ParticleSystem LenaAttack2VX;
+    public ParticleSystem LenaAttack3VX;
     public GameObject LenaAttack2Pos;
-    public ParticleSystem LenaVX1_3;
     public ParticleSystem LenaVX2_1;
     public ParticleSystem LenaVX2_2;
 
@@ -181,56 +182,29 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             case 1:
                 lenaAnim.SetTrigger("FirstAttack");
+                StartCoroutine("Attack");
                 if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * LenaVX1_1.transform.rotation), 1.0f);
-                //StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * LenaAttack1VX.transform.rotation), 1.0f);
                 SoundManager.Instance.KnightSoundPlay(0);
                 break;
 
             case 2:
                 lenaAnim.SetTrigger("SecondAttack");
+                StartCoroutine("Attack");
                 if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack2VX", LenaAttack2Pos.transform.position, Quaternion.LookRotation(dir) * LenaVX1_2.transform.rotation), 1.0f);
-                //StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack2VX", LenaAttack2Pos.transform.position, Quaternion.LookRotation(dir) * LenaAttack2VX.transform.rotation), 1.0f);
                 SoundManager.Instance.KnightSoundPlay(1);
                 break;
 
             case 3:
                 lenaAnim.SetTrigger("ThirdAttack");
+                StartCoroutine("Attack");
                 if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * LenaVX1_3.transform.rotation), 1.0f);
-                //StartCoroutine("Skill_Hit");
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/LenaAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * LenaAttack3VX.transform.rotation), 1.0f);
                 SoundManager.Instance.KnightSoundPlay(2);
                 break;
 
         }
-
-        //if (lenaAnim.GetInteger("Combo") == 0)
-        //{
-        //    lenaAnim.SetTrigger("FirstAttack");
-        //    if (photonView.IsMine)
-        //        PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * LenaVX1_1.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    SoundManager.Instance.KnightSoundPlay(0);
-        //}
-        //else if (lenaAnim.GetInteger("Combo") == 1)
-        //{
-        //    lenaAnim.SetTrigger("SecondAttack");
-        //    //if (photonView.IsMine)
-        //    //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", LenaAttack2Pos.transform.position, Quaternion.LookRotation(dir) * LenaVX1_2.transform.rotation);
-        //    StartCoroutine("Skill_Hit");
-        //    SoundManager.Instance.KnightSoundPlay(1);
-        //}
-        //else if (lenaAnim.GetInteger("Combo") == 2)
-        //{
-        //    lenaAnim.SetTrigger("ThirdAttack");
-        //    //if (photonView.IsMine)
-        //    //    PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * LenaVX1_3.transform.rotation).GetComponent<PhotonView>();
-        //    StartCoroutine("Skill_Hit");
-        //    SoundManager.Instance.KnightSoundPlay(2);
-
-        //}
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -347,7 +321,7 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.isAttacking = false;
         Vector3 dir = player.transform.forward;
         if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * LenaVX1_3.transform.rotation);
+            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.LookRotation(dir) * LenaAttack3VX.transform.rotation);
         StartCoroutine("Skill_Hit");
         SoundManager.Instance.KnightSoundPlay(2);
     }
@@ -416,6 +390,13 @@ public class LenaSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    IEnumerator Attack()
+    {
+        yield return new WaitForSeconds(0.1f);
+        trailRenderer.enabled = true;
+        yield return new WaitForSeconds(0.3f);
+        trailRenderer.enabled = false;
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 

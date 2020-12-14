@@ -16,6 +16,7 @@ public class UImanager : MonoBehaviour
     public Image slot3;
     public Image slot4;
     public Image slot5;
+    public Image dashImage;
 
     GameObject hpOrb;
     GameObject mpOrb;
@@ -81,6 +82,7 @@ public class UImanager : MonoBehaviour
         slot3 = GameObject.FindWithTag("CoolTime_Slot_3").GetComponent<Image>();
         slot4 = GameObject.FindWithTag("CoolTime_Slot_4").GetComponent<Image>();
         slot5 = GameObject.FindWithTag("CoolTime_Slot_5").GetComponent<Image>();
+        dashImage = GameObject.FindWithTag("DashImage").GetComponent<Image>();
         hpOrb = GameObject.FindWithTag("hpOrb");
         mpOrb = GameObject.FindWithTag("mpOrb");
         stBar = GameObject.FindWithTag("stOrb");
@@ -223,6 +225,14 @@ public class UImanager : MonoBehaviour
                 slot5.fillAmount = 1f;
             }
 
+            //if(player.dashoff == true)
+            //{
+            //    dashImage.enabled = true;
+            //}
+            //else
+            //{
+            //    dashImage.enabled = false;
+            //}
 
             hpControl();
             mpControl();

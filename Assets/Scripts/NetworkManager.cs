@@ -117,7 +117,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (ChatInput.text != "" && Input.GetKeyDown(KeyCode.Return))
         {
             Send();
-            //Debug.Log("send via return key");
         }
         
     }
