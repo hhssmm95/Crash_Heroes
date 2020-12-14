@@ -116,6 +116,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public bool stopWhileAttack;
     float stopTimer;
 
+    bool dashOff;
+
     public string user;
     public int Photnet_AnimationSync;
     //MageSkill mSkill;
@@ -375,7 +377,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (isDamaging)
             {
                 damageTimer += Time.deltaTime;
-                if (damageTimer >= 1.0f)
+                if (damageTimer >= 0.4f)
                 {
                     isDamaging = false;
                     damageTimer = 0;
@@ -391,10 +393,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 //    photonView.RPC("Jump", RpcTarget.All);
                 //if (Input.GetKeyDown(KeyCode.Space))
                 //    Jump();
-                if (Input.GetKeyDown(KeyCode.Mouse1) && st >= 20.0f)
+                if (Input.GetKeyDown(KeyCode.Mouse1) && !dashOff)
                 {
                     SetLookAtMousePos();
-                    photonView.RPC("Dash", RpcTarget.All);
+                    //photonView.RPC("Dash", RpcTarget.All);
+                    StartCoroutine("Dash");
                 }
                 //Dash();
                 //Skill_1();
@@ -491,13 +494,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (skill_2_Off)
             {
                 skill_2_Timer += Time.deltaTime;
-                if (skill_2_Timer >= 1.0f)
-                {
-                    if (job == Global.Classes.Warrior)
-                    {
-                        wSkill.warriorAnim.SetBool("Skill2_2", false);
-                    }
-                }
+                
 
                 if (skill_2_Timer >= skill_2_Cooltime)
                 {
@@ -508,10 +505,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (skill_3_Off)
             {
                 skill_3_Timer += Time.deltaTime;
-                if (skill_3_Timer >= 1.0f && job == Global.Classes.Warrior)
-                {
-                    wSkill.warriorAnim.SetBool("Skill3_2", false);
-                }
                 if (skill_3_Timer >= skill_3_Cooltime)
                 {
                     skill_3_Off = false;
@@ -567,34 +560,25 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         }
     }
         //[PunRPC]
-        void Jump()
-        {
-            //바닥에 있으면 점프를 실행
-            if (isGround)
-            {
-                //print("점프 가능 !");
-                isGround = false;
-                myAnim.SetTrigger("Jump");
-                Photnet_AnimationSync = 1;
-                myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            }
-            else
-            {
-                return;
-            }
-        }
+        //void Jump()
+        //{
+        //    //바닥에 있으면 점프를 실행
+        //    if (isGround)
+        //    {
+        //        //print("점프 가능 !");
+        //        isGround = false;
+        //        myAnim.SetTrigger("Jump");
+        //        Photnet_AnimationSync = 1;
+        //        myRig.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        //    }
+        //    else
+        //    {
+        //        return;
+        //    }
+        //}
     
-
-    [PunRPC]
-    void Dash()
-    {
-
-        st -= 20;
-        //isDashing = true;
-        myAnim.SetTrigger("Dash");
-        Photnet_AnimationSync = 2;
-
-    }
+        
+    
 
     [PunRPC]
     public void OnDamage(float damage , Vector3 normal)
@@ -603,7 +587,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            Photnet_AnimationSync = 3;
+            Photnet_AnimationSync = 2;
             myRig.AddForce(normal * (jumpPower/3), ForceMode.Impulse);
             if (def <= damage)
             {
@@ -646,7 +630,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             {
                 case "WarriorSkill4" :
                     myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 3;
+                    Photnet_AnimationSync = 2;
                     if (def <= damage)
                     {
                         if (br > damage)
@@ -675,7 +659,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 case "ArcherSkill3":
                     myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 3;
+                    Photnet_AnimationSync = 2;
                     if (def <= damage)
                     {
                         if (br > damage)
@@ -706,7 +690,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                 case "ArcherSkill4":
                     myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 3;
+                    Photnet_AnimationSync = 2;
                     if (def <= damage)
                     {
                         if (br > damage)
@@ -749,7 +733,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("HeavyDamage");
-            Photnet_AnimationSync = 4;
+            Photnet_AnimationSync = 3;
             myRig.AddForce(normal * jumpPower/2, ForceMode.Impulse);
 
             if (def <= damage)
@@ -795,7 +779,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
-            Photnet_AnimationSync = 3;
+            Photnet_AnimationSync = 2;
             myRig.AddForce(normal * (jumpPower / 3), ForceMode.Impulse);
 
             hp -= damage;
@@ -892,7 +876,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             //myAnim.Play("Die2");
             //myAnim.SetBool("isDead", true);
             myAnim.SetTrigger("isDead");
-            Photnet_AnimationSync = 5;
+            Photnet_AnimationSync = 4;
         }
 
     }
@@ -928,10 +912,22 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         isDashing = false;
     }
 
+    IEnumerator Dash()
+    {
+        dashOff = true;
+        //st -= 20;
+        //isDashing = true;
+        myAnim.SetTrigger("Dash");
+        Photnet_AnimationSync = 1;
+        yield return new WaitForSeconds(10.0f);
+        dashOff = false;
+
+    }
+
     IEnumerator Slow(float rate, float time)
     {
         float originSpeed = speed;
-        speed *= rate;
+        speed *= (1.0f - rate);
         yield return new WaitForSeconds(time);
         speed = originSpeed;
     }
@@ -945,6 +941,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         isStun = false;
     }
     
+
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -962,27 +959,27 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
             switch (Photnet_AnimationSync)
             {
-                case 1:
-                    myAnim.SetTrigger("Jump");
-                    Photnet_AnimationSync = 0;
-                    break;
+                //case 1:
+                //    myAnim.SetTrigger("Jump");
+                //    Photnet_AnimationSync = 0;
+                //    break;
 
-                case 2:
+                case 1:
                     myAnim.SetTrigger("Dash");
                     Photnet_AnimationSync = 0;
                     break;
 
-                case 3:
+                case 2:
                     myAnim.SetTrigger("Damage");
                     Photnet_AnimationSync = 0;
                     break;
 
-                case 4:
+                case 3:
                     myAnim.SetTrigger("HeavyDamage");
                     Photnet_AnimationSync = 0;
                     break;
 
-                case 5:
+                case 4:
                     myAnim.SetTrigger("isDead");
                     Photnet_AnimationSync = 0;
                     break;

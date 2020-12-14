@@ -73,7 +73,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.CompareTag("Archer") && other.gameObject.layer == 9 /*&& Archer.isAttacking*/)
+        if (!other.CompareTag("Archer") && other.gameObject.layer == 9 /*&& Archer.isAttacking*/&& photonView.IsMine )
         {
 
             var enemy = other.GetComponent<CharacterMove>();

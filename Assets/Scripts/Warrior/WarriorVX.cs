@@ -52,7 +52,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9)
+        if (!other.CompareTag("Warrior") && other.gameObject.layer == 9 && photonView.IsMine)
         {
             var enemy = other.GetComponent<CharacterMove>();
             if (s4HitReady)

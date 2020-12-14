@@ -67,10 +67,10 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnTriggerStay(Collider other)
     {
-        if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 /*&& Dragoon.isAttacking*/)
+        if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 /*&& Dragoon.isAttacking*/&& photonView.IsMine)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            if (tag == "DragoonSkill3" && meteorReady)
+            if (tag == "DragoonSkill4" && meteorReady)
             {
                 
                 Debug.Log("브레스타격");

@@ -89,7 +89,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 //photonView.RPC("Warrior_Attack", RpcTarget.All);
-                Warrior_Attack();
+                //Warrior_Attack();
+                StartCoroutine("Warrior_Attack_Effect");
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 //photonView.RPC("Warrior_Skill1", RpcTarget.All);
                 Warrior_Skill1();
@@ -107,17 +108,17 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
                 Warrior_Skill5();
 
 
-            if (attackOff)
-            {
-                attack_Timer += Time.deltaTime;
-                //if (attack_Timer >= 1.0f)
-                //    player.isAttacking = false;
-                if (attack_Timer >= attack_Cooltime)
-                {
-                    attackOff = false;
-                    attack_Timer = 0;
-                }
-            }
+            //if (attackOff)
+            //{
+            //    attack_Timer += Time.deltaTime;
+            //    //if (attack_Timer >= 1.0f)
+            //    //    player.isAttacking = false;
+            //    if (attack_Timer >= attack_Cooltime)
+            //    {
+            //        attackOff = false;
+            //        attack_Timer = 0;
+            //    }
+            //}
 
 
             if (comboContinue)
@@ -355,6 +356,64 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     void SkillHitOff()
     {
         player.isAttacking = false;
+    }
+
+    IEnumerator Warrior_Attack_Effect()
+    {
+        attackOff = true;
+        comboContinue = true;
+
+        if (combo == 1)
+        {
+            SetLookAtMousePos();
+        }
+
+        if (comboTimer > 3.0f)
+        {
+            //warriorAnim.SetInteger("Combo", 0);
+            combo = 1;
+            comboContinue = false;
+        }
+        comboTimer = 0;
+
+        Vector3 dir = player.transform.forward;
+
+        switch (combo)
+        {
+            case 1:
+                warriorAnim.SetTrigger("FirstAttack");
+                Photnet_AnimationSync = 1;
+                if (photonView.IsMine)
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation), 1.0f);
+                //StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(0);
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
+                break;
+
+            case 2:
+                warriorAnim.SetTrigger("SecondAttack");
+                Photnet_AnimationSync = 2;
+                if (photonView.IsMine)
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation), 1.0f);
+                //StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(1);
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
+                break;
+
+            case 3:
+                warriorAnim.SetTrigger("ThirdAttack");
+                Photnet_AnimationSync = 3;
+                if (photonView.IsMine)
+                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation), 1.0f);
+                //StartCoroutine("Skill_Hit");
+                SoundManager.Instance.KnightSoundPlay(2);
+                yield return new WaitForSeconds(attack_Cooltime + 0.5f);
+                attackOff = false;
+                break;
+
+        }
     }
 
     IEnumerator Warrior_Skill1_VFX()
