@@ -89,7 +89,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
-        if (photonView.IsMine && !player.isDead && !player.isStun)
+        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 Mage_Attack();

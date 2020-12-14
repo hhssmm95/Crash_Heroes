@@ -112,7 +112,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     bool isWS4Hit;
     bool isDS4Hit;
     bool isAS3Hit;
-
+    public bool isHeavyDamaging;
     public bool dashAttacking_warrior;
     public bool stopWhileAttack;
     float stopTimer;
@@ -387,7 +387,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 }
             }
 
-            if (!isDead && !isDashing && !isStun && !stopWhileAttack) //사망처리중일 시 이동 불가
+            if (!isDead && !isDashing && !isHeavyDamaging && !isStun && !stopWhileAttack) //사망처리중일 시 이동 불가
             {
 
                 Move();
@@ -586,7 +586,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnDamage(float damage , Vector3 normal)
     {
-        if (photonView.IsMine && !isDamaging && !isDead)
+        if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
             isDamaging = true;
             myAnim.SetTrigger("Damage");
@@ -626,7 +626,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnSpecialDamage(float damage, string tag)
     {
-        if (photonView.IsMine && !isDamaging && !isDead)
+        if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
             switch(tag)
             {
@@ -727,9 +727,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnHeavyDamage(float damage, Vector3 normal)
     {
-        if (photonView.IsMine && !isDamaging && !isDead)
+        if (photonView.IsMine && !isDamaging && !isHeavyDamaging && !isDead)
         {
-            isDamaging = true;
+
+            StartCoroutine("HeavyDamaging");
             myAnim.SetTrigger("HeavyDamage");
             Photnet_AnimationSync = 3;
             myRig.AddForce(normal * jumpPower/2, ForceMode.Impulse);
@@ -950,6 +951,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     public void DashOff()
     {
         isDashing = false;
+    }
+
+    IEnumerator HeavyDamaging()
+    {
+        isHeavyDamaging = true;
+        yield return new WaitForSeconds(2.0f);
+        isHeavyDamaging = false;
     }
 
     IEnumerator Dash()

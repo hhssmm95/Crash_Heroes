@@ -85,7 +85,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         //ownerObject = player.gameObject.name;
         //animName = warriorAnim.name;
 
-        if (photonView.IsMine && !player.isDead && !player.isStun)
+        if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
                 //photonView.RPC("Warrior_Attack", RpcTarget.All);
