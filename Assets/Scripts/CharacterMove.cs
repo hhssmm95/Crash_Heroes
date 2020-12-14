@@ -8,6 +8,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     Vector3 cameraOffset;
     public Animator myAnim;
     private Rigidbody myRig;
+    private AudioSource aud;
 
     private Camera mainCamera;
     public Global.Classes job;
@@ -861,6 +862,31 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     {
         if (GameObject.FindWithTag("Shield").activeInHierarchy)
             Destroy(GameObject.FindWithTag("Shield"));
+    }
+
+    [PunRPC]
+    public void PlaySE(int m, int n)
+    {
+        switch(m)
+        {
+            case 1:
+                aud.clip = SoundManager.Instance.knightSoundList[n];
+                break;
+            case 2:
+                aud.clip = SoundManager.Instance.archerSoundList[n];
+                break;
+            case 3:
+                aud.clip = SoundManager.Instance.dragoonSoundList[n];
+                break;
+            case 4:
+                aud.clip = SoundManager.Instance.mageSoundList[n];
+                break;
+            case 5:
+                //aud.clip = SoundManager.Instance.knightSoundList[n];
+                break;
+
+        }
+        aud.Play();
     }
     //[PunRPC]
     public void OnDead()

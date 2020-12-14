@@ -75,16 +75,16 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.mpRegen = 9;
         player.stRegen = 5;
         attack_Cooltime = 1.0f;
-        player.skill_1_Cooltime = 10.0f;
+        player.skill_1_Cooltime = 8.0f;
         player.skill_1_Cost = 30;
         player.skill_2_Cooltime = 12.0f;
         player.skill_2_Cost = 40;
-        player.skill_3_Cooltime = 18.0f;
-        player.skill_3_Cost = 50;
-        player.skill_4_Cooltime = 30.0f;
-        player.skill_4_Cost = 40;
+        player.skill_3_Cooltime = 15.0f;
+        player.skill_3_Cost = 35;
+        player.skill_4_Cooltime = 63.0f;
+        player.skill_4_Cost = 97;
         player.skill_5_Cooltime = 60.0f;
-        player.skill_5_Cost = 100;
+        player.skill_5_Cost = 60;
     }
 
     void Update()
