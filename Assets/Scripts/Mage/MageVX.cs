@@ -33,7 +33,6 @@ public class MageVX : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-       
     }
 
     private void OnTriggerStay(Collider enemy)
