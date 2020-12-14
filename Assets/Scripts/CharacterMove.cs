@@ -53,7 +53,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     float moveTimer; //걷는 사운드 세부조절 타이머
 
-    public int killCount;
+    public int killCount = 0;
 
     public float speed = 2.0f; // 캐릭터 이동속도
 
