@@ -538,44 +538,41 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
-
-            switch (Photnet_AnimationSync)
+            if (!photonView.IsMine)
             {
-                case 1:
-                    warriorAnim.SetTrigger("FirstAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                switch (Photnet_AnimationSync)
+                {
+                    case 1:
+                        warriorAnim.SetTrigger("FirstAttack");
+                        break;
 
-                case 2:
-                    warriorAnim.SetTrigger("SecondAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 2:
+                        warriorAnim.SetTrigger("SecondAttack");
+                        break;
 
-                case 3:
-                    warriorAnim.SetTrigger("ThirdAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 3:
+                        warriorAnim.SetTrigger("ThirdAttack");
+                        break;
 
-                case 4:
-                    warriorAnim.SetTrigger("Skill1");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 4:
+                        warriorAnim.SetTrigger("Skill1");
+                        break;
 
-                case 5:
-                    warriorAnim.SetTrigger("Skill2");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 5:
+                        warriorAnim.SetTrigger("Skill2");
+                        break;
 
-                case 6:
-                    warriorAnim.SetTrigger("Skill3");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 6:
+                        warriorAnim.SetTrigger("Skill3");
+                        break;
 
-                case 7:
-                    warriorAnim.SetTrigger("Skill4");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 7:
+                        warriorAnim.SetTrigger("Skill4");
+                        break;
+                }
+
             }
+            Photnet_AnimationSync = 0;
 
         }
     }

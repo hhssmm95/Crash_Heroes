@@ -510,44 +510,40 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
-
-            switch (Photnet_AnimationSync)
+            if (!photonView.IsMine)
             {
-                case 1:
-                    dragoonAnim.SetTrigger("FirstAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                switch (Photnet_AnimationSync)
+                {
+                    case 1:
+                        dragoonAnim.SetTrigger("FirstAttack");
+                        break;
 
-                case 2:
-                    dragoonAnim.SetTrigger("SecondAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 2:
+                        dragoonAnim.SetTrigger("SecondAttack");
+                        break;
 
-                case 3:
-                    dragoonAnim.SetTrigger("ThirdAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 3:
+                        dragoonAnim.SetTrigger("ThirdAttack");
+                        break;
 
-                case 4:
-                    dragoonAnim.SetTrigger("Skill1");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 4:
+                        dragoonAnim.SetTrigger("Skill1");
+                        break;
 
-                case 5:
-                    dragoonAnim.SetTrigger("Skill2");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 5:
+                        dragoonAnim.SetTrigger("Skill2");
+                        break;
 
-                case 6:
-                    dragoonAnim.SetTrigger("Skill3");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 6:
+                        dragoonAnim.SetTrigger("Skill3");
+                        break;
 
-                case 7:
-                    dragoonAnim.SetTrigger("Skill4");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 7:
+                        dragoonAnim.SetTrigger("Skill4");
+                        break;
+                }
             }
+            Photnet_AnimationSync = 0;
 
         }
     }
