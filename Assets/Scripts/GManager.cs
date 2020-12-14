@@ -46,8 +46,9 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public int killCount = 0;
     private void Start()
     {
+        if(PhotonNetwork.IsMasterClient)
         //GameMode가 1이면 배틀로얄, 2라면 데스 매치
-        GameMode = (int)PhotonNetwork.CurrentRoom.CustomProperties["mode"];
+        GameMode = (int)PhotonNetwork.LocalPlayer.CustomProperties["mode"];
 
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         audioSource = GetComponent<AudioSource>();

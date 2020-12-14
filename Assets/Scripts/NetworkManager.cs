@@ -302,23 +302,39 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void ModeCheak(int num)
     {
-        if(num == 1)
+        if(PhotonNetwork.IsMasterClient)
+        {
+            if (num == 1)
+            {
+                PV.RPC("ShowMode", RpcTarget.All, num);
+                mode = "Battle";
+                SetLocalTag("mode", 1);
+            }
+            else if (num == 2)
+            {
+                PV.RPC("ShowMode", RpcTarget.All, num);
+                mode = "DeathMatch";
+                SetLocalTag("mode", 2);
+            }
+            else
+            {
+                mode = null;
+            }
+        }
+    }
+
+    [PunRPC]
+    public void ShowMode(int num)
+    {
+        if (num == 1)
         {
             BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
             DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
-            mode = "Battle";
-            SetRoomTag(mode, 1);
         }
         else if(num == 2)
         {
             DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
             BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
-            mode = "DeathMatch";
-            SetRoomTag(mode, 2);
-        }
-        else
-        {
-            mode = null;
         }
     }
 
@@ -363,9 +379,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { slotIndex.ToString(), value } });
     }
 
-    void SetRoomTag(string mode, int value)
+    void SetLocalTag(string mode, int value)
     {
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { mode, value } });
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { mode, value } });
     }
 
     int GetRoomTag(int slotIndex)
