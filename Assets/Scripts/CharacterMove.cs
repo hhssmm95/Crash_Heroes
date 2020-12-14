@@ -613,13 +613,20 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
                     return;
                 }
-                gameObject.SendMessage("BarriorDestroy");
-                Debug.Log(gameObject.name + "(이)가 배리어가 적용된 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
+                if (br>0)
+                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어"+ br +" 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                else
+                    Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                
                 hp -= ((damage - br) - def);
                 br -= damage;
             }
             if (br < 0)
+            {
                 br = 0;
+                gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+            }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
             if(hp<=0)
@@ -642,11 +649,28 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
-                        hp -= (damage - def);
-                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                        if (br > damage)
+                        {
+                            br -= damage;
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                            return;
+                        }
+
+                        if (br > 0)
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                        else
+                            Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
+                        hp -= ((damage - br) - def);
+                        br -= damage;
+                    }
+                    if (br < 0)
+                    {
+                        br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     //hpBar.SetHealth(hp);
-                    
+
                     break;
 
                 case "ArcherSkill3":
@@ -654,8 +678,25 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
-                        hp -= (damage - def);
-                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                        if (br > damage)
+                        {
+                            br -= damage;
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                            return;
+                        }
+
+                        if (br > 0)
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                        else
+                            Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
+                        hp -= ((damage - br) - def);
+                        br -= damage;
+                    }
+                    if (br < 0)
+                    {
+                        br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
 
@@ -668,8 +709,25 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Photnet_AnimationSync = 3;
                     if (def <= damage)
                     {
-                        hp -= (damage - def);
-                        Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                        if (br > damage)
+                        {
+                            br -= damage;
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                            return;
+                        }
+
+                        if (br > 0)
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                        else
+                            Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
+                        hp -= ((damage - br) - def);
+                        br -= damage;
+                    }
+                    if (br < 0)
+                    {
+                        br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
                 default:
@@ -696,25 +754,28 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
             if (def <= damage)
             {
-                
-            }
-
-            if (def <= damage)
-            {
                 if (br > damage)
                 {
                     br -= damage;
                     Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
                     return;
                 }
+                else
+                    Destroy(GameObject.FindWithTag("Shield"));
 
-               
-                gameObject.SendMessage("BarriorDestroy");
-                Debug.Log(gameObject.name + "(이)가 배리어 수치 "+br+" 가 차감된 " + (damage - br) + "데미지를 방어력 " + def + " 만큼 경감하여 " + ((damage - br) - def) + " 중상을 입음");
+                if (br > 0)
+                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                else
+                    Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
                 hp -= ((damage - br) - def);
                 br -= damage;
+
                 if (br < 0)
+                {
                     br = 0;
+                    gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                }
             }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
@@ -812,12 +873,16 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     {
         if (photonView.IsMine && !isDead)
         {
-            br += amount;
-            if (hp > maxHP)
-                hp = maxHP;
+            br = amount*maxHP;
         }
     }
 
+    [PunRPC]
+    public void BarriorBroken()
+    {
+        if (GameObject.FindWithTag("Shield").activeInHierarchy)
+            Destroy(GameObject.FindWithTag("Shield"));
+    }
     //[PunRPC]
     public void OnDead()
     {
