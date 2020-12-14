@@ -198,7 +198,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
 
             if(player.GetComponent<CharacterMove>().isDead)
             {
-                Destroy(player);
+                PhotonNetwork.Destroy(player);
                 StartCoroutine("ReSpawn");
             }
         }
