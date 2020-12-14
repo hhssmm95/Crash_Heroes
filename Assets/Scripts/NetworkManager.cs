@@ -32,6 +32,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text RoomInfoText;
     public Text[] ChatText;
     public InputField ChatInput;
+    public Button BattleButton;
+    public Button DeathMatchButton;
+    public string mode;
 
     [Header("ETC")]
     public Text StatusText;
@@ -39,6 +42,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     List<RoomInfo> RoomList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
+
 
     private void Start()
     {
@@ -296,9 +300,31 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region 게임시작, 종료
 
+    public void ModeCheak(int num)
+    {
+        if(num == 1)
+        {
+            BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
+            DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
+            mode = "Battle";
+            SetRoomTag(mode, 1);
+        }
+        else if(num == 2)
+        {
+            DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
+            BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
+            mode = "DeathMatch";
+            SetRoomTag(mode, 2);
+        }
+        else
+        {
+            mode = null;
+        }
+    }
+
     public void StartGame()
     {
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1 && mode != null)
         {
             int Num = Random.Range(1, 3);
             PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -335,6 +361,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     void SetRoomTag(int slotIndex, int value)
     {
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { slotIndex.ToString(), value } });
+    }
+
+    void SetRoomTag(string mode, int value)
+    {
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { mode, value } });
     }
 
     int GetRoomTag(int slotIndex)
