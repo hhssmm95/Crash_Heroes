@@ -549,41 +549,38 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
-
-            switch (Photnet_AnimationSync)
+            if (!photonView.IsMine)
             {
-                case 1:
-                    archerAnim.SetTrigger("FirstAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                switch (Photnet_AnimationSync)
+                {
+                    case 1:
+                        archerAnim.SetTrigger("FirstAttack");
+                        break;
 
-                case 2:
-                    archerAnim.SetTrigger("SecondAttack");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 2:
+                        archerAnim.SetTrigger("SecondAttack");
+                        break;
 
-                case 3:
-                    archerAnim.SetTrigger("Skill1");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 3:
+                        archerAnim.SetTrigger("Skill1");
+                        break;
 
-                case 4:
-                    archerAnim.SetTrigger("Skill2");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 4:
+                        archerAnim.SetTrigger("Skill2");
+                        break;
 
-                case 5:
-                    archerAnim.SetTrigger("Skill3");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 5:
+                        archerAnim.SetTrigger("Skill3");
+                        break;
 
-                case 6:
-                    archerAnim.SetTrigger("Skill4");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 6:
+                        archerAnim.SetTrigger("Skill4");
+                        break;
+                }
             }
-
+            Photnet_AnimationSync = 0;
         }
+
     }
 
 }

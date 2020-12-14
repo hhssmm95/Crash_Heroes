@@ -373,46 +373,42 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             PN_AnimationSync = (int)stream.ReceiveNext();
-
-            switch (PN_AnimationSync)
+            if (!photonView.IsMine)
             {
-                case 1:
-                    mageAnim.SetTrigger("FirstAttack");
-                    PN_AnimationSync = 0;
-                    break;
+                switch (PN_AnimationSync)
+                {
+                    case 1:
+                        mageAnim.SetTrigger("FirstAttack");
+                        break;
 
-                case 2:
-                    mageAnim.SetTrigger("SecondAttack");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 2:
+                        mageAnim.SetTrigger("SecondAttack");
+                        break;
 
-                case 3:
-                    mageAnim.SetTrigger("ThirdAttack");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 3:
+                        mageAnim.SetTrigger("ThirdAttack");
+                        break;
 
-                case 4:
-                    mageAnim.SetTrigger("Skill2");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 4:
+                        mageAnim.SetTrigger("Skill2");
+                        break;
 
-                case 5:
-                    mageAnim.SetTrigger("Skill3");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 5:
+                        mageAnim.SetTrigger("Skill3");
+                        break;
 
-                case 6:
-                    mageAnim.SetTrigger("Skill4");
-                    StartCoroutine("Mage_Skill4_Effect");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 6:
+                        mageAnim.SetTrigger("Skill4");
+                        StartCoroutine("Mage_Skill4_Effect");
+                        break;
 
-                case 7:
-                    mageAnim.SetTrigger("Skill5");
-                    PN_AnimationSync = 0;
-                    break;
+                    case 7:
+                        mageAnim.SetTrigger("Skill5");
+                        break;
+                }
             }
 
+            PN_AnimationSync = 0;
         }
     }
 }

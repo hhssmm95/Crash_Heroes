@@ -610,6 +610,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (br < 0)
             {
                 br = 0;
+                gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
             }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
@@ -651,6 +652,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     //hpBar.SetHealth(hp);
 
@@ -679,6 +681,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
 
@@ -709,6 +712,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
+                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
                 default:
@@ -755,6 +759,7 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 if (br < 0)
                 {
                     br = 0;
+                    gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                 }
             }
             //hpBar.SetHealth(hp);
@@ -952,34 +957,33 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
-
-            switch (Photnet_AnimationSync)
+            if (!photonView.IsMine)
             {
-                //case 1:
-                //    myAnim.SetTrigger("Jump");
-                //    Photnet_AnimationSync = 0;
-                //    break;
+                switch (Photnet_AnimationSync)
+                {
+                    //case 1:
+                    //    myAnim.SetTrigger("Jump");
+                    //    Photnet_AnimationSync = 0;
+                    //    break;
 
-                case 1:
-                    myAnim.SetTrigger("Dash");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 1:
+                        myAnim.SetTrigger("Dash");
+                        break;
 
-                case 2:
-                    myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 2:
+                        myAnim.SetTrigger("Damage");
+                        break;
 
-                case 3:
-                    myAnim.SetTrigger("HeavyDamage");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 3:
+                        myAnim.SetTrigger("HeavyDamage");
+                        break;
 
-                case 4:
-                    myAnim.SetTrigger("isDead");
-                    Photnet_AnimationSync = 0;
-                    break;
+                    case 4:
+                        myAnim.SetTrigger("isDead");
+                        break;
+                }
             }
+            Photnet_AnimationSync = 0;
 
         }
     }
