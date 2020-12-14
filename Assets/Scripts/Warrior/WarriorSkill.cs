@@ -68,16 +68,16 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.mpRegen = 7;
         player.stRegen = 7;
         attack_Cooltime = 0.4f;
-        player.skill_1_Cooltime = 12.0f;
-        player.skill_1_Cost = 25.0f;
+        player.skill_1_Cooltime = 8.0f;
+        player.skill_1_Cost = 30.0f;
         player.skill_2_Cooltime = 28.0f;
-        player.skill_2_Cost = 30.0f;
-        player.skill_3_Cooltime = 18.0f;
+        player.skill_2_Cost = 45.0f;
+        player.skill_3_Cooltime = 15.0f;
         player.skill_3_Cost = 40.0f;
         player.skill_4_Cooltime = 118.0f;
         player.skill_4_Cost = 126.0f;
         player.skill_5_Cooltime = 60.0f;
-        player.skill_5_Cost = 100.0f;
+        player.skill_5_Cost = 60.0f;
     }
 
     // Update is called once per frame

@@ -10,8 +10,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     Transform Skill1Pos;
     bool checkReady;
     public bool snipeReady;
-    float checkTimer = 0.3f;
-    float snipeTimer = 0.3f;
+    float checkTimer = 0.5f;
+    float snipeTimer = 0.5f;
     public bool s3HitReady;
     public bool s4HitReady;
     bool hit;
@@ -46,7 +46,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
         Locate();
         if(checkReady)
         {
-            if (checkTimer >= 0.3f)
+            if (checkTimer >= 0.5f)
                 s3HitReady = true;
             else
                 checkTimer += Time.deltaTime;
@@ -54,7 +54,7 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
         }
         if (snipeReady)
         {
-            if (snipeTimer >= 0.3f)
+            if (snipeTimer >= 0.5f)
                 s4HitReady = true;
             else
                 snipeTimer += Time.deltaTime;
@@ -81,8 +81,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 checkTimer = 0.0f;
                 s3HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.7f, transform.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.6f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.575f, transform.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.575f + "감소 전 피해를 입힘.");
                 if (enemy.isDead == true)
                     Archer.CountKill();
                 return;
@@ -91,8 +91,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 snipeTimer = 0.0f;
                 s4HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.0f, transform.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.2f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.9f, transform.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.9f + "감소 전 피해를 입힘.");
                 if (enemy.isDead == true)
                     Archer.CountKill();
                 return;

@@ -701,7 +701,32 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     break;
 
                 case "DragoonSkill4":
+                    if (!isStun)
+                    {
+                        myAnim.SetTrigger("Damage");
+                        Photnet_AnimationSync = 2;
+                    }
+                    if (def <= damage)
+                    {
+                        if (br > damage)
+                        {
+                            br -= damage;
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 전량 배리어로 방어함");
+                            return;
+                        }
 
+                        if (br > 0)
+                            Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                        else
+                            Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+
+                        hp -= ((damage - br) - def);
+                        br -= damage;
+                    }
+                    if (br < 0)
+                    {
+                        br = 0;
+                    }
                     break;
 
                 case "ArcherSkill4":

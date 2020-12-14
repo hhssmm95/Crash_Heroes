@@ -12,7 +12,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     Transform Atk2Pos;
     Transform Skill1Pos;
     public bool meteorReady;
-    float meteorCount;
+    bool s4HitReady;
+    float meteorTimer = 0.5f;
     List<string> dm;
     //bool hit;
     void Awake()
@@ -46,6 +47,14 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
 
     void Update()
     {
+        if (meteorReady)
+        {
+            if (meteorTimer >= 0.5f)
+                s4HitReady = true;
+            else
+                meteorTimer += Time.deltaTime;
+
+        }
         //if(tag == "DragoonSkil3" && !meteorReady)
         //{
         //    if (meteorCount >= 0.7f)
@@ -70,12 +79,12 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
         if (!other.CompareTag("Dragoon") && other.gameObject.layer == 9 /*&& Dragoon.isAttacking*/&& photonView.IsMine)
         {
             var enemy = other.GetComponent<CharacterMove>();
-            if (tag == "DragoonSkill4" && meteorReady)
+            if (s4HitReady)
             {
-                
-                Debug.Log("브레스타격");
-                //enemy.OnDamage(10);
-                enemy.GetComponent<PhotonView>().RPC("OnBurn", RpcTarget.All, 10.0f, Dragoon.atk * 0.25f);
+                meteorTimer = 0.0f;
+                s4HitReady = false;
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.5f, transform.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.5f + "감소 전 피해를 입힘.");
                 if (enemy.isDead == true)
                     Dragoon.CountKill();
                 return;
@@ -163,7 +172,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(0.7f);
         meteorReady = true;
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(2.1f);
         var coll = gameObject.GetComponent<CapsuleCollider>();
         coll.enabled = false;
     }

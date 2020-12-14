@@ -65,15 +65,15 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.stRegen = 8;
         attack_Cooltime = 0.4f;
         player.skill_1_Cooltime = 4.0f;
-        player.skill_1_Cost = 25;
-        player.skill_2_Cooltime = 17.0f;
-        player.skill_2_Cost = 35;
-        player.skill_3_Cooltime = 23.0f;
-        player.skill_3_Cost = 40;
+        player.skill_1_Cost = 30;
+        player.skill_2_Cooltime = 11.0f;
+        player.skill_2_Cost = 40;
+        player.skill_3_Cooltime = 16.0f;
+        player.skill_3_Cost = 45;
         player.skill_4_Cooltime = 106.0f;
         player.skill_4_Cost = 130;
         player.skill_5_Cooltime = 30.0f;
-        player.skill_5_Cost = 100;
+        player.skill_5_Cost = 30;
     }
 
     // Update is called once per frame
@@ -485,7 +485,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
 
             var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill3VX", new Vector3(transform.position.x, transform.position.y + 15, transform.position.z) + pos, Quaternion.LookRotation(dir));
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(2.6f);
             PhotonNetwork.Destroy(effect);
         }
     }
@@ -500,7 +500,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
 
         SetLookAtMousePos();
 
-        yield return new WaitForSeconds(4.1f);
+        yield return new WaitForSeconds(3.4f);
         PhotonNetwork.Destroy(effect);
     }
 
