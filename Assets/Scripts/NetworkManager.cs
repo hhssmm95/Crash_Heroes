@@ -295,7 +295,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region 게임시작
+    #region 게임시작, 종료
 
     public void StartGame()
     {
@@ -307,7 +307,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(Num);
         }
     }
-
+    public void OnClickExit()
+    {
+        Application.Quit();
+    }
     #endregion
 
     #region 음악
