@@ -610,7 +610,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (br < 0)
             {
                 br = 0;
-                gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
             }
             //hpBar.SetHealth(hp);
             hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
@@ -652,7 +651,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
-                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     //hpBar.SetHealth(hp);
 
@@ -681,7 +679,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
-                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
 
@@ -712,7 +709,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     if (br < 0)
                     {
                         br = 0;
-                        gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                     }
                     break;
                 default:
@@ -759,7 +755,6 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 if (br < 0)
                 {
                     br = 0;
-                    gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
                 }
             }
             //hpBar.SetHealth(hp);
