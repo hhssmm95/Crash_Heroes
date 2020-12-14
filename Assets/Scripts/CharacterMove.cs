@@ -634,8 +634,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             switch(tag)
             {
                 case "WarriorSkill4" :
-                    myAnim.SetTrigger("Damage");
-                    Photnet_AnimationSync = 2;
+                    if (!isStun)
+                    {
+                        myAnim.SetTrigger("Damage");
+                        Photnet_AnimationSync = 2;
+                    }
                     if (def <= damage)
                     {
                         if (br > damage)
@@ -715,14 +718,13 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         br = 0;
                     }
                     break;
-                default:
-                    hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
-                    if (hp <= 0)
-                    {
-                        isDead = true;
-                        Debug.Log(gameObject.name + "(이)가 사망");
-                    }
-                    break;
+            }
+
+            hpBar.GetComponent<PhotonView>().RPC("SetHealth", RpcTarget.All, hp);
+            if (hp <= 0)
+            {
+                isDead = true;
+                Debug.Log(gameObject.name + "(이)가 사망");
             }
         }
     }
@@ -798,14 +800,14 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     [PunRPC]
     public void OnSlow(float rate, float time)
     {
-        if (photonView.IsMine && !isDead)
+        if (!isDead)
             StartCoroutine(Slow(rate, time));
     }
 
     [PunRPC]
     public void OnStun(float time)
     {
-        if (photonView.IsMine && isHeavyDamaging && !isDead)
+        if (!isHeavyDamaging && !isDead)
             StartCoroutine(Stun(time));
     }
 
@@ -985,10 +987,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     IEnumerator Stun(float time)
     {
+        Debug.Log(tag + " " + time + "초 동안 스턴!");
         isStun = true;
-        myAnim.SetBool("isStun", true);
+        myAnim.SetTrigger("isStun");
+        Photnet_AnimationSync = 5;
         yield return new WaitForSeconds(time);
-        myAnim.SetBool("isStun", false);
+        //myAnim.SetBool("isStun", false);
         isStun = false;
     }
 
@@ -1038,6 +1042,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
                     case 4:
                         myAnim.SetTrigger("isDead");
+                        break;
+
+                    case 5:
+                        myAnim.SetTrigger("isStun");
                         break;
                 }
             }

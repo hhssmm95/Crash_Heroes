@@ -14,8 +14,9 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     public bool s4HitReady;
     bool hit;
     bool checkReady;
+    float checkTimer = 0.5f;
     public int count;
-    List<string> dm;
+    public List<string> dm;
     void Start()
     {
         Warrior = GameObject.FindGameObjectWithTag("Warrior").GetComponent<CharacterMove>();
@@ -43,6 +44,14 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
         //        s4HitReady = true;
         //    }
         //}
+        if (checkReady)
+        {
+            if (checkTimer >= 0.5f)
+                s4HitReady = true;
+            else
+                checkTimer += Time.deltaTime;
+
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -57,11 +66,13 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
             var enemy = other.GetComponent<CharacterMove>();
             if (s4HitReady)
             {
+                checkTimer = 0.0f;
                 s4HitReady = false;
+
                 //skill4Timer = 0.0f;
                 count++;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 0.8f, transform.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 0.8f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 1.375f, transform.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.375f + "감소 전 피해를 입힘.");
                 //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
                 return;
@@ -128,7 +139,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     }
     IEnumerator StayCheck()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         checkReady = true;
     }
 

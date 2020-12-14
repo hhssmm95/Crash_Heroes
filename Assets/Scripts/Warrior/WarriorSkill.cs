@@ -481,7 +481,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.isAttacking = true;
         player.ControlOff();
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(2.3f);
         PhotonNetwork.Destroy(effect);
 
         //yield return new WaitForSeconds(3.5f);
@@ -489,7 +489,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     }
     IEnumerator Warrior_Skill4_2_VFX()
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.1f);
         player.isAttacking = false;
         var myRig = GetComponent<Rigidbody>().useGravity = true;
         WMesh.SetActive(true);
