@@ -126,7 +126,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 comboTimer += Time.deltaTime;
             }
 
-            if (!(player.hp <= 0) && gameObject.GetComponent<CharacterMove>().stopWhileAttack==false)
+            if (!(player.hp <= 0))
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -285,9 +285,9 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_4_Off = true;
             mageAnim.SetTrigger("Skill4");
             PN_AnimationSync = 6;
+            StartCoroutine("Mage_Skill4_Effect");
             player.mp -= player.skill_4_Cost;
             SoundManager.Instance.MageSoundPlay(5);
-            StartCoroutine("Mage_Skill4_Effect");
             player.skill_1_Timer = 0;
             player.skill_2_Timer = 0;
             player.skill_3_Timer = 0;
@@ -298,8 +298,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         }
 
     }
-
-
+    
     void MageSkill5()
     {
         if (player.mp >= player.skill_5_Cost)
@@ -310,11 +309,11 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             PN_AnimationSync = 7;
             SoundManager.Instance.MageSoundPlay(6);
             //shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
+
+            player.BarriorFill(0.4f);
             PhotonNetwork.Instantiate("Prefebs/VFX/MageShield", gameObject.transform.position + ShiledEff.transform.position, Quaternion.Euler(0, 0, 0));
-            
             shld = GameObject.FindWithTag("Shield");
             shld.transform.parent = gameObject.transform;
-            player.BarriorFill(player.maxHP * 0.4f);
         }
 
     }
@@ -339,11 +338,11 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         //player.skill_3_Cooltime *= 10.0f;
         BuffEff.SetActive(false);
     }
-
-    [PunRPC]
+    
     IEnumerator Mage_Skill5_Effect()
     {
         yield return new WaitForSeconds(30.0f);
+        player.BarriorFill(0);
         Destroy(shld);
     }
     
@@ -403,6 +402,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
                 case 6:
                     mageAnim.SetTrigger("Skill4");
+                    StartCoroutine("Mage_Skill4_Effect");
                     PN_AnimationSync = 0;
                     break;
 
