@@ -95,6 +95,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 LimitTime = 0;
                 text_Time.text = "0";
+                isTimeOver = true;
             }
 
             //죽어있는 플레이어의 수를 센다.
