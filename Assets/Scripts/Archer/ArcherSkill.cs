@@ -451,7 +451,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         SetLookAtMousePos();
         //Vector3 dir = transform.forward;
-        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z + 0.4f), transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/);
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", ArcherSkill1Pos.transform.position, transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/);
         SoundManager.Instance.ArcherSoundPlay(4);
         SoundManager.Instance.ArcherSoundPlay(0);
         yield return new WaitForSeconds(3.0f);
@@ -463,7 +463,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         archerAnim.SetTrigger("Skill2");
         Photnet_AnimationSync = 4;
         SetLookAtMousePos();
-        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.4f), transform.rotation);
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", ArcherSkill1Pos.transform.position, transform.rotation);
         yield return new WaitForSeconds(4.0f);
         PhotonNetwork.Destroy(effect);
     }
