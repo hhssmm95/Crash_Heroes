@@ -364,7 +364,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if(moveTimer >= 0.5f)
             {
                 moveTimer = 0;
-                SoundManager.Instance.FootstepsSoundPlay(0);
+                aud.clip = SoundManager.Instance.footStepsSoundList[0];
+                aud.Play();
             }
         }
         else if(myAnim.GetBool("Run"))
@@ -373,7 +374,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
             if (moveTimer >= 0.2f)
             {
                 moveTimer = 0;
-                SoundManager.Instance.FootstepsSoundPlay(0);
+                aud.clip = SoundManager.Instance.footStepsSoundList[0];
+                aud.Play();
             }
         }
         else
@@ -634,8 +636,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     return;
                 }
 
-                if (br>0)
-                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어"+ br +" 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                if (br > 0)
+                {
+                    Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                    gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                }
                 else
                     Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
                 
@@ -685,7 +690,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         }
 
                         if (br > 0)
+                        {
                             Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                            gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                        }
                         else
                             Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
 
@@ -716,7 +724,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         }
 
                         if (br > 0)
+                        {
                             Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                            gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                        }
                         else
                             Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
 
@@ -745,7 +756,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         }
 
                         if (br > 0)
+                        {
                             Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                            gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                        }
                         else
                             Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
 
@@ -773,7 +787,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                         }
 
                         if (br > 0)
+                        {
                             Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                            gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                        }
                         else
                             Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
 
@@ -825,9 +842,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                     Destroy(GameObject.FindWithTag("Shield"));
 
                 if (br > 0)
+                {
                     Debug.Log(gameObject.name + "(이)가 " + damage + "데미지를 배리어" + br + " 과 방어력 " + def + " 만큼 경감하여 " + (damage - br - def) + " 피해를 입음");
+                    gameObject.GetComponent<PhotonView>().RPC("BarriorBroken", RpcTarget.All);
+                }
                 else
-                    Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
+                Debug.Log(gameObject.name + "(이)가" + damage + "데미지를 방어력 " + def + " 만큼 경감하여 " + (damage - def) + " 피해를 입음");
 
                 hp -= ((damage - br) - def);
                 br -= damage;
@@ -957,17 +977,64 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     }
 
     [PunRPC]
-    public void GetItem(int itemnum, int amount)
+    public void GetItem(int itemnum, float amount)
     {
         if (photonView.IsMine && !isDead)
         {
             switch(itemnum)
             {
                 case 1:
-                    hp += amount;
+                    hp += amount*maxHP;
                     break;
                 case 2:
-                    mp += amount;
+                    mp = amount*maxMP;
+                    break;
+                case 3:
+                    bool z = true;
+                    while (z)
+                    {
+                        int k = (int)Random.Range(0, 5);
+                        if (k == 0 && skill_1_Off == true)
+                        {
+                            skill_1_Off = false;
+                            skill_1_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 1 && skill_2_Off == true)
+                        {
+                            skill_2_Off = false;
+                            skill_2_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 2 && skill_3_Off == true)
+                        {
+                            skill_3_Off = false;
+                            skill_3_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 3 && skill_4_Off == true)
+                        {
+                            skill_4_Off = false;
+                            skill_4_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 4 && skill_5_Off == true)
+                        {
+                            skill_5_Off = false;
+                            skill_5_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (skill_1_Off == false && skill_2_Off == false && skill_3_Off == false && skill_4_Off == false && skill_5_Off == false)
+                        {
+                            z = false;
+                            break;
+                        }
+                    }
                     break;
             }
         }

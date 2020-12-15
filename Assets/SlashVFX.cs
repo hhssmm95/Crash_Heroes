@@ -32,11 +32,18 @@ public class SlashVFX : MonoBehaviourPunCallbacks, IPunObservable
             var enemy = other.GetComponent<CharacterMove>();
             enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, warrior.atk*2.65f, -transform.right, warrior.gameObject.tag);
             Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + warrior.atk * 2.65f + "감소 전 피해를 입힘.");
-            SoundManager.Instance.HitSoundPlay(0);
-            
+            var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit_2", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
+            StartCoroutine(destroyEffect(effect));
+            SoundManager.Instance.HitSoundPlay(2);
+
         }
     }
-
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

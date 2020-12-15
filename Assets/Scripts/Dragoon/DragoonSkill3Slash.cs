@@ -35,6 +35,7 @@ public class DragoonSkill3Slash : MonoBehaviourPunCallbacks, IPunObservable
                 dm.Add(enemy.name);
 
                 enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.8f, Dragoon.transform.forward, Dragoon.gameObject.tag);
+                SoundManager.Instance.HitSoundPlay(7);
             }
             
 

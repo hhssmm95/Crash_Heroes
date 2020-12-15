@@ -37,8 +37,10 @@ public class MageVX : MonoBehaviour
             if(!dm.Exists(x=>x==enemy.name))
             {
                 dm.Add(enemy.name);
+
                 switch (gameObject.name)
                 {
+                    
                     case "MageSkill1VX(Clone)":
                         enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 1.96f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.96f + "감소 전 피해를 입힘.");
@@ -55,14 +57,20 @@ public class MageVX : MonoBehaviour
                     case "MageAttack1VX(Clone)":
                         enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.8f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.8f + "감소 전 피해를 입힘.");
+                        var effect1 = PhotonNetwork.Instantiate("Prefebs/Effect_41_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                        StartCoroutine(destroyEffect(effect1));
                         break;
                     case "MageAttack2VX(Clone)":
                         enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Mage.atk * 0.9f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 0.9f + "감소 전 피해를 입힘.");
+                        var effect2 = PhotonNetwork.Instantiate("Prefebs/Effect_41_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                        StartCoroutine(destroyEffect(effect2));
                         break;
                     case "MageAttack3VX(Clone)":
                         enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Mage.atk * 1.1f, Mage.transform.forward, Mage.gameObject.tag);
                         Debug.Log(gameObject.name + "스킬이 " + enemy.gameObject.name + "에게 " + Mage.atk * 1.1f + "감소 전 피해를 입힘.");
+                        var effect3 = PhotonNetwork.Instantiate("Prefebs/Effect_41_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                        StartCoroutine(destroyEffect(effect3));
                         break;
 
                 }
@@ -73,6 +81,12 @@ public class MageVX : MonoBehaviour
     }
 
 
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

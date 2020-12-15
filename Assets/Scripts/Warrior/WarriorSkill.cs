@@ -66,7 +66,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.atk = 64.0f;
         player.def = 39.0f;
         player.hpRegen = 9.0f;
-        player.mpRegen = 7;
+        player.mpRegen = 6;
         player.stRegen = 7;
         attack_Cooltime = 0.4f;
         player.skill_1_Cooltime = 8.0f;
@@ -340,7 +340,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.skill_5_Off = true;
             player.mp -= player.skill_5_Cost;
             healing = true;
-            SoundManager.Instance.KnightSoundPlay(6);
+            //SoundManager.Instance.KnightSoundPlay(6);
             StartCoroutine("Warrior_Skill5_Effect");
         }
     }
@@ -389,8 +389,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 1:
                 warriorAnim.SetTrigger("FirstAttack");
                 Photnet_AnimationSync = 1;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation), 1.0f);
+
+                var effect1 = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(0);
                 yield return new WaitForSeconds(attack_Cooltime);
@@ -400,8 +400,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 2:
                 warriorAnim.SetTrigger("SecondAttack");
                 Photnet_AnimationSync = 2;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation), 1.0f);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(1);
                 yield return new WaitForSeconds(attack_Cooltime);
@@ -411,8 +410,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 3:
                 warriorAnim.SetTrigger("ThirdAttack");
                 Photnet_AnimationSync = 3;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation), 1.0f);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(2);
                 yield return new WaitForSeconds(attack_Cooltime + 0.5f);
@@ -431,7 +429,9 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             Photnet_AnimationSync = 4;
             GameObject effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill1VX", new Vector3(transform.position.x, transform.position.y + 0.53f, transform.position.z), transform.rotation);
             effect.transform.parent = gameObject.transform;
-            Destroy(effect, 5.0f);
+            SoundManager.Instance.KnightSoundPlay(3);
+            yield return new WaitForSeconds(3.0f);
+            PhotonNetwork.Destroy(effect);
         }
         yield return null;
     }
@@ -446,7 +446,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         warriorAnim.SetTrigger("Skill2");
         Photnet_AnimationSync = 5;
         SoundManager.Instance.KnightSoundPlay(4);
-        player.atk *= 2.0f;
+        player.atk *= 1.5f;
         //player.def *= 1.3f;
         yield return new WaitForSeconds(8.0f);
         Destroy(buffEffect);
@@ -474,9 +474,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         Vector3 dir = player.transform.forward;
         yield return new WaitForSeconds(0.2f);
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
+
+        SoundManager.Instance.KnightSoundPlay(5);
         yield return new WaitForSeconds(2.0f);
         PhotonNetwork.Destroy(effect);
-        SoundManager.Instance.KnightSoundPlay(5);
     }
 
     IEnumerator Warrior_Skill4_1_VFX()
@@ -488,6 +489,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.isAttacking = true;
         player.ControlOff();
         s4Effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        StartCoroutine("Skill4_Sound");
         yield return new WaitForSeconds(2.3f);
         StartCoroutine("Warrior_Skill4_2_VFX");
 
@@ -517,11 +519,29 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         //StartCoroutine("Warrior_Skill4_2_VFX");
     }
 
+    IEnumerator Skill4_Sound()
+    {
+        float second = 0;
+        SoundManager.Instance.KnightSoundPlay(6);
+        yield return new WaitForSeconds(0.2f);
+        second += 0.2f;
+        SoundManager.Instance.KnightSoundPlay(7);
+        yield return new WaitForSeconds(0.2f);
+        second += 0.2f;
+        while (second>= 2.2f)
+        {
+            SoundManager.Instance.KnightSoundPlay(8);
+            yield return new WaitForSeconds(0.2f);
+            second += 0.2f;
+        }
+
+    }
+
     IEnumerator Warrior_Skill5_Effect()
     {
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
-        
+        SoundManager.Instance.KnightSoundPlay(9);
         yield return new WaitForSeconds(1.2f);
         Destroy(buffEffect);
         

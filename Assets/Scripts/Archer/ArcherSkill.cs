@@ -281,7 +281,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * ArcherVX2_1.transform.rotation);
                 //StartCoroutine("Skill_Hit");
-                SoundManager.Instance.ArcherSoundPlay(7);
+                SoundManager.Instance.ArcherSoundPlay(0);
                 yield return new WaitForSeconds(attack_Cooltime);
                 attackOff = false;
                 break;
@@ -292,7 +292,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/ArcherAttack2VX", ArcherAttack2Pos.transform.position, Quaternion.LookRotation(dir) * ArcherVX2_2.transform.rotation);
                 //StartCoroutine("Skill_Hit");
-                SoundManager.Instance.ArcherSoundPlay(7);
+                SoundManager.Instance.ArcherSoundPlay(1);
                 yield return new WaitForSeconds(attack_Cooltime + 0.5f);
                 attackOff = false;
                 break;
@@ -452,8 +452,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         SetLookAtMousePos();
         //Vector3 dir = transform.forward;
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", ArcherSkill1Pos.transform.position, transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/);
-        SoundManager.Instance.ArcherSoundPlay(4);
-        SoundManager.Instance.ArcherSoundPlay(0);
+        SoundManager.Instance.ArcherSoundPlay(2);
+        //SoundManager.Instance.ArcherSoundPlay(0);
         yield return new WaitForSeconds(1.0f);
         PhotonNetwork.Destroy(effect);
     }
@@ -464,6 +464,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         Photnet_AnimationSync = 4;
         SetLookAtMousePos();
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", ArcherSkill1Pos.transform.position, transform.rotation);
+        SoundManager.Instance.ArcherSoundPlay(3);
         yield return new WaitForSeconds(2.0f);
         PhotonNetwork.Destroy(effect);
     }
@@ -473,7 +474,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         SetLookAtMousePos();
         archerAnim.SetTrigger("Skill3");
         Photnet_AnimationSync = 5;
-
+        SoundManager.Instance.ArcherSoundPlay(4);
         Vector3 dir = player.transform.forward;
         Vector3 pos;
 
@@ -499,6 +500,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation);
 
         SetLookAtMousePos();
+        SoundManager.Instance.ArcherSoundPlay(6);
 
         yield return new WaitForSeconds(3.4f);
         PhotonNetwork.Destroy(effect);
@@ -508,11 +510,12 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
     {
         //float originSpeed = player.speed;
 
-        SoundManager.Instance.ArcherSoundPlay(10);
+        //SoundManager.Instance.ArcherSoundPlay(10);
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
 
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
+        SoundManager.Instance.ArcherSoundPlay(8);
         yield return null;
         //player.speed *= 1.2f;
         //yield return new WaitForSeconds(1.2f);

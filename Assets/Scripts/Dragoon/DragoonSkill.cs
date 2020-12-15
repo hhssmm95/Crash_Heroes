@@ -381,6 +381,7 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         //Instantiate(DragoonVX2, Attack2Pos.transform.position, Quaternion.LookRotation(dir) * DragoonVX2.transform.rotation);
 
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill2VX_v2", new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.LookRotation(dir) * Quaternion.Euler(0, 0, 180.0f));
+        SoundManager.Instance.DragoonSoundPlay(4);
         yield return new WaitForSeconds(1.5f);
         PhotonNetwork.Destroy(effect);
 
@@ -394,12 +395,13 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
         dragoonAnim.SetTrigger("Skill3");
         Photnet_AnimationSync = 6;
         Vector3 dir = player.transform.forward;
-        
-            var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position, Quaternion.LookRotation(dir));
+
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill3VX", transform.position, Quaternion.LookRotation(dir));
+        SoundManager.Instance.DragoonSoundPlay(5);
         yield return new WaitForSeconds(1.5f);
         PhotonNetwork.Destroy(effect);
 
-        
+
     }
 
     IEnumerator Dragoon_Skill4_Effect()
@@ -422,18 +424,18 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
             Photnet_AnimationSync = 7;
 
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-            if (photonView.IsMine)
-            {
-                PhotonNetwork.Instantiate("Prefebs/FireDragon", DragonSpawn.transform.position, Quaternion.LookRotation(dir) * Dragon.transform.rotation);
-                //PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z), transform.rotation);
-                SoundManager.Instance.DragoonSoundPlay(4);
-            }
+
+            var dragon = PhotonNetwork.Instantiate("Prefebs/FireDragon", DragonSpawn.transform.position, Quaternion.LookRotation(dir) * Dragon.transform.rotation);
+            //PhotonNetwork.Instantiate("Prefebs/DragonDestination", new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z), transform.rotation);
+            SoundManager.Instance.DragoonSoundPlay(6);
+
 
             yield return new WaitForSeconds(2.0f);
             var effect = PhotonNetwork.Instantiate("Prefebs/VFX/DragoonSkill4VX", transform.position + pos, Quaternion.LookRotation(dir) * Quaternion.Euler(180, 0, 0));
             yield return new WaitForSeconds(1.5f);
             PhotonNetwork.Destroy(circle);
             yield return new WaitForSeconds(0.7f);
+            PhotonNetwork.Destroy(dragon);
             PhotonNetwork.Destroy(effect);
         }
         //float originMaxHP = player.maxHP;
@@ -455,12 +457,13 @@ public class DragoonSkill : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator Dragoon_Skill5_Effect()
     {
         float originDef = player.def;
-        SoundManager.Instance.DragoonSoundPlay(6);
+        //SoundManager.Instance.DragoonSoundPlay(6);
 
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;
-
+        
         player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.5f);
+        SoundManager.Instance.DragoonSoundPlay(8);
         player.def *= 0.8f;
         yield return new WaitForSeconds(1.2f);
         PhotonNetwork.Destroy(buffEffect);
