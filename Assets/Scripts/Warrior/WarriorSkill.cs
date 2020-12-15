@@ -38,6 +38,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     public int Photnet_AnimationSync = 0;
     public bool isMine;
     public int combo = 1;
+    GameObject s4Effect;
     void Awake()
     {
         //if(CompareTag("Player"))
@@ -69,7 +70,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.stRegen = 7;
         attack_Cooltime = 0.4f;
         player.skill_1_Cooltime = 8.0f;
-        player.skill_1_Cost = 30.0f;
+        player.skill_1_Cost = 32.0f;
         player.skill_2_Cooltime = 28.0f;
         player.skill_2_Cost = 45.0f;
         player.skill_3_Cooltime = 15.0f;
@@ -80,6 +81,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.skill_5_Cost = 60.0f;
     }
 
+    void Start()
+    {
+        WColl = GetComponent<BoxCollider>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -320,7 +325,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             SetLookAtMousePos();
             player.skill_4_Off = true;
             player.mp -= player.skill_4_Cost;
-
+            
            
             StartCoroutine("Warrior_Skill4_1_VFX");
         }
@@ -468,8 +473,9 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         Photnet_AnimationSync = 6;
         Vector3 dir = player.transform.forward;
         yield return new WaitForSeconds(0.2f);
-        if (photonView.IsMine)
-            PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
+        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill3VX", WarriorSkill3Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX3.transform.rotation);
+        yield return new WaitForSeconds(2.0f);
+        PhotonNetwork.Destroy(effect);
         SoundManager.Instance.KnightSoundPlay(5);
     }
 
@@ -481,22 +487,24 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         Photnet_AnimationSync = 7;
         player.isAttacking = true;
         player.ControlOff();
-        var effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
+        s4Effect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorSkill4VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         yield return new WaitForSeconds(2.3f);
-        PhotonNetwork.Destroy(effect);
+        StartCoroutine("Warrior_Skill4_2_VFX");
 
         //yield return new WaitForSeconds(3.5f);
         // player.isAttacking = false;
     }
     IEnumerator Warrior_Skill4_2_VFX()
     {
-        yield return new WaitForSeconds(2.1f);
+        //yield return new WaitForSeconds(2.1f);
         player.isAttacking = false;
         var myRig = GetComponent<Rigidbody>().useGravity = true;
         WMesh.SetActive(true);
         WRoot.SetActive(true);
         WColl.enabled = true;
         player.ControlOn();
+        PhotonNetwork.Destroy(s4Effect);
+        yield return null;
     }
     void Invisible()
     {
@@ -506,7 +514,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         
         transform.position = new Vector3(originPos.x, originPos.y + 1.5f, originPos.z);
         var myRig = GetComponent<Rigidbody>().useGravity = false;
-        StartCoroutine("Warrior_Skill4_2_VFX");
+        //StartCoroutine("Warrior_Skill4_2_VFX");
     }
 
     IEnumerator Warrior_Skill5_Effect()
@@ -537,6 +545,10 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(Photnet_AnimationSync);
+            stream.SendNext(WMesh.activeSelf);
+            stream.SendNext(WRoot.activeSelf);
+            stream.SendNext(WColl.enabled);
+
             Photnet_AnimationSync = 0;
 
 
@@ -544,6 +556,9 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             Photnet_AnimationSync = (int)stream.ReceiveNext();
+            WMesh.SetActive((bool)stream.ReceiveNext());
+            WRoot.SetActive((bool)stream.ReceiveNext());
+            WColl.enabled = (bool)stream.ReceiveNext();
             if (!photonView.IsMine)
             {
                 switch (Photnet_AnimationSync)

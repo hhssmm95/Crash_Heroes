@@ -73,7 +73,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.skill_4_Cooltime = 106.0f;
         player.skill_4_Cost = 130;
         player.skill_5_Cooltime = 30.0f;
-        player.skill_5_Cost = 30;
+        player.skill_5_Cost = 60;
     }
 
     // Update is called once per frame
@@ -454,7 +454,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/PoisonArrow", ArcherSkill1Pos.transform.position, transform.rotation/*Quaternion.LookRotation(dir) * ArcherArrow.transform.rotation*/);
         SoundManager.Instance.ArcherSoundPlay(4);
         SoundManager.Instance.ArcherSoundPlay(0);
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.0f);
         PhotonNetwork.Destroy(effect);
     }
 
@@ -464,7 +464,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         Photnet_AnimationSync = 4;
         SetLookAtMousePos();
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill2VX", ArcherSkill1Pos.transform.position, transform.rotation);
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(2.0f);
         PhotonNetwork.Destroy(effect);
     }
 
@@ -509,7 +509,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         //float originSpeed = player.speed;
 
         SoundManager.Instance.ArcherSoundPlay(10);
-        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.15f);
+        player.GetComponent<PhotonView>().RPC("OnHeal", RpcTarget.All, player.maxHP * 0.3f);
 
         GameObject buffEffect = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorHealEffect", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.rotation);
         buffEffect.transform.parent = gameObject.transform;

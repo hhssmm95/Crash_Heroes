@@ -71,8 +71,8 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
 
                 //skill4Timer = 0.0f;
                 count++;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 1.375f, transform.tag, Warrior.gameObject.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.375f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Warrior.atk * 1.438f, transform.tag, Warrior.gameObject.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.438f + "감소 전 피해를 입힘.");
                 //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
                 return;
@@ -84,6 +84,8 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Warrior.atk * 1.2f, Warrior.transform.forward, Warrior.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
+                    StartCoroutine(destroyEffect(effect));
                 }
                 else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
                 {
@@ -104,11 +106,16 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk, Warrior.transform.forward, Warrior.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk + "감소 전 피해를 입힘.");
+                    //var pos = enemy.gameObject.transform.LookAt()
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
+                    StartCoroutine(destroyEffect(effect));
                 }
                 else if (tag == "WarriorAttack2")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk*1.1f, Warrior.transform.forward, Warrior.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk*1.1f + "감소 전 피해를 입힘.");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
+                    StartCoroutine(destroyEffect(effect));
                 }
                 SoundManager.Instance.HitSoundPlay(0);
             }
@@ -146,7 +153,14 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator destroyEffect()
     {
         yield return new WaitForSeconds(1.5f);
-        PhotonNetwork.Destroy(gameObject);
+        if(this.gameObject != null)
+            PhotonNetwork.Destroy(gameObject);
+    }
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

@@ -71,7 +71,6 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     
     private void OnTriggerEnter(Collider other)
     {
-        
     }
 
     private void OnTriggerStay(Collider other)
@@ -83,8 +82,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 meteorTimer = 0.0f;
                 s4HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.5f, transform.tag, Dragoon.gameObject.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.5f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.6f, transform.tag, Dragoon.gameObject.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.6f + "감소 전 피해를 입힘.");
                 return;
             }
             if (!dm.Exists(x => x == other.name) && Dragoon.isAttacking)
