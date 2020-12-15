@@ -1115,10 +1115,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         myAnim.SetBool("Move", false);
         myAnim.SetBool("Run", false);
         isRunning = false;
+        isDashing = false;
 
         isHeavyDamaging = true;
         yield return new WaitForSeconds(2.0f);
         isHeavyDamaging = false;
+        ControlOn();
     }
 
     IEnumerator Dash()
@@ -1148,12 +1150,15 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         isStun = true;
         myAnim.SetBool("Move", false);
         myAnim.SetBool("Run", false);
+        isDashing = false;
         isRunning = false;
         myAnim.SetTrigger("isStun");
         Photnet_AnimationSync = 5;
         yield return new WaitForSeconds(time);
         //myAnim.SetBool("isStun", false);
         isStun = false;
+
+        ControlOn();
     }
 
     IEnumerator Exhaust()
