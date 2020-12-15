@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ItemManager : MonoBehaviour
 {
-    public PhotonView PV;
+
     public Vector3 itemPosition;
     public float x, y, z;
     public float timer;
@@ -20,20 +20,21 @@ public class ItemManager : MonoBehaviour
         itemPosition = new Vector3(0,0,0);
         timer = 0.0f;
         count = 0;
+        x = y = z = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
-        if (count < (int)(timer / 60.0f))
+        if (count < (int)(timer / 60.0f)&& PhotonNetwork.IsMasterClient)
         {
-            PV.RPC("randomcall()", RpcTarget.All);
+            Randomcall();
         }
     }
 
     [PunRPC]
-    void randomcall()
+    void Randomcall()
     {
         count++;
         int i = Random.Range(0, 2);
@@ -61,7 +62,7 @@ public class ItemManager : MonoBehaviour
         else
         {
             x = Random.Range(0, length);
-            y = Random.Range(0, (length * length) - (x * x));
+            y = Random.Range(0, Mathf.Sqrt((length * length) - (x * x)));
             if ((int)j != 0)
                 x *= -1;
             if ((int)k != 0 && y<5.0f)
