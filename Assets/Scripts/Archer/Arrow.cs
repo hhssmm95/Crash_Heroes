@@ -33,6 +33,8 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
             {
                 enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, atk * 1.3f, normal, Archer.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
+                var effect = PhotonNetwork.Instantiate("Prefebs/Effect_17_ArrowHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                StartCoroutine(destroyEffect(effect));
                 SoundManager.Instance.HitSoundPlay(1);
                 hit = true;
             }
@@ -44,11 +46,16 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
             
         }
 
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
 
     }
 
-
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 

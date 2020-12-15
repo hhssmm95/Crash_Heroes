@@ -81,11 +81,11 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 checkTimer = 0.0f;
                 s3HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.575f, transform.tag, Archer.gameObject.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.575f + "감소 전 피해를 입힘.");
-                if (enemy.isDead == true)
-                    Archer.CountKill();
-                return;
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.964f, transform.tag, Archer.gameObject.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.964f + "감소 전 피해를 입힘.");
+                var effect = PhotonNetwork.Instantiate("Prefebs/Effect_17_ArrowHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1.1f, enemy.transform.position.z), Quaternion.Euler(90, 0, 0));
+                StartCoroutine(destroyEffect(effect));
+                
             }
             else if(s4HitReady)
             {
@@ -98,12 +98,15 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
 
             if (!dm.Exists(x => x == other.name) && Archer.isAttacking)
             {
+                
 
                 if (tag == "ArcherAttack1")
                 {
                     dm.Add(other.name);
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 0.9f, Archer.transform.forward, Archer.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.9f + "감소 전 피해를 입힘.");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_29_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * Quaternion.Euler(-120,90,-90));
+                    StartCoroutine(destroyEffect(effect));
 
                     SoundManager.Instance.HitSoundPlay(0);
                 }
@@ -112,6 +115,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
                     dm.Add(other.name);
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Archer.atk * 1.0f, Archer.transform.forward, Archer.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.0f + "감소 전 피해를 입힘.");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_29_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * Quaternion.Euler(-120, 90, -90));
+                    StartCoroutine(destroyEffect(effect));
 
                     SoundManager.Instance.HitSoundPlay(0);
                 }
@@ -167,10 +172,16 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator destroyEffect()
     {
         yield return new WaitForSeconds(1.5f);
-        PhotonNetwork.Destroy(gameObject);
+        if (this.gameObject != null)
+            PhotonNetwork.Destroy(gameObject);
     }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
+    }
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
     }
 }

@@ -96,6 +96,8 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 2.5f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.5f + "감소 전 피해를 입힘.");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                    StartCoroutine(destroyEffect(effect));
                     //enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                     //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                     //enemy.OnSlow(0.5f, 3.0f);
@@ -106,20 +108,28 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.6f + "감소 전 피해를 입힘.");
                     enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.1f, 2.0f);
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 10%의 슬로우를 2초동안 적용함");
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_43_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                    StartCoroutine(destroyEffect(effect));
                 }
                 else if (tag == "DragoonAttack3")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.4f, Dragoon.transform.forward, Dragoon.gameObject.tag);
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                    StartCoroutine(destroyEffect(effect));
                 }
 
 
                 else if (tag == "DragoonAttack1")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk , Dragoon.transform.forward, Dragoon.gameObject.tag);
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                    StartCoroutine(destroyEffect(effect));
                 }
                 else if (tag == "DragoonAttack2")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward, Dragoon.gameObject.tag);
+                    var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
+                    StartCoroutine(destroyEffect(effect));
                 }
 
                 SoundManager.Instance.HitSoundPlay(0);
@@ -175,6 +185,12 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(1.5f);
         PhotonNetwork.Destroy(gameObject);
+    }
+    IEnumerator destroyEffect(GameObject effect)
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (effect != null)
+            PhotonNetwork.Destroy(effect);
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
