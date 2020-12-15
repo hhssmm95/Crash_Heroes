@@ -81,7 +81,7 @@ public class MageVX : MonoBehaviour
 
                 }
 
-                enemy.GetComponent<PhotonView>().RPC("PlaySE", RpcTarget.All, 4, 0);
+                //enemy.GetComponent<PhotonView>().RPC("PlaySE", RpcTarget.All, 4, 0);
             }
             
         }

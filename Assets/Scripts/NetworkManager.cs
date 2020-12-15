@@ -346,7 +346,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1 && mode != null)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2 && mode != null)
         {
             int Num = Random.Range(1, 3);
             PhotonNetwork.CurrentRoom.IsOpen = false;
