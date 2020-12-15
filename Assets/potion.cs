@@ -5,12 +5,11 @@ using Photon.Pun;
 
 public class potion : MonoBehaviour
 {
-    public int type;
-    public float amount;
+    public int type, amount;
     public GameObject eff, bottle;
     private float timer;
-    // type 1=HP, 2=MP, 3=Cool
-    // amount : 회복량(1,2에만 적용)
+    // type 1=HP, 2=MP
+    // amount : 회복량
     // Start is called before the first frame update
     void Start()
     {

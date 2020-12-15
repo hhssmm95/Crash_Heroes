@@ -924,17 +924,17 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
     }
 
     [PunRPC]
-    public void GetItem(int itemnum, float amount)
+    public void GetItem(int itemnum, int amount)
     {
         if (photonView.IsMine && !isDead)
         {
             switch(itemnum)
             {
                 case 1:
-                    hp += amount*maxHP;
+                    hp += amount;
                     break;
                 case 2:
-                    mp = amount*maxMP;
+                    mp += amount;
                     break;
                 case 3:
                     bool z = true;
