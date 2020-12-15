@@ -40,7 +40,6 @@ public class ItemManager : MonoBehaviour
         int i = Random.Range(0, 2);
         int j = Random.Range(0, 2);
         int k = Random.Range(0, 2);
-        int l = Random.Range(0,3);
         if (map == 1)
         {
 
@@ -70,16 +69,16 @@ public class ItemManager : MonoBehaviour
                 y *= -1;
         }
         itemPosition = new Vector3(x, z, y);
-        switch(l)
+        switch((int)Random.Range(0, 3))
         {
             case 0:
                 PhotonNetwork.Instantiate("Prefebs/Bottle_Mana", itemPosition, Quaternion.Euler(0, 0, 0));
                 break;
             case 1:
-                PhotonNetwork.Instantiate("Prefebs/Bottle_Mana", itemPosition, Quaternion.Euler(0, 0, 0));
+                PhotonNetwork.Instantiate("Prefebs/Bottle_Health", itemPosition, Quaternion.Euler(0, 0, 0));
                 break;
             case 2:
-                PhotonNetwork.Instantiate("Prefebs/Bottle_Mana", itemPosition, Quaternion.Euler(0, 0, 0));
+                PhotonNetwork.Instantiate("Prefebs/Bottle_Endurance", itemPosition, Quaternion.Euler(0, 0, 0));
                 break;
 
         }
