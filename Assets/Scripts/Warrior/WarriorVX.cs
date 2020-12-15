@@ -75,6 +75,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.438f + "감소 전 피해를 입힘.");
                 var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit_2", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
                 StartCoroutine(destroyEffect(effect));
+                SoundManager.Instance.HitSoundPlay(0);
                 //enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Warrior.atk * 5.5f, Warrior.transform.forward);
                 //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 5.5f + "감소 전 피해를 입힘.");
                 return;
@@ -88,6 +89,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 1.2f + "감소 전 피해를 입힘.");
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
                 else if (tag == "WarriorSkill2_1" || tag == "WarriorSkill2_2")
                 {
@@ -100,6 +102,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk * 2.2f + "감소 전 피해를 입힘.");
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit_2", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(1);
                 }
                 else if (tag == "WarriorSkill4")
                 {
@@ -113,6 +116,7 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     //var pos = enemy.gameObject.transform.LookAt()
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
                 else if (tag == "WarriorAttack2")
                 {
@@ -120,8 +124,9 @@ public class WarriorVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Warrior.atk*1.1f + "감소 전 피해를 입힘.");
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_11_SlashHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.6f, enemy.transform.position.z), Quaternion.LookRotation(transform.position));
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
-                SoundManager.Instance.HitSoundPlay(0);
+                
             }
         }
     }

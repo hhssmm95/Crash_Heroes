@@ -72,7 +72,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         player.def = 29;
 
         player.hpRegen = 5;
-        player.mpRegen = 9;
+        player.mpRegen = 7;
         player.stRegen = 5;
         attack_Cooltime = 1.0f;
         player.skill_1_Cooltime = 8.0f;

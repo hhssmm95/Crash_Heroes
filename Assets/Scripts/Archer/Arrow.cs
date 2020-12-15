@@ -35,7 +35,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + atk * 1.3f + "감소 전 피해를 입힘.");
                 var effect = PhotonNetwork.Instantiate("Prefebs/Effect_17_ArrowHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                 StartCoroutine(destroyEffect(effect));
-                SoundManager.Instance.HitSoundPlay(1);
+                SoundManager.Instance.HitSoundPlay(4);
                 hit = true;
             }
             //else if(tag == "ArcherSkill2")
