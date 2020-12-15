@@ -16,7 +16,5 @@ public static class Global
         Lena
             
     }
-
-
 }
 

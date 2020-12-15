@@ -199,7 +199,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
         }
         SetLocalTag("isPick", false);
-        SetLocalTag("KillCount", 0);
+        //SetLocalTag("isDie", false);
+        //SetLocalTag("KillCount", 0);
         StartCoroutine("RoomUpdate");
     }
 
@@ -266,7 +267,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
 
                 PlayerSlot[i].text = nickName;
-
+                if(mode == "Battle")
+                {
+                    PV.RPC("SetLocalTag", RpcTarget.All, "mode", 1);
+                }
+                if(mode == "DeathMatch")
+                {
+                    PV.RPC("SetLocalTag", RpcTarget.All, "mode", 2);
+                }
             }
         }
     }
@@ -309,13 +317,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             {
                 PV.RPC("ShowMode", RpcTarget.All, num);
                 mode = "Battle";
-                SetLocalTag("mode", 1);
+                PV.RPC("SetLocalTag", RpcTarget.All, "mode", 1);
+                //SetLocalTag("mode", 1);
             }
             else if (num == 2)
             {
                 PV.RPC("ShowMode", RpcTarget.All, num);
                 mode = "DeathMatch";
-                SetLocalTag("mode", 2);
+                PV.RPC("SetLocalTag", RpcTarget.All, "mode", 2);
+                //SetLocalTag("mode", 2);
             }
             else
             {
@@ -380,6 +390,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable { { slotIndex.ToString(), value } });
     }
 
+    [PunRPC]
     void SetLocalTag(string key, int value)
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { key, value } });
