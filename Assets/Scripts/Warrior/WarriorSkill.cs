@@ -389,8 +389,8 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 1:
                 warriorAnim.SetTrigger("FirstAttack");
                 Photnet_AnimationSync = 1;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation), 1.0f);
+
+                var effect1 = PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack1VX", new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z + 0.1f), Quaternion.LookRotation(dir) * WarriorVX1_1.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(0);
                 yield return new WaitForSeconds(attack_Cooltime);
@@ -400,8 +400,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 2:
                 warriorAnim.SetTrigger("SecondAttack");
                 Photnet_AnimationSync = 2;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation), 1.0f);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack2VX", WarriorAttack2Pos.transform.position, Quaternion.LookRotation(dir) * WarriorVX1_2.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(1);
                 yield return new WaitForSeconds(attack_Cooltime);
@@ -411,8 +410,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
             case 3:
                 warriorAnim.SetTrigger("ThirdAttack");
                 Photnet_AnimationSync = 3;
-                if (photonView.IsMine)
-                    Destroy(PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation), 1.0f);
+                PhotonNetwork.Instantiate("Prefebs/VFX/WarriorAttack3VX", new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), Quaternion.LookRotation(dir) * WarriorVX1_3.transform.rotation);
                 //StartCoroutine("Skill_Hit");
                 SoundManager.Instance.KnightSoundPlay(2);
                 yield return new WaitForSeconds(attack_Cooltime + 0.5f);

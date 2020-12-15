@@ -92,7 +92,8 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine && !player.isDead && !player.isHeavyDamaging && !player.isStun && !player.isExhausting)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && !attackOff)
-                Mage_Attack();
+                //Mage_Attack();
+                StartCoroutine("Mage_Attack_Effect");
             //photonView.RPC("Mage_Attack", RpcTarget.All);
             if (Input.GetKeyDown(KeyCode.Alpha1) && !player.skill_1_Off)
                 MageSkill1();
@@ -110,17 +111,17 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 MageSkill5();
             //photonView.RPC("MageSkill5", RpcTarget.All);
 
-            if (attackOff)
-            {
-                attack_Timer += Time.deltaTime;
-                //if (attack_Timer >= 1.0f)
-                //    player.isAttacking = false;
-                if (attack_Timer >= attack_Cooltime)
-                {
-                    attackOff = false;
-                    attack_Timer = 0;
-                }
-            }
+            //if (attackOff)
+            //{
+            //    attack_Timer += Time.deltaTime;
+            //    //if (attack_Timer >= 1.0f)
+            //    //    player.isAttacking = false;
+            //    if (attack_Timer >= attack_Cooltime)
+            //    {
+            //        attackOff = false;
+            //        attack_Timer = 0;
+            //    }
+            //}
             if (comboContinue)
             {
 
@@ -174,45 +175,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
 
     void Mage_Attack()
     {
-        //player.isAttacking = true;
-        attackOff = true;
-        comboContinue = true;
-
-        if (comboTimer > 3.0f)
-        {
-            mageAnim.SetInteger("Combo", 0);
-            comboContinue = false;
-        }
-        comboTimer = 0;
-
-        Vector3 dir = player.transform.forward;
-
-        switch (combo)
-        {
-            case 1:
-                mageAnim.SetTrigger("FirstAttack");
-                PN_AnimationSync = 1;
-                if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(1);
-                break;
-
-            case 2:
-                mageAnim.SetTrigger("SecondAttack");
-                PN_AnimationSync = 2;
-                if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(7);
-                break;
-
-            case 3:
-                mageAnim.SetTrigger("ThirdAttack");
-                PN_AnimationSync = 3;
-                if (photonView.IsMine)
-                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(8);
-                break;
-        }
+       
 
 
 
@@ -338,6 +301,55 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
         Destroy(GameObject.FindWithTag("Shield"));
     }
 
+    IEnumerator Mage_Attack_Effect()
+    {
+        //player.isAttacking = true;
+        attackOff = true;
+        comboContinue = true;
+
+        if (comboTimer > 3.0f)
+        {
+            mageAnim.SetInteger("Combo", 0);
+            comboContinue = false;
+        }
+        comboTimer = 0;
+
+        Vector3 dir = player.transform.forward;
+
+        switch (combo)
+        {
+            case 1:
+                mageAnim.SetTrigger("FirstAttack");
+                PN_AnimationSync = 1;
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
+                SoundManager.Instance.MageSoundPlay(1);
+
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
+                break;
+
+            case 2:
+                mageAnim.SetTrigger("SecondAttack");
+                PN_AnimationSync = 2;
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
+                SoundManager.Instance.MageSoundPlay(7);
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
+                break;
+
+            case 3:
+                mageAnim.SetTrigger("ThirdAttack");
+                PN_AnimationSync = 3;
+                if (photonView.IsMine)
+                    PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
+                SoundManager.Instance.MageSoundPlay(8);
+                yield return new WaitForSeconds(attack_Cooltime);
+                attackOff = false;
+                break;
+        }
+    }
 
     IEnumerator Mage_Skill4_Effect()
     {
