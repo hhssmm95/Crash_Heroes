@@ -136,12 +136,12 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                     }
                 }
 
-                //한명이 살아남았거나 남은 시간이 없을때
-                if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
-                {
-                    PV.RPC("WinOrLose", RpcTarget.All);
-                    isGameOver = true;
-                }
+                ////한명이 살아남았거나 남은 시간이 없을때
+                //if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
+                //{
+                //    PV.RPC("WinOrLose", RpcTarget.All);
+                //    isGameOver = true;
+                //}
             }
             #endregion
 
