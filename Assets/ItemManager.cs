@@ -29,7 +29,9 @@ public class ItemManager : MonoBehaviour
         timer += Time.deltaTime;
         if (count < (int)(timer / 60.0f)&& PhotonNetwork.IsMasterClient)
         {
-            Randomcall();
+            GameObject[] potion = GameObject.FindGameObjectsWithTag("potion");
+            if(!((int)potion.Length>=3))
+                Randomcall();
         }
     }
 
