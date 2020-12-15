@@ -133,7 +133,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     //Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
                     if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
-                        > 11.0f)
+                        > 18.0f)
                     {
                         Target.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, 0, transform.position.z);
                         Target.transform.rotation = Quaternion.Euler(0, 0, 0);
