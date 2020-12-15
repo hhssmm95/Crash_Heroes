@@ -29,7 +29,9 @@ public class ItemManager : MonoBehaviour
         timer += Time.deltaTime;
         if (count < (int)(timer / 60.0f)&& PhotonNetwork.IsMasterClient)
         {
-            Randomcall();
+            GameObject[] potion = GameObject.FindGameObjectsWithTag("potion");
+            if(!((int)potion.Length>=3))
+                Randomcall();
         }
     }
 
@@ -59,13 +61,22 @@ public class ItemManager : MonoBehaviour
                 y = ((x + 8) * -2.25f) + 19;
             }
         }
-        else
+        else if(map==3)
         {
             x = Random.Range(0, length);
             y = Random.Range(0, Mathf.Sqrt((length * length) - (x * x)));
             if ((int)j != 0)
                 x *= -1;
             if ((int)k != 0 && y<5.0f)
+                y *= -1;
+        }
+        else
+        {
+            x = Random.Range(0, length);
+            y = Random.Range(0, Mathf.Sqrt((length * length) - (x * x)));
+            if ((int)j != 0)
+                x *= -1;
+            if ((int)k != 0)
                 y *= -1;
         }
         itemPosition = new Vector3(x, z, y);

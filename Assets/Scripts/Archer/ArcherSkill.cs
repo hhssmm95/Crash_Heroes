@@ -133,7 +133,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     //Vector3 dir = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
                     if (((hit.point.x - transform.position.x) * (hit.point.x - transform.position.x)) + ((hit.point.z - transform.position.z) * (hit.point.z - transform.position.z))
-                        > 15.0f)
+                        > 11.0f)
                     {
                         Target.transform.position = new Vector3(hit.point.x - transform.position.x, 0, hit.point.z - transform.position.z).normalized * 3 + new Vector3(transform.position.x, 0, transform.position.z);
                         Target.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -391,7 +391,9 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.ControlOff();
             archerAnim.SetBool("Move", false);
             archerAnim.SetBool("Run", false);
+
             isSniping = true;
+            SoundManager.Instance.ArcherSoundPlay(6);
             //StartCoroutine("Archer_Skill4_Effect");
 
         }
@@ -486,7 +488,7 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
             pos = new Vector3(hit.point.x - transform.position.x, 0f, hit.point.z - transform.position.z);
 
             var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill3VX", new Vector3(transform.position.x, transform.position.y + 15, transform.position.z) + pos, Quaternion.LookRotation(dir));
-            yield return new WaitForSeconds(2.6f);
+            yield return new WaitForSeconds(2.4f);
             PhotonNetwork.Destroy(effect);
         }
     }
@@ -500,9 +502,8 @@ public class ArcherSkill : MonoBehaviourPunCallbacks, IPunObservable
         var effect = PhotonNetwork.Instantiate("Prefebs/VFX/ArcherSkill4VX", new Vector3(Target.transform.position.x, Target.transform.position.y + 0.3f, Target.transform.position.z), Target.transform.rotation);
 
         SetLookAtMousePos();
-        SoundManager.Instance.ArcherSoundPlay(6);
-
-        yield return new WaitForSeconds(3.4f);
+        SoundManager.Instance.ArcherSoundPlay(7);
+        yield return new WaitForSeconds(3.2f);
         PhotonNetwork.Destroy(effect);
     }
 

@@ -164,24 +164,34 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator StayCheck()
     {
         float second = 0;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
         checkReady = true;
-        while (second >= 2.5f)
+
+
+        while (second < 1.8f)
         {
-            SoundManager.Instance.ArcherSoundPlay(5);
-            yield return new WaitForSeconds(0.2f);
+
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.archerSoundList[5]);
+            yield return new WaitForSeconds(0.15f);
             second += 0.2f;
         }
+        //while (second < 2.5f)
+        //{
+        //    SoundManager.Instance.ArcherSoundPlay(5);
+        //    yield return new WaitForSeconds(0.2f);
+        //    second += 0.2f;
+        //    SoundManager.Instance.ArcherSoundPlay(2);
+        //}
     }
     IEnumerator SnipeCheck()
     {
         float second = 0;
-        yield return new WaitForSeconds(2.1f);
+        yield return new WaitForSeconds(1.8f);
         snipeReady = true;
-        while (second >= 1.5f)
+        while (second < 3.0f)
         {
-            SoundManager.Instance.ArcherSoundPlay(7);
-            yield return new WaitForSeconds(0.2f);
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.archerSoundList[7]);
+            yield return new WaitForSeconds(0.1f);
             second += 0.2f;
         }
     }

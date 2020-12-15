@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager instance;
-    AudioSource audioSource;
+    public AudioSource audioSource;
     public AudioClip[] footStepsSoundList;
     public AudioClip[] knightSoundList;
     public AudioClip[] archerSoundList;

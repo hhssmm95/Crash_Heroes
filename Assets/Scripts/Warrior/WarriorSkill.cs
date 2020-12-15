@@ -522,15 +522,15 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator Skill4_Sound()
     {
         float second = 0;
-        SoundManager.Instance.KnightSoundPlay(6);
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.knightSoundList[6]);
         yield return new WaitForSeconds(0.2f);
         second += 0.2f;
-        SoundManager.Instance.KnightSoundPlay(7);
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.knightSoundList[7]);
         yield return new WaitForSeconds(0.2f);
         second += 0.2f;
-        while (second>= 2.2f)
+        while (second< 2.2f)
         {
-            SoundManager.Instance.KnightSoundPlay(8);
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.knightSoundList[8]);
             yield return new WaitForSeconds(0.2f);
             second += 0.2f;
         }
