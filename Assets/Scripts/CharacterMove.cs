@@ -936,6 +936,53 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 case 2:
                     mp += amount;
                     break;
+                case 3:
+                    bool z = true;
+                    while (z)
+                    {
+                        int k = (int)Random.Range(0, 5);
+                        if (k == 0 && skill_1_Off == true)
+                        {
+                            skill_1_Off = false;
+                            skill_1_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 1 && skill_2_Off == true)
+                        {
+                            skill_2_Off = false;
+                            skill_2_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 2 && skill_3_Off == true)
+                        {
+                            skill_3_Off = false;
+                            skill_3_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 3 && skill_4_Off == true)
+                        {
+                            skill_4_Off = false;
+                            skill_4_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (k == 4 && skill_5_Off == true)
+                        {
+                            skill_5_Off = false;
+                            skill_5_Timer = 0;
+                            z = false;
+                            break;
+                        }
+                        if (skill_1_Off == false && skill_2_Off == false && skill_3_Off == false && skill_4_Off == false && skill_5_Off == false)
+                        {
+                            z = false;
+                            break;
+                        }
+                    }
+                    break;
             }
         }
     }
