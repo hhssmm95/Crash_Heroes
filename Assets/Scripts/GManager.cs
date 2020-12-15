@@ -121,27 +121,28 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 text_Time.text = "0";
                 isTimeOver = true;
             }
+            //죽어있는 플레이어의 수를 센다.
+            int count = 0;
+
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                if ((bool)PhotonNetwork.PlayerList[i].CustomProperties["isDie"])
+                {
+                    count++;
+                }
+            }
+
+            //한명이 살아남았거나 남은 시간이 없을때
+            if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
+            {
+                PV.RPC("WinOrLose", RpcTarget.All);
+                isGameOver = true;
+            }
 
             #region 배틀로얄
             if (GameMode == 1)
             {
-                //죽어있는 플레이어의 수를 센다.
-                int count = 0;
-
-                for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-                {
-                    if ((bool)PhotonNetwork.PlayerList[i].CustomProperties["isDie"])
-                    {
-                        count++;
-                    }
-                }
-
-                //한명이 살아남았거나 남은 시간이 없을때
-                if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
-                {
-                    PV.RPC("WinOrLose", RpcTarget.All);
-                    isGameOver = true;
-                }
+                
             }
             #endregion
 
@@ -278,7 +279,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     //[PunRPC]
     //IEnumerator ReSpawn()
     //{
-    //    print("리스폰");
     //    player.transform.position = spawn_point[playerNum].position;
     //    player.GetComponent<CharacterMove>().Reset();
     //    yield return new WaitForSeconds(5.0f);
@@ -288,7 +288,6 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     //}
     //public void ReSpawn()
     //{
-    //    print("리스폰");
     //    player.transform.position = spawn_point[playerNum].position;
     //    player.GetComponent<CharacterMove>().Reset();
     //    player.SetActive(true);
