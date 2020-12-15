@@ -84,6 +84,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                 s4HitReady = false;
                 enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Dragoon.atk * 1.6f, transform.tag, Dragoon.gameObject.tag);
                 Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 1.6f + "감소 전 피해를 입힘.");
+                SoundManager.Instance.HitSoundPlay(8);
                 return;
             }
             if (!dm.Exists(x => x == other.name) && Dragoon.isAttacking)
@@ -98,6 +99,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Dragoon.atk * 2.5f + "감소 전 피해를 입힘.");
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(5);
                     //enemy.GetComponent<PhotonView>().RPC("OnSlow", RpcTarget.All, 0.5f, 3.0f);
                     //Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + )
                     //enemy.OnSlow(0.5f, 3.0f);
@@ -110,12 +112,14 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                     Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 10%의 슬로우를 2초동안 적용함");
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_43_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(6);
                 }
                 else if (tag == "DragoonAttack3")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnHeavyDamage", RpcTarget.All, Dragoon.atk * 1.4f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
 
 
@@ -124,15 +128,17 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk , Dragoon.transform.forward, Dragoon.gameObject.tag);
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
                 else if (tag == "DragoonAttack2")
                 {
                     enemy.GetComponent<PhotonView>().RPC("OnDamage", RpcTarget.All, Dragoon.atk * 1.1f, Dragoon.transform.forward, Dragoon.gameObject.tag);
                     var effect = PhotonNetwork.Instantiate("Prefebs/Effect_32_Hit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 0.5f, enemy.transform.position.z), Quaternion.LookRotation(-transform.forward) * enemy.transform.rotation);
                     StartCoroutine(destroyEffect(effect));
+                    SoundManager.Instance.HitSoundPlay(0);
                 }
 
-                SoundManager.Instance.HitSoundPlay(0);
+                
                 //enemy.OnDamage(10);
                 //hit = true;
             }
@@ -177,6 +183,7 @@ public class DragoonVX : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(0.7f);
         meteorReady = true;
+        SoundManager.Instance.DragoonSoundPlay(7);
         //yield return new WaitForSeconds(2.1f);
         //var coll = gameObject.GetComponent<CapsuleCollider>();
         //coll.enabled = false;
