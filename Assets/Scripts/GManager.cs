@@ -43,7 +43,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isTimeOver = false;
     public bool isGameOver;
     public int GameMode;
-    public int killCount = 0;
+    public int OverDeath = 0;
+    public int DeathCount = 0;
     public bool isReSpawn = false;
     private void Start()
     {
@@ -60,7 +61,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         //픽 선택, 죽음 판정 초기화
         //SetLocalTag("isPick", false);
         SetLocalTag("isDie", false);
-        SetLocalTag("KillCount", 0);
+        SetLocalTag("DeathCount", 0);
 
         //자신의 번호찾기(스폰 위치 정할때 사용)
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
@@ -76,11 +77,11 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (PhotonNetwork.PlayerList.Length == 2)
             {
-                killCount = 5;
+                OverDeath = 5;
             }
             if (PhotonNetwork.PlayerList.Length > 2)
             {
-                killCount = 10;
+                OverDeath = 10;
             }
         }
 
@@ -149,13 +150,13 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
                 {
-                    if ((int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] == killCount)
+                    if ((int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] == OverDeath)
                     {
                         DeathMatchEnd();
                     }
                     else
                     {
-                        print(i + "번째 " + PhotonNetwork.PlayerList[i].NickName + "은/는 " + (int)PhotonNetwork.PlayerList[i].CustomProperties["KillCount"] + "명 잡았습니다.");
+                        print(i + "번째 " + PhotonNetwork.PlayerList[i].NickName + "은/는 " + (int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] + "번 죽었습니다.");
                     }
                 }
             }
@@ -169,7 +170,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             {
                 isReSpawn = true;
                 PV.RPC("ReSpawn", RpcTarget.All);
-            }
+                DeathCount = (int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] + 1;
+                SetLocalTag("DeathCount", DeathCount);            }
         }
     }
 
@@ -269,6 +271,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         print("리스폰");
         yield return new WaitUntil(() => (bool)PhotonNetwork.LocalPlayer.CustomProperties["isDie"]);
+        //PhotonNetwork.Destroy(player);
+        //Destroy(player);
         yield return new WaitForSeconds(3.0f);
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
         //characterMove = player.GetComponent<CharacterMove>();
@@ -323,7 +327,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void DeathMatchEnd()
     {
-        if((int)PhotonNetwork.LocalPlayer.CustomProperties["KillCount"] == killCount)
+        if((int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] == OverDeath)
         {
             victoryPanel.SetActive(true);
         }
