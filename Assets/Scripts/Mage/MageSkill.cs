@@ -147,6 +147,9 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                         skillPos.transform.position = new Vector3(hit.point.x, gameObject.transform.position.y, hit.point.z);
                         skillPos.transform.rotation = Quaternion.Euler(0, 0, 0);
                     }
+
+                    if (skillPos.transform.position.y < 0)
+                        skillPos.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
                     //transform.rotation = Quaternion.LookRotation(dir);
                 }
                 else
