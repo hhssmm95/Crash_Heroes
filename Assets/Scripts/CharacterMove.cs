@@ -1112,6 +1112,10 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     IEnumerator HeavyDamaging()
     {
+        myAnim.SetBool("Move", false);
+        myAnim.SetBool("Run", false);
+        isRunning = false;
+
         isHeavyDamaging = true;
         yield return new WaitForSeconds(2.0f);
         isHeavyDamaging = false;
@@ -1139,8 +1143,12 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
 
     IEnumerator Stun(float time)
     {
+
         Debug.Log(tag + " " + time + "초 동안 스턴!");
         isStun = true;
+        myAnim.SetBool("Move", false);
+        myAnim.SetBool("Run", false);
+        isRunning = false;
         myAnim.SetTrigger("isStun");
         Photnet_AnimationSync = 5;
         yield return new WaitForSeconds(time);
