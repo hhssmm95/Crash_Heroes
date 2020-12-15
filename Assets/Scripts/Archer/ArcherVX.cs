@@ -81,8 +81,8 @@ public class ArcherVX : MonoBehaviourPunCallbacks, IPunObservable
             {
                 checkTimer = 0.0f;
                 s3HitReady = false;
-                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 0.964f, transform.tag, Archer.gameObject.tag);
-                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 0.964f + "감소 전 피해를 입힘.");
+                enemy.GetComponent<PhotonView>().RPC("OnSpecialDamage", RpcTarget.All, Archer.atk * 1.12f, transform.tag, Archer.gameObject.tag);
+                Debug.Log(tag + "스킬이 " + enemy.gameObject.name + "에게 " + Archer.atk * 1.12f + "감소 전 피해를 입힘.");
                 var effect = PhotonNetwork.Instantiate("Prefebs/Effect_17_ArrowHit", new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1.1f, enemy.transform.position.z), Quaternion.Euler(90, 0, 0));
                 StartCoroutine(destroyEffect(effect));
                 SoundManager.Instance.HitSoundPlay(4);

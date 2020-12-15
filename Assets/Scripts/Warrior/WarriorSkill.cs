@@ -446,7 +446,7 @@ public class WarriorSkill : MonoBehaviourPunCallbacks, IPunObservable
         warriorAnim.SetTrigger("Skill2");
         Photnet_AnimationSync = 5;
         SoundManager.Instance.KnightSoundPlay(4);
-        player.atk *= 2.0f;
+        player.atk *= 1.5f;
         //player.def *= 1.3f;
         yield return new WaitForSeconds(8.0f);
         Destroy(buffEffect);
