@@ -267,14 +267,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
 
                 PlayerSlot[i].text = nickName;
-                if(mode == "Battle")
-                {
-                    PV.RPC("SetLocalTag", RpcTarget.All, "mode", 1);
-                }
-                if(mode == "DeathMatch")
-                {
-                    PV.RPC("SetLocalTag", RpcTarget.All, "mode", 2);
-                }
+
             }
         }
     }
@@ -341,17 +334,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
             DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
+            mode = "Battle";
         }
         else if(num == 2)
         {
             DeathMatchButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-PUSH");
             BattleButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/MainUI/button_gray-HOVER");
+            mode = "DeathMatch";
         }
     }
 
     public void StartGame()
     {
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1 && mode != null)
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2 && mode != null)
         {
             int Num = Random.Range(1, 3);
             PhotonNetwork.CurrentRoom.IsOpen = false;

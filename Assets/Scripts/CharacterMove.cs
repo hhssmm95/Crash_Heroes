@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭터의 전반적인 입력들과 애니메이션, 상태 처리 클래스
@@ -331,6 +332,29 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         
     }
 
+    public void Reset()
+    {
+        skill_1_Off = false;
+        skill_1_Timer = 0;
+
+        skill_2_Off = false;
+        skill_2_Timer = 0;
+
+        skill_3_Off = false;
+        skill_3_Timer = 0;
+
+        skill_4_Off = false;
+        skill_4_Timer = 0;
+
+        skill_5_Off = false;
+        skill_5_Timer = 0;
+
+        mp = maxMP;
+        st = maxST;
+        hp = maxHP;
+        isDead = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -630,7 +654,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
-                PV.RPC("DestroyRPC", RpcTarget.All);
+                //PV.RPC("DestroyRPC", RpcTarget.All);
+                //StartCoroutine("DestroyRPC");
                 var enemy = GameObject.FindGameObjectWithTag(job);
                 enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
@@ -769,7 +794,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
-                PV.RPC("DestroyRPC", RpcTarget.All);
+                //PV.RPC("DestroyRPC", RpcTarget.All);
+                //StartCoroutine("DestroyRPC");
                 var enemy = GameObject.FindGameObjectWithTag(job);
                 enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
@@ -819,7 +845,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
-                PV.RPC("DestroyRPC", RpcTarget.All);
+                //PV.RPC("DestroyRPC", RpcTarget.All);
+                //StartCoroutine("DestroyRPC");
                 var enemy = GameObject.FindGameObjectWithTag(job);
                 enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
@@ -847,7 +874,8 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
                 Debug.Log(gameObject.name + "(이)가 사망");
                 myAnim.SetTrigger("isDead");
                 Photnet_AnimationSync = 4;
-                PV.RPC("DestroyRPC", RpcTarget.All);
+                //PV.RPC("DestroyRPC", RpcTarget.All);
+                //StartCoroutine("DestroyRPC");
                 var enemy = GameObject.FindGameObjectWithTag(job);
                 enemy.GetComponent<PhotonView>().RPC("CountKill", RpcTarget.All);
             }
@@ -1060,11 +1088,11 @@ public class CharacterMove : MonoBehaviourPunCallbacks, IPunObservable //캐릭�
         yield return new WaitForSeconds(1.0f);
         isExhausting = false;
     }
-    [PunRPC]
+
     IEnumerator DestroyRPC()
     {
         yield return new WaitForSeconds(3.0f);
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
     [PunRPC]
     public void CountKill()

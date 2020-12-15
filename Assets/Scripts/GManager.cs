@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -43,15 +44,13 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     public bool isTimeOver = false;
     public bool isGameOver;
     public int GameMode;
-    public int OverDeath = 0;
+    public int life = 0;
     public int DeathCount = 0;
     public bool isReSpawn = false;
     private void Start()
     {
         //GameMode가 1이면 배틀로얄, 2라면 데스 매치
-        GameMode = (int)PhotonNetwork.LocalPlayer.CustomProperties["mode"];
-
-        print(GameMode);
+        //GameMode = (int)PhotonNetwork.LocalPlayer.CustomProperties["mode"];
 
         text_Time = GameObject.FindWithTag("Timer").GetComponent<Text>();
         audioSource = GetComponent<AudioSource>();
@@ -61,7 +60,7 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         //픽 선택, 죽음 판정 초기화
         //SetLocalTag("isPick", false);
         SetLocalTag("isDie", false);
-        SetLocalTag("DeathCount", 0);
+        //SetLocalTag("DeathCount", 0);
 
         //자신의 번호찾기(스폰 위치 정할때 사용)
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
@@ -73,17 +72,18 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        if (GameMode == 2)
-        {
-            if (PhotonNetwork.PlayerList.Length == 2)
-            {
-                OverDeath = 5;
-            }
-            if (PhotonNetwork.PlayerList.Length > 2)
-            {
-                OverDeath = 10;
-            }
-        }
+        //데스 매치
+        //if (GameMode == 2)
+        //{
+        //    if (PhotonNetwork.PlayerList.Length == 2)
+        //    {
+        //        life = 5;
+        //    }
+        //    if (PhotonNetwork.PlayerList.Length > 2)
+        //    {
+        //        life = 10;
+        //    }
+        //}
 
         //방장이 캐릭터 선택창 RPC로 실행
         if (!PhotonNetwork.IsMasterClient) return;
@@ -137,41 +137,50 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
                 }
 
                 //한명이 살아남았거나 남은 시간이 없을때
-                //if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
-                //{
-                //    PV.RPC("WinOrLose", RpcTarget.All);
-                //    isGameOver = true;
-                //}
+                if ((count == PhotonNetwork.PlayerList.Length - 1) || isTimeOver)
+                {
+                    PV.RPC("WinOrLose", RpcTarget.All);
+                    isGameOver = true;
+                }
             }
             #endregion
 
             #region 데스매치
-            else if (GameMode == 2)
-            {
-                for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-                {
-                    if ((int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] == OverDeath)
-                    {
-                        DeathMatchEnd();
-                    }
-                    else
-                    {
-                        print(i + "번째 " + PhotonNetwork.PlayerList[i].NickName + "은/는 " + (int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] + "번 죽었습니다.");
-                    }
-                }
-            }
+            //else if (GameMode == 2)
+            //{
+            //    print("데스매치");
+            //    for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            //    {
+            //        if ((int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] == life)
+            //        {
+            //            DeathMatchEnd();
+            //            isGameOver = true;
+            //        }
+            //        else
+            //        {
+            //            print(i + "번째 " + PhotonNetwork.PlayerList[i].NickName + "은/는 " + (int)PhotonNetwork.PlayerList[i].CustomProperties["DeathCount"] + "번 죽었습니다.");
+            //        }
+            //    }
+            //}
             #endregion
         }
+
+        if (player == null) return;
 
         if (player.GetComponent<CharacterMove>().isDead == true)
         {
             SetLocalTag("isDie", true);
-            if(GameMode == 2 && !isReSpawn)
-            {
-                isReSpawn = true;
-                PV.RPC("ReSpawn", RpcTarget.All);
-                DeathCount = (int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] + 1;
-                SetLocalTag("DeathCount", DeathCount);            }
+
+            //if(GameMode == 2 && !isReSpawn)
+            //{
+            //    isReSpawn = true;
+            //    DeathCount = (int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] + 1;
+            //    SetLocalTag("DeathCount", DeathCount);
+            //    print(DeathCount + "죽음");
+            //    player.SetActive(false);
+            //    StartCoroutine(ReSpawn());
+            //    //PV.RPC("ReSpawn", RpcTarget.All);
+            //}
         }
     }
 
@@ -213,6 +222,8 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
             PV.RPC("CharacterPick", RpcTarget.All, num);
             SetLocalTag("isPick", true);
         }
+        else
+            return;
     }
 
     // 캐릭터 이름확인
@@ -263,42 +274,29 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
         isSpawn = true;
-        //characterMove = player.GetComponent<CharacterMove>();
     }
-
-    [PunRPC]
-    IEnumerator ReSpawn()
-    {
-        print("리스폰");
-        yield return new WaitUntil(() => (bool)PhotonNetwork.LocalPlayer.CustomProperties["isDie"]);
-        //PhotonNetwork.Destroy(player);
-        //Destroy(player);
-        yield return new WaitForSeconds(3.0f);
-        player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
-        //characterMove = player.GetComponent<CharacterMove>();
-        isReSpawn = false;
-        SetLocalTag("isDie", false);
-    }
-
     //[PunRPC]
+    //IEnumerator ReSpawn()
+    //{
+    //    print("리스폰");
+    //    player.transform.position = spawn_point[playerNum].position;
+    //    player.GetComponent<CharacterMove>().Reset();
+    //    yield return new WaitForSeconds(5.0f);
+    //    player.SetActive(true);
+    //    SetLocalTag("isDie", false);
+    //    isReSpawn = false;
+    //}
     //public void ReSpawn()
     //{
-    //    if ((bool)PhotonNetwork.LocalPlayer.CustomProperties["isDie"])
-    //    {
-    //        Destroy(player);
-    //        print("리스폰");
-    //        player = PhotonNetwork.Instantiate(pickName, spawn_point[playerNum].position, spawn_point[playerNum].rotation) as GameObject;
-    //        characterMove = player.GetComponent<CharacterMove>();
-    //        isReSpawn = false;
-    //    }
+    //    print("리스폰");
+    //    player.transform.position = spawn_point[playerNum].position;
+    //    player.GetComponent<CharacterMove>().Reset();
+    //    player.SetActive(true);
+    //    SetLocalTag("isDie", false);
+    //    isReSpawn = false;
     //}
-    #endregion
 
-    #region 타이머
-    public void Timer()
-    {
-
-    }
+    
     #endregion
 
     #region 게임끝
@@ -324,18 +322,19 @@ public class GManager : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
-    private void DeathMatchEnd()
-    {
-        if((int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] == OverDeath)
-        {
-            victoryPanel.SetActive(true);
-        }
-        else
-        {
-            DefeatPanel.SetActive(true);
-        }
-    }
+    //[PunRPC]
+    //private void DeathMatchEnd()
+    //{
+    //    if((int)PhotonNetwork.LocalPlayer.CustomProperties["DeathCount"] == life)
+    //    {
+    //        victoryPanel.SetActive(true);
+    //    }
+    //    else
+    //    {
+    //        DefeatPanel.SetActive(true);
+    //    }
+
+    //}
 
     IEnumerator LeaveGame()
     {
