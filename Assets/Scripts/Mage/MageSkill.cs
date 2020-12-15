@@ -203,7 +203,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("ThirdAttack");
             PN_AnimationSync = 3;
             Vector3 dir = player.transform.forward;
-            SoundManager.Instance.MageSoundPlay(2);
+            SoundManager.Instance.MageSoundPlay(3);
             //transform.rotation = Quaternion.LookRotation(dir);
             //Instantiate(MageVX1, Skill1Pos.transform.position, Quaternion.LookRotation(dir) * MageVX1.transform.rotation);
             if (photonView.IsMine)
@@ -223,7 +223,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill2");
             PN_AnimationSync = 4;
             Vector3 dir = player.transform.forward;
-            SoundManager.Instance.MageSoundPlay(3);
+            SoundManager.Instance.MageSoundPlay(4);
             if (photonView.IsMine)
             {
                 PhotonNetwork.Instantiate("Prefebs/VFX/MageSkill2VX", skillPos.transform.position, Quaternion.LookRotation(dir) * MageVX2.transform.rotation);
@@ -245,7 +245,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             mageAnim.SetTrigger("Skill3");
             PN_AnimationSync = 5;
             Vector3 dir = player.transform.forward;
-            SoundManager.Instance.MageSoundPlay(4);
+            SoundManager.Instance.MageSoundPlay(5);
             //Instantiate(Dragon, new Vector3(DragonSpawn.transform.position.x - 1.95f, DragonSpawn.transform.position.y + 1.3f, DragonSpawn.transform.position.z - 0.16f), Quaternion.LookRotation(dir) * Dragon.transform.rotation);
             if (photonView.IsMine)
             {
@@ -266,7 +266,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             PN_AnimationSync = 6;
             StartCoroutine("Mage_Skill4_Effect");
             player.mp -= player.skill_4_Cost;
-            SoundManager.Instance.MageSoundPlay(5);
+            SoundManager.Instance.MageSoundPlay(6);
             player.skill_1_Timer = 0;
             player.skill_2_Timer = 0;
             player.skill_3_Timer = 0;
@@ -286,7 +286,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
             player.mp -= player.skill_5_Cost;
             StartCoroutine("Mage_Skill5_Effect");
             PN_AnimationSync = 7;
-            SoundManager.Instance.MageSoundPlay(6);
+            SoundManager.Instance.MageSoundPlay(7);
             //shld = Instantiate(ShiledEff, gameObject.transform.position + ShiledEff.transform.position, Quaternion.EulerAngles(0, 0, 0));
 
             player.BarriorFill(0.4f);
@@ -326,7 +326,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 1;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack1VX", AttackPos1.transform.position, Quaternion.LookRotation(dir) * MageVX0_1.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(1);
+                SoundManager.Instance.MageSoundPlay(0);
 
                 yield return new WaitForSeconds(attack_Cooltime);
                 attackOff = false;
@@ -337,7 +337,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 2;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack2VX", AttackPos2.transform.position, Quaternion.LookRotation(dir) * MageVX0_2.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(7);
+                SoundManager.Instance.MageSoundPlay(1);
                 yield return new WaitForSeconds(attack_Cooltime);
                 attackOff = false;
                 break;
@@ -347,7 +347,7 @@ public class MageSkill : MonoBehaviourPunCallbacks, IPunObservable
                 PN_AnimationSync = 3;
                 if (photonView.IsMine)
                     PhotonNetwork.Instantiate("Prefebs/VFX/MageAttack3VX", AttackPos3.transform.position, Quaternion.LookRotation(dir) * MageVX0_3.transform.rotation);
-                SoundManager.Instance.MageSoundPlay(8);
+                SoundManager.Instance.MageSoundPlay(2);
                 yield return new WaitForSeconds(attack_Cooltime);
                 attackOff = false;
                 break;
